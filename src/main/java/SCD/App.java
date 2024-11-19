@@ -1,4 +1,4 @@
-package SCD-Project;
+package SCD;
 
 /**
  * Hello world!
