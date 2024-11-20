@@ -2,14 +2,14 @@ package SCD.Project;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
-public class SplashScreenView extends JFrame {
-    public SplashScreenView() {
+public class SplashScreen extends JFrame {
+    public SplashScreen() {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setUndecorated(true);
-        setOpacity(1.0f);
 
         JPanel splashPanel = new JPanel();
         splashPanel.setBackground(new Color(255, 102, 102));
@@ -27,5 +27,17 @@ public class SplashScreenView extends JFrame {
 
         add(splashPanel, BorderLayout.CENTER);
         setLocationRelativeTo(null);
+    }
+
+    public void showSplashScreen() {
+        setVisible(true);
+
+        Timer timer = new Timer(3000, (ActionEvent e) -> {
+            dispose();
+            new MainMenu().setVisible(true);
+        });
+
+        timer.setRepeats(false);
+        timer.start();
     }
 }

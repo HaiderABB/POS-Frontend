@@ -24,9 +24,4 @@ public class UserModel {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    // Validate user credentials (this is a placeholder; replace with real validation)
-    public boolean validate() {
-        return "admin".equals(username) && "password".equals(password);
-    }
 }
