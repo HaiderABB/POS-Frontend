@@ -1,7 +1,8 @@
-package SCD.Project;
+package SCD.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import SCD.controllers.LoginPageController;
 
 public class SuperAdminLoginPage extends LoginPage {
 

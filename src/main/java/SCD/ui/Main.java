@@ -1,4 +1,4 @@
-package SCD.Project;
+package SCD.ui;
 
 public class Main {
     public static void main(String[] args) {

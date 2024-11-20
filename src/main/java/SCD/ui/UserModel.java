@@ -1,4 +1,4 @@
-package SCD.Project;
+package SCD.ui;
 
 public class UserModel {
     private String username;

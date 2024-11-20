@@ -1,4 +1,4 @@
-package SCD.Project;
+package SCD.ui;
 
 import javax.swing.*;
 import java.awt.*;
