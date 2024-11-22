@@ -1,23 +1,26 @@
-package SCD.ui;
+package SCD.ui.BranchManager;
+
+
+import SCD.ui.Common.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class SuperAdminDashboard extends JFrame {
+public class BranchManagerDashboard extends JFrame {
 
     private Sidebar sidebar;
     private JPanel mainContent;
     private boolean isSidebarVisible = true;
 
-    public SuperAdminDashboard() {
-        setTitle("Super Admin Dashboard");
+    public BranchManagerDashboard() {
+        setTitle("Branch Manager Dashboard");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        String[] menuItems = {"Dashboard", "Manage Users", "Manage Branches", "View Reports", "System Settings", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\companyLogo.png");
+        String[] menuItems = {"Dashboard", "Manage Staff", "View Sales Reports", "Manage Inventory", "Settings", "Logout"};
+        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\branchLogo.png");
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
@@ -63,10 +66,10 @@ public class SuperAdminDashboard extends JFrame {
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Manage Users", "C:\\Users\\AMMAR\\Desktop\\icons\\users.png"));
-        mainContent.add(createCard("Manage Branches", "C:\\Users\\AMMAR\\Desktop\\icons\\branches.png"));
-        mainContent.add(createCard("View Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\reports.png"));
-        mainContent.add(createCard("System Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png"));
+        mainContent.add(createCard("Manage Staff", "C:\\Users\\AMMAR\\Desktop\\icons\\staff.png"));
+        mainContent.add(createCard("View Sales Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\sales.png"));
+        mainContent.add(createCard("Inventory Management", "C:\\Users\\AMMAR\\Desktop\\icons\\inventory.png"));
+        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png"));
 
         return mainContent;
     }
@@ -86,7 +89,7 @@ public class SuperAdminDashboard extends JFrame {
 
         JLabel cardTitle = new JLabel(title, JLabel.CENTER);
         cardTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        cardTitle.setForeground(new Color(190, 102, 102));
+        cardTitle.setForeground(new Color(102, 153, 255));
         card.add(cardTitle, BorderLayout.SOUTH);
 
         return card;
@@ -94,8 +97,9 @@ public class SuperAdminDashboard extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            SuperAdminDashboard dashboard = new SuperAdminDashboard();
+            BranchManagerDashboard dashboard = new BranchManagerDashboard();
             dashboard.setVisible(true);
         });
     }
 }
+

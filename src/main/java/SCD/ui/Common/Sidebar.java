@@ -1,4 +1,6 @@
-package SCD.ui;
+package SCD.ui.Common;
+
+import SCD.ui.ButtonFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +20,7 @@ public class Sidebar extends JPanel {
         add(logo);
 
 
-        JLabel title = new JLabel("Super Admin", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setForeground(Color.WHITE);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
-        add(title);
+
 
         for (String item : menuItems) {
             JButton menuButton = ButtonFactory.createStyledButton(item);
