@@ -132,7 +132,7 @@ public class Branch {
     }
 
     // Override equals() and hashCode() for comparing objects
-    @Override
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

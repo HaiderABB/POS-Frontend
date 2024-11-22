@@ -13,28 +13,28 @@ public class MainMenuController {
         this.mainMenu = mainMenu;
 
         this.mainMenu.getSuperAdminButton().addActionListener(new ActionListener() {
-            @Override
+
             public void actionPerformed(ActionEvent e) {
                 showLoginPanel("Super Admin");
             }
         });
 
         this.mainMenu.getAdminButton().addActionListener(new ActionListener() {
-            @Override
+
             public void actionPerformed(ActionEvent e) {
                 showLoginPanel("Admin/Branch Manager");
             }
         });
 
         this.mainMenu.getCashierButton().addActionListener(new ActionListener() {
-            @Override
+
             public void actionPerformed(ActionEvent e) {
                 showLoginPanel("Cashier");
             }
         });
 
         this.mainMenu.getDataEntryButton().addActionListener(new ActionListener() {
-            @Override
+
             public void actionPerformed(ActionEvent e) {
                 showLoginPanel("Data Entry Operator");
             }
