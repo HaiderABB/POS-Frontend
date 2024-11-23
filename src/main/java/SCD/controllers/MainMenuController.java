@@ -2,7 +2,7 @@ package SCD.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import SCD.ui.MainMenu;
+import SCD.ui.Common.MainMenu;
 import SCD.ui.LoginPage;
 import SCD.ui.UserModel;
 

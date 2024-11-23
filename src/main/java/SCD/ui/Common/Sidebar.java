@@ -1,7 +1,5 @@
 package SCD.ui.Common;
 
-import SCD.ui.ButtonFactory;
-
 import javax.swing.*;
 import java.awt.*;
 
