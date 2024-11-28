@@ -1,7 +1,7 @@
 package SCD.ui.SuperAdmin;
 
 import SCD.ui.Common.ButtonFactory;
-import SCD.ui.Common.Sidebar;
+import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,24 +11,25 @@ import java.util.Date;
 
 public class ViewReportsPage extends JFrame {
     private Sidebar sidebar;
-
+    private NavBar navBar;
     public ViewReportsPage() {
         setTitle("View Reports");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        String[] menuItems = {"Dashboard", "Manage Users", "Manage Branches", "View Reports", "System Settings", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\companyLogo.png");
+       sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        navBar = new NavBar();
+        contentPanel.add(navBar, BorderLayout.NORTH);
 
-        JLabel titleLabel = new JLabel("View Reports", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        contentPanel.add(titleLabel, BorderLayout.NORTH);
+        navBar.setTitle("Reports");
+
+
 
         JPanel reportSelectionPanel = new JPanel();
         reportSelectionPanel.setLayout(new GridLayout(5, 3, 10, 10));
