@@ -10,9 +10,9 @@ package SCD.ui;
 //}
 
 
-import SCD.ui.SplashScreen;
-
 import javax.swing.*;
+
+import SCD.ui.Common.SplashScreen;
 
 public class Main {
 
