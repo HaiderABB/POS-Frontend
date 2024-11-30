@@ -1,4 +1,4 @@
-package SCD.ui.SuperAdmin;
+package SCD.ui.BranchManager;
 
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
@@ -7,19 +7,17 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class ManageUsersPage extends JFrame {
-    private Sidebar sidebar;
+public class ManageStaffPage extends JFrame {
     private DefaultTableModel tableModel;
     private NavBar navBar;
 
-    public ManageUsersPage() {
-
+    public ManageStaffPage() {
+        setTitle("Manage Staff");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        String[] menuItems = {"Dashboard", "Manage Users", "Manage Branches", "View Reports", "System Settings", "Logout"};
-        sidebar = new Sidebar();
+       BranchSidebar sidebar = new BranchSidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -27,33 +25,36 @@ public class ManageUsersPage extends JFrame {
         navBar = new NavBar();
         contentPanel.add(navBar, BorderLayout.NORTH);
 
+        navBar.setTitle("Manage Staff");
 
-        navBar.setTitle("Manage Users");
-
-
-
-        String[] columnNames = {"ID", "Name", "Email"};
+        String[] columnNames = {"Staff ID", "Name", "Role", "Contact"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        JTable userTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(userTable);
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        JTable staffTable = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(staffTable);
+        contentPanel.add(tableScrollPane, BorderLayout.CENTER);
 
-        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        JLabel idLabel = new JLabel("ID:");
+
+        JLabel idLabel = new JLabel("Staff ID:");
         JTextField idField = new JTextField();
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField();
-        JLabel emailLabel = new JLabel("Email:");
-        JTextField emailField = new JTextField();
+        JLabel roleLabel = new JLabel("Role:");
+        JTextField roleField = new JTextField();
+        JLabel contactLabel = new JLabel("Contact:");
+        JTextField contactField = new JTextField();
+
         formPanel.add(idLabel);
         formPanel.add(idField);
         formPanel.add(nameLabel);
         formPanel.add(nameField);
-        formPanel.add(emailLabel);
-        formPanel.add(emailField);
+        formPanel.add(roleLabel);
+        formPanel.add(roleField);
+        formPanel.add(contactLabel);
+        formPanel.add(contactField);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+       JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton addButton = ButtonFactory.createStyledButton("Add");
         JButton updateButton = ButtonFactory.createStyledButton("Update");
         JButton deleteButton = ButtonFactory.createStyledButton("Delete");
@@ -67,54 +68,59 @@ public class ManageUsersPage extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
+        setVisible(true);
 
         addButton.addActionListener(e -> {
             String id = idField.getText().trim();
             String name = nameField.getText().trim();
-            String email = emailField.getText().trim();
+            String role = roleField.getText().trim();
+            String contact = contactField.getText().trim();
 
-            if (id.isEmpty() || name.isEmpty() || email.isEmpty()) {
+            if (id.isEmpty() || name.isEmpty() || role.isEmpty() || contact.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill all fields!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                tableModel.addRow(new Object[]{id, name, email});
-                clearFields(idField, nameField, emailField);
+                tableModel.addRow(new Object[]{id, name, role, contact});
+                clearFields(idField, nameField, roleField, contactField);
             }
         });
 
         updateButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow();
+            int selectedRow = staffTable.getSelectedRow();
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Please select a user to update!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please select a staff member to update!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 String id = idField.getText().trim();
                 String name = nameField.getText().trim();
-                String email = emailField.getText().trim();
+                String role = roleField.getText().trim();
+                String contact = contactField.getText().trim();
 
-                if (id.isEmpty() || name.isEmpty() || email.isEmpty()) {
+                if (id.isEmpty() || name.isEmpty() || role.isEmpty() || contact.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Please fill all fields!", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     tableModel.setValueAt(id, selectedRow, 0);
                     tableModel.setValueAt(name, selectedRow, 1);
-                    tableModel.setValueAt(email, selectedRow, 2);
-                    clearFields(idField, nameField, emailField);
+                    tableModel.setValueAt(role, selectedRow, 2);
+                    tableModel.setValueAt(contact, selectedRow, 3);
+                    clearFields(idField, nameField, roleField, contactField);
                 }
             }
         });
 
-        deleteButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow();
+         deleteButton.addActionListener(e -> {
+            int selectedRow = staffTable.getSelectedRow();
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Please select a user to delete!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please select a staff member to delete!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 tableModel.removeRow(selectedRow);
-                clearFields(idField, nameField, emailField);
+                clearFields(idField, nameField, roleField, contactField);
             }
         });
     }
 
-    private void clearFields(JTextField idField, JTextField nameField, JTextField emailField) {
+    private void clearFields(JTextField idField, JTextField nameField, JTextField roleField, JTextField contactField) {
         idField.setText("");
         nameField.setText("");
-        emailField.setText("");
+        roleField.setText("");
+        contactField.setText("");
     }
 }

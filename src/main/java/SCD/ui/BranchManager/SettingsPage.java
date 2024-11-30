@@ -1,18 +1,22 @@
-package SCD.ui.SuperAdmin;
+package SCD.ui.BranchManager;
+
+
+
 
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
+import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SystemSettingsPage extends JFrame {
+public class SettingsPage extends JFrame {
     private Sidebar sidebar;
     private NavBar navBar;
 
-    public SystemSettingsPage() {
+    public SettingsPage() {
         setTitle("Settings");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,7 +32,7 @@ public class SystemSettingsPage extends JFrame {
         navBar = new NavBar();
         contentPanel.add(navBar, BorderLayout.NORTH);
 
-        // Set initial NavBar title
+
         navBar.setTitle("Settings");
 
 
@@ -58,9 +62,9 @@ public class SystemSettingsPage extends JFrame {
                     char[] oldPassword = oldPasswordField.getPassword();
                     char[] newPassword = newPasswordField.getPassword();
                     if (oldPassword.length > 0 && newPassword.length > 0) {
-                        JOptionPane.showMessageDialog(SystemSettingsPage.this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(SCD.ui.BranchManager.SettingsPage.this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(SystemSettingsPage.this, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(SCD.ui.BranchManager.SettingsPage.this, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -78,7 +82,7 @@ public class SystemSettingsPage extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            SystemSettingsPage frame = new SystemSettingsPage();
+            SCD.ui.SuperAdmin.SystemSettingsPage frame = new SCD.ui.SuperAdmin.SystemSettingsPage();
             frame.setVisible(true);
         });
     }

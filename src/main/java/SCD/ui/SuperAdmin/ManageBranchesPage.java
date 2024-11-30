@@ -1,34 +1,41 @@
 package SCD.ui.SuperAdmin;
 
 import SCD.ui.Common.ButtonFactory;
-import SCD.ui.Common.Sidebar;
+import SCD.ui.Common.NavBar;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ManageBranchesPage extends JFrame {
     private Sidebar sidebar;
     private DefaultTableModel tableModel;
+    private NavBar navBar;
+    private boolean isSidebarVisible = true;
 
     public ManageBranchesPage() {
         setTitle("Manage Branches");
         setSize(1000, 700);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        String[] menuItems = {"Dashboard", "Manage Users", "Manage Branches", "View Reports", "System Settings", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\companyLogo.png");
+
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel titleLabel = new JLabel("Manage Branches", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        contentPanel.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+
+
+        navBar = new NavBar();
+        contentPanel.add(navBar, BorderLayout.NORTH);
+
+
+        navBar.setTitle("Manage Branches");
+
 
         String[] columnNames = {"Branch ID", "Branch Name", "Branch Address"};
         tableModel = new DefaultTableModel(columnNames, 0);
@@ -36,9 +43,9 @@ public class ManageBranchesPage extends JFrame {
         JScrollPane scrollPane = new JScrollPane(branchTable);
         contentPanel.add(scrollPane, BorderLayout.CENTER);
 
+
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
         JLabel idLabel = new JLabel("Branch ID:");
         JTextField idField = new JTextField();
         JLabel nameLabel = new JLabel("Branch Name:");
@@ -110,6 +117,12 @@ public class ManageBranchesPage extends JFrame {
                 clearFields(idField, nameField, addressField);
             }
         });
+    }
+    private void toggleSidebar(ActionEvent e) {
+        isSidebarVisible = !isSidebarVisible;
+        sidebar.setVisible(isSidebarVisible);
+        revalidate();
+        repaint();
     }
 
     private void clearFields(JTextField idField, JTextField nameField, JTextField addressField) {
