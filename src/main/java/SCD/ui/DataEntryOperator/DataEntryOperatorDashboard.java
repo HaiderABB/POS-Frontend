@@ -2,7 +2,7 @@
 
 package SCD.ui.DataEntryOperator;
 
-import SCD.ui.Common.Sidebar;
+import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class DataEntryOperatorDashboard extends JFrame {
         setLayout(new BorderLayout());
 
         String[] menuItems = {"Dashboard", "Enter Data", "Update Records", "View Reports", "Pending Entries", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\dataEntryLogo.png");
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();

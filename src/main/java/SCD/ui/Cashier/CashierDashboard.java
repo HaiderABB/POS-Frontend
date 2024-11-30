@@ -1,6 +1,6 @@
 package SCD.ui.Cashier;
 
-import SCD.ui.Common.Sidebar;
+import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +17,7 @@ public class CashierDashboard extends JFrame {
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
-        String[] menuItems = {"Dashboard", "Process Payment", "View Sales", "Refund", "Settings", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\cashierLogo.png");
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
