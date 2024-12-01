@@ -28,7 +28,7 @@ public class ManageBranchesPage extends JFrame {
         contentPanel.add(navBar, BorderLayout.NORTH);
         navBar.setTitle("Manage Branches");
 
-        String[] columnNames = {"Branch Code", "City", "Phone", "Address", "Active"};
+        String[] columnNames = {"Branch ID", "Branch Code", "City", "Phone", "Address", "Active"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable branchTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(branchTable);
@@ -45,7 +45,7 @@ public class ManageBranchesPage extends JFrame {
         JTextField phoneField = new JTextField();
         JLabel addressLabel = new JLabel("Address:");
         JTextField addressField = new JTextField();
-        JLabel activeLabel = new JLabel("Active (true/false):");
+        JLabel activeLabel = new JLabel("Active:");
         JCheckBox activeCheckBox = new JCheckBox();
 
         formPanel.add(codeLabel);
@@ -73,7 +73,6 @@ public class ManageBranchesPage extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
         setLocationRelativeTo(null);
 
-        // Add Branch logic
         addButton.addActionListener(e -> {
             String code = codeField.getText().trim();
             String city = cityField.getText().trim();
@@ -82,11 +81,11 @@ public class ManageBranchesPage extends JFrame {
             boolean active = activeCheckBox.isSelected();
 
             if (validateBranchInputs(code, city, phone)) {
-                tableModel.addRow(new Object[]{code, city, phone, address, active});
+                int newBranchId = tableModel.getRowCount() + 1;
+                tableModel.addRow(new Object[]{newBranchId, code, city, phone, address, active});
                 clearFields(codeField, cityField, phoneField, addressField, activeCheckBox);
             }
         });
-
 
         updateButton.addActionListener(e -> {
             int selectedRow = branchTable.getSelectedRow();
@@ -100,16 +99,15 @@ public class ManageBranchesPage extends JFrame {
                 boolean active = activeCheckBox.isSelected();
 
                 if (validateBranchInputs(code, city, phone)) {
-                    tableModel.setValueAt(code, selectedRow, 0);
-                    tableModel.setValueAt(city, selectedRow, 1);
-                    tableModel.setValueAt(phone, selectedRow, 2);
-                    tableModel.setValueAt(address, selectedRow, 3);
-                    tableModel.setValueAt(active, selectedRow, 4);
+                    tableModel.setValueAt(code, selectedRow, 1);
+                    tableModel.setValueAt(city, selectedRow, 2);
+                    tableModel.setValueAt(phone, selectedRow, 3);
+                    tableModel.setValueAt(address, selectedRow, 4);
+                    tableModel.setValueAt(active, selectedRow, 5);
                     clearFields(codeField, cityField, phoneField, addressField, activeCheckBox);
                 }
             }
         });
-
 
         deleteButton.addActionListener(e -> {
             int selectedRow = branchTable.getSelectedRow();
@@ -144,5 +142,12 @@ public class ManageBranchesPage extends JFrame {
         phoneField.setText("");
         addressField.setText("");
         activeCheckBox.setSelected(false);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            ManageBranchesPage frame = new ManageBranchesPage();
+            frame.setVisible(true);
+        });
     }
 }
