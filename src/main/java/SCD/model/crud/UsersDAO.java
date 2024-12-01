@@ -1,14 +1,16 @@
-package SCD.Dao;
+package SCD.model.crud;
 
-import SCD.Connection.DBConnection;
-import SCD.Model.User;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersDAO {
+import SCD.config.DBConnection;
+import SCD.model.models.User;
 
+public class UsersDAO {
 
     public void addUser(User user) throws SQLException {
         String sql = "INSERT INTO users (username, password, role, branch_id, emp_no, email, salary, is_first_login, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
@@ -16,15 +18,14 @@ public class UsersDAO {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getRole());
-            stmt.setObject(4, user.getBranchId(), java.sql.Types.INTEGER); // Nullable for SuperAdmin
-            stmt.setString(5, user.getEmpNo());
+            stmt.setString(4, user.getBranchCode());
+            stmt.setString(5, user.getEmployeeCode());
             stmt.setString(6, user.getEmail());
             stmt.setDouble(7, user.getSalary());
             stmt.setBoolean(8, user.isFirstLogin());
             stmt.executeUpdate();
         }
     }
-
 
     public User getUserByUsername(String username) throws SQLException {
         String sql = "SELECT * FROM users WHERE username = ?";
@@ -38,7 +39,6 @@ public class UsersDAO {
         return null;
     }
 
-    
     public List<User> getUsersByRole(String role) throws SQLException {
         String sql = "SELECT * FROM users WHERE role = ?";
         List<User> users = new ArrayList<>();
@@ -58,13 +58,12 @@ public class UsersDAO {
                 rs.getString("username"),
                 rs.getString("password"),
                 rs.getString("role"),
-                rs.getInt("branch_id"),
-                rs.getString("emp_no"),
+                rs.getString("branch_code"),
+                rs.getString("employee_code"),
                 rs.getString("email"),
                 rs.getDouble("salary"),
                 rs.getBoolean("is_first_login"),
                 rs.getTimestamp("created_at"),
-                rs.getTimestamp("updated_at")
-        );
+                rs.getTimestamp("updated_at"));
     }
 }
