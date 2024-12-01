@@ -105,7 +105,7 @@ public class SystemSettingsPage extends JFrame {
             return false;
         }
 
-        if (!oldPassword.equals("existingPassword123")) { // Replace with actual password check logic
+        if (!oldPassword.equals("existingPassword123")) {
             JOptionPane.showMessageDialog(
                     this,
                     "Old password is incorrect.",

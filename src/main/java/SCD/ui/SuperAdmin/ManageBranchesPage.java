@@ -87,7 +87,7 @@ public class ManageBranchesPage extends JFrame {
             }
         });
 
-        // Update Branch logic
+
         updateButton.addActionListener(e -> {
             int selectedRow = branchTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -110,7 +110,7 @@ public class ManageBranchesPage extends JFrame {
             }
         });
 
-        // Delete Branch logic
+
         deleteButton.addActionListener(e -> {
             int selectedRow = branchTable.getSelectedRow();
             if (selectedRow == -1) {

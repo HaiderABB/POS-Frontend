@@ -44,7 +44,7 @@ public class ViewReportsPage extends JFrame {
         JLabel branchCodeLabel = new JLabel("Branch Code (Required, BH-1234):");
         JTextField branchCodeField = new JTextField();
 
-        // Date fields, initially hidden
+
         JLabel startDateLabel = new JLabel("Date From:");
         JSpinner startDateSpinner = new JSpinner(new SpinnerDateModel());
         startDateSpinner.setEditor(new JSpinner.DateEditor(startDateSpinner, "yyyy-MM-dd"));
@@ -60,7 +60,7 @@ public class ViewReportsPage extends JFrame {
         datePanel.add(startDateSpinner);
         datePanel.add(endDateLabel);
         datePanel.add(endDateSpinner);
-        datePanel.setVisible(false); // Initially hidden
+        datePanel.setVisible(false);
 
         JLabel graphTypeLabel = new JLabel("Select Graph Type:");
         String[] graphTypes = {"None", "Sales", "Remaining Stock", "Profit"};
@@ -79,7 +79,7 @@ public class ViewReportsPage extends JFrame {
         JButton generateReportButton = ButtonFactory.createStyledButton("Generate Report");
         buttonPanel.add(generateReportButton);
 
-        // Combine datePanel and buttonPanel into one panel
+
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.add(datePanel, BorderLayout.CENTER);
         southPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -91,14 +91,14 @@ public class ViewReportsPage extends JFrame {
 
         setLocationRelativeTo(null);
 
-        // Listener to toggle visibility and enable date fields
+
         reportDurationComboBox.addActionListener(e -> {
             String selectedDuration = (String) reportDurationComboBox.getSelectedItem();
             boolean isCustomRange = "Custom Range".equals(selectedDuration);
             datePanel.setVisible(isCustomRange);
             startDateSpinner.setEnabled(isCustomRange);
             endDateSpinner.setEnabled(isCustomRange);
-            contentPanel.revalidate(); // Refresh UI
+            contentPanel.revalidate();
             contentPanel.repaint();
         });
 

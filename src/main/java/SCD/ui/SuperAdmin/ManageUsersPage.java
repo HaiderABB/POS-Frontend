@@ -74,7 +74,7 @@ public class ManageUsersPage extends JFrame {
 
         setLocationRelativeTo(null);
 
-        // Add Branch Manager logic
+
         addButton.addActionListener(e -> {
             String empCode = empCodeField.getText().trim();
             String username = usernameField.getText().trim();
@@ -94,7 +94,7 @@ public class ManageUsersPage extends JFrame {
             }
         });
 
-        // Update Branch Manager logic
+
         updateButton.addActionListener(e -> {
             int selectedRow = userTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -118,7 +118,7 @@ public class ManageUsersPage extends JFrame {
             }
         });
 
-        // Delete Branch Manager logic
+
         deleteButton.addActionListener(e -> {
             int selectedRow = userTable.getSelectedRow();
             if (selectedRow == -1) {
