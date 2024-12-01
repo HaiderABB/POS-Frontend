@@ -3,17 +3,14 @@ package SCD.ui.SuperAdmin;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class ManageBranchesPage extends JFrame {
     private Sidebar sidebar;
     private DefaultTableModel tableModel;
     private NavBar navBar;
-    private boolean isSidebarVisible = true;
 
     public ManageBranchesPage() {
         setTitle("Manage Branches");
@@ -21,44 +18,46 @@ public class ManageBranchesPage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-
         sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
-
-
         JPanel contentPanel = new JPanel(new BorderLayout());
-
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
         navBar = new NavBar();
         contentPanel.add(navBar, BorderLayout.NORTH);
-
-
         navBar.setTitle("Manage Branches");
 
-
-        String[] columnNames = {"Branch ID", "Branch Name", "Branch Address"};
+        String[] columnNames = {"Branch Code", "City", "Phone", "Address", "Active"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable branchTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(branchTable);
         contentPanel.add(scrollPane, BorderLayout.CENTER);
 
-
-        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        JLabel idLabel = new JLabel("Branch ID:");
-        JTextField idField = new JTextField();
-        JLabel nameLabel = new JLabel("Branch Name:");
-        JTextField nameField = new JTextField();
-        JLabel addressLabel = new JLabel("Branch Address:");
-        JTextField addressField = new JTextField();
 
-        formPanel.add(idLabel);
-        formPanel.add(idField);
-        formPanel.add(nameLabel);
-        formPanel.add(nameField);
+        JLabel codeLabel = new JLabel("Branch Code (BH-1234):");
+        JTextField codeField = new JTextField();
+        JLabel cityLabel = new JLabel("City:");
+        JTextField cityField = new JTextField();
+        JLabel phoneLabel = new JLabel("Phone (0321-1234567):");
+        JTextField phoneField = new JTextField();
+        JLabel addressLabel = new JLabel("Address:");
+        JTextField addressField = new JTextField();
+        JLabel activeLabel = new JLabel("Active (true/false):");
+        JCheckBox activeCheckBox = new JCheckBox();
+
+        formPanel.add(codeLabel);
+        formPanel.add(codeField);
+        formPanel.add(cityLabel);
+        formPanel.add(cityField);
+        formPanel.add(phoneLabel);
+        formPanel.add(phoneField);
         formPanel.add(addressLabel);
         formPanel.add(addressField);
+        formPanel.add(activeLabel);
+        formPanel.add(activeCheckBox);
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         JButton addButton = ButtonFactory.createStyledButton("Add");
@@ -68,66 +67,82 @@ public class ManageBranchesPage extends JFrame {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
 
-        formPanel.add(buttonPanel);
         contentPanel.add(formPanel, BorderLayout.SOUTH);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(contentPanel, BorderLayout.CENTER);
-
         setLocationRelativeTo(null);
 
+        // Add Branch logic
         addButton.addActionListener(e -> {
-            String id = idField.getText().trim();
-            String name = nameField.getText().trim();
+            String code = codeField.getText().trim();
+            String city = cityField.getText().trim();
+            String phone = phoneField.getText().trim();
             String address = addressField.getText().trim();
+            boolean active = activeCheckBox.isSelected();
 
-            if (id.isEmpty() || name.isEmpty() || address.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill all fields!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                tableModel.addRow(new Object[]{id, name, address});
-                clearFields(idField, nameField, addressField);
+            if (validateBranchInputs(code, city, phone)) {
+                tableModel.addRow(new Object[]{code, city, phone, address, active});
+                clearFields(codeField, cityField, phoneField, addressField, activeCheckBox);
             }
         });
 
+        // Update Branch logic
         updateButton.addActionListener(e -> {
             int selectedRow = branchTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please select a branch to update!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                String id = idField.getText().trim();
-                String name = nameField.getText().trim();
+                String code = codeField.getText().trim();
+                String city = cityField.getText().trim();
+                String phone = phoneField.getText().trim();
                 String address = addressField.getText().trim();
+                boolean active = activeCheckBox.isSelected();
 
-                if (id.isEmpty() || name.isEmpty() || address.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please fill all fields!", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    tableModel.setValueAt(id, selectedRow, 0);
-                    tableModel.setValueAt(name, selectedRow, 1);
-                    tableModel.setValueAt(address, selectedRow, 2);
-                    clearFields(idField, nameField, addressField);
+                if (validateBranchInputs(code, city, phone)) {
+                    tableModel.setValueAt(code, selectedRow, 0);
+                    tableModel.setValueAt(city, selectedRow, 1);
+                    tableModel.setValueAt(phone, selectedRow, 2);
+                    tableModel.setValueAt(address, selectedRow, 3);
+                    tableModel.setValueAt(active, selectedRow, 4);
+                    clearFields(codeField, cityField, phoneField, addressField, activeCheckBox);
                 }
             }
         });
 
+        // Delete Branch logic
         deleteButton.addActionListener(e -> {
             int selectedRow = branchTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please select a branch to delete!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 tableModel.removeRow(selectedRow);
-                clearFields(idField, nameField, addressField);
+                clearFields(codeField, cityField, phoneField, addressField, activeCheckBox);
             }
         });
     }
-    private void toggleSidebar(ActionEvent e) {
-        isSidebarVisible = !isSidebarVisible;
-        sidebar.setVisible(isSidebarVisible);
-        revalidate();
-        repaint();
+
+    private boolean validateBranchInputs(String code, String city, String phone) {
+        if (!code.matches("BH-\\d{4}")) {
+            JOptionPane.showMessageDialog(this, "Branch Code must follow the format 'BH-1234'", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!city.matches("[A-Za-z\\s]+")) {
+            JOptionPane.showMessageDialog(this, "City must contain only letters", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!phone.matches("03\\d{2}-\\d{7}")) {
+            JOptionPane.showMessageDialog(this, "Phone must follow the format '0321-1234567'", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
-    private void clearFields(JTextField idField, JTextField nameField, JTextField addressField) {
-        idField.setText("");
-        nameField.setText("");
+    private void clearFields(JTextField codeField, JTextField cityField, JTextField phoneField, JTextField addressField, JCheckBox activeCheckBox) {
+        codeField.setText("");
+        cityField.setText("");
+        phoneField.setText("");
         addressField.setText("");
+        activeCheckBox.setSelected(false);
     }
 }
