@@ -7,14 +7,14 @@ public class Product {
     private int productId;
     private int vendorId;
     private int branchId;
-    private String product_code;
-    private String name;
-    private String category;
-    private double originalPrice;
-    private double salePrice;
-    private double priceByUnit;
-    private double priceByCarton;
-    private int stock_quantity;
+    private String product_code; // U
+    private String name; // U
+    private String category; // U
+    private double originalPrice; // U
+    private double salePrice; // U
+    private double priceByUnit; // U
+    private double priceByCarton; // U
+    private int stock_quantity; // U
     private Date createdAt;
     private Date updatedAt;
 

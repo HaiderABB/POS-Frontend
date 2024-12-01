@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public class Vendor {
     private int vendorId;
-    private String vendor_code;
-    private String name;
-    private String phone_number;
-    private String email;
-    private String address;
+    private String vendor_code; // U
+    private String name; // U
+    private String phone_number; // U
+    private String email; // U
+    private String address; // U
 
     public Vendor(int vendorId, int branchId, String name, String phone_number, String email, String address) {
         this.vendorId = vendorId;
