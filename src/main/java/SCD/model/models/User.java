@@ -1,35 +1,35 @@
-package SCD.Model;
+package SCD.model.models;
+
 import java.util.Date;
 import java.util.Objects;
 
 public class User {
-    private int userId;
+    private int user_id;
     private String username;
     private String password;
     private String role;
-    private Integer branchId;
-    private String empNo;
+    private String branch_code;
+    private String employee_code;
     private String email;
+    private String phone_number;
     private double salary;
     private boolean isFirstLogin;
     private Date createdAt;
     private Date updatedAt;
-
 
     public User() {
         this.createdAt = new Date();
         this.isFirstLogin = true;
     }
 
-
-    public User(int userId, String username, String password, String role, Integer branchId, String empNo,
-                String email, double salary, boolean isFirstLogin, Date createdAt, Date updatedAt) {
-        this.userId = userId;
+    public User(int user_id, String username, String password, String role, String branch_code, String employee_code,
+            String email, double salary, boolean isFirstLogin, Date createdAt, Date updatedAt) {
+        this.user_id = user_id;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.branchId = branchId;
-        this.empNo = empNo;
+        this.branch_code = branch_code;
+        this.employee_code = employee_code;
         this.email = email;
         this.salary = salary;
         this.isFirstLogin = isFirstLogin;
@@ -37,13 +37,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-
-    public int getUserId() {
-        return userId;
+    public int getuser_id() {
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setuser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getUsername() {
@@ -70,20 +69,20 @@ public class User {
         this.role = role;
     }
 
-    public Integer getBranchId() {
-        return branchId;
+    public String getBranchCode() {
+        return branch_code;
     }
 
-    public void setBranchId(Integer branchId) {
-        this.branchId = branchId;
+    public void setBranchCode(String branch_code) {
+        this.branch_code = branch_code;
     }
 
-    public String getEmpNo() {
-        return empNo;
+    public String getEmployeeCode() {
+        return employee_code;
     }
 
-    public void setEmpNo(String empNo) {
-        this.empNo = empNo;
+    public void setEmployeeCode(String employee_code) {
+        this.employee_code = employee_code;
     }
 
     public String getEmail() {
@@ -126,13 +125,21 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public String getPhoneNumber() {
+        return phone_number;
+    }
+
+    public void setPhoneNumber(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "user_id=" + user_id +
                 ", username='" + username + '\'' +
                 ", role='" + role + '\'' +
-                ", branchId=" + branchId +
-                ", empNo='" + empNo + '\'' +
+                ", branch_code=" + branch_code +
+                ", employee_code='" + employee_code + '\'' +
                 ", email='" + email + '\'' +
                 ", salary=" + salary +
                 ", isFirstLogin=" + isFirstLogin +
@@ -142,17 +149,19 @@ public class User {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         User user = (User) o;
-        return userId == user.userId &&
+        return user_id == user.user_id &&
                 Double.compare(user.salary, salary) == 0 &&
                 isFirstLogin == user.isFirstLogin &&
                 Objects.equals(username, user.username) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(role, user.role) &&
-                Objects.equals(branchId, user.branchId) &&
-                Objects.equals(empNo, user.empNo) &&
+                Objects.equals(branch_code, user.branch_code) &&
+                Objects.equals(employee_code, user.employee_code) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(createdAt, user.createdAt) &&
                 Objects.equals(updatedAt, user.updatedAt);
@@ -160,7 +169,9 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, password, role, branchId, empNo, email, salary, isFirstLogin, createdAt, updatedAt);
+        return Objects.hash(user_id, username, password, role, branch_code, employee_code, email, salary, isFirstLogin,
+                createdAt,
+                updatedAt);
     }
-}
 
+}

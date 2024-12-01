@@ -1,20 +1,19 @@
-package SCD.Model;
+package SCD.model.models;
 
 import java.util.Objects;
 
 public class Vendor {
     private int vendorId;
-    private int branchId;
+    private String vendor_code;
     private String name;
-    private String contactInfo;
+    private String phone_number;
     private String email;
     private String address;
 
-    public Vendor(int vendorId, int branchId, String name, String contactInfo, String email, String address) {
+    public Vendor(int vendorId, int branchId, String name, String phone_number, String email, String address) {
         this.vendorId = vendorId;
-        this.branchId = branchId;
         this.name = name;
-        this.contactInfo = contactInfo;
+        this.phone_number = phone_number;
         this.email = email;
         this.address = address;
     }
@@ -27,14 +26,6 @@ public class Vendor {
         this.vendorId = vendorId;
     }
 
-    public int getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
-
     public String getName() {
         return name;
     }
@@ -44,11 +35,11 @@ public class Vendor {
     }
 
     public String getContactInfo() {
-        return contactInfo;
+        return phone_number;
     }
 
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
+    public void setContactInfo(String phone_number) {
+        this.phone_number = phone_number;
     }
 
     public String getEmail() {
@@ -67,32 +58,38 @@ public class Vendor {
         this.address = address;
     }
 
-
     public String toString() {
         return "Vendor{" +
                 "vendorId=" + vendorId +
-                ", branchId=" + branchId +
                 ", name='" + name + '\'' +
-                ", contactInfo='" + contactInfo + '\'' +
+                ", phone_number='" + phone_number + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 '}';
     }
 
-
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Vendor vendor = (Vendor) o;
         return vendorId == vendor.vendorId &&
-                branchId == vendor.branchId &&
                 Objects.equals(name, vendor.name) &&
-                Objects.equals(contactInfo, vendor.contactInfo) &&
+                Objects.equals(phone_number, vendor.phone_number) &&
                 Objects.equals(email, vendor.email) &&
                 Objects.equals(address, vendor.address);
     }
 
     public int hashCode() {
-        return Objects.hash(vendorId, branchId, name, contactInfo, email, address);
+        return Objects.hash(vendorId, name, phone_number, email, address);
+    }
+
+    public String getVendor_code() {
+        return vendor_code;
+    }
+
+    public void setVendor_code(String vendor_code) {
+        this.vendor_code = vendor_code;
     }
 }

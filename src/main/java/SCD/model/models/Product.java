@@ -1,4 +1,4 @@
-package SCD.Model;
+package SCD.model.models;
 
 import java.util.Date;
 import java.util.Objects;
@@ -7,20 +7,20 @@ public class Product {
     private int productId;
     private int vendorId;
     private int branchId;
+    private String product_code;
     private String name;
     private String category;
     private double originalPrice;
     private double salePrice;
     private double priceByUnit;
     private double priceByCarton;
-    private int stockQuantity;
+    private int stock_quantity;
     private Date createdAt;
     private Date updatedAt;
 
-
     public Product(int productId, int vendorId, int branchId, String name, String category,
-                   double originalPrice, double salePrice, double priceByUnit,
-                   double priceByCarton, int stockQuantity, Date createdAt, Date updatedAt) {
+            double originalPrice, double salePrice, double priceByUnit,
+            double priceByCarton, int stock_quantity, Date createdAt, Date updatedAt) {
         this.productId = productId;
         this.vendorId = vendorId;
         this.branchId = branchId;
@@ -30,11 +30,10 @@ public class Product {
         this.salePrice = salePrice;
         this.priceByUnit = priceByUnit;
         this.priceByCarton = priceByCarton;
-        this.stockQuantity = stockQuantity;
+        this.stock_quantity = stock_quantity;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
 
     public int getProductId() {
         return productId;
@@ -109,11 +108,11 @@ public class Product {
     }
 
     public int getStockQuantity() {
-        return stockQuantity;
+        return stock_quantity;
     }
 
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setStockQuantity(int stock_quantity) {
+        this.stock_quantity = stock_quantity;
     }
 
     public Date getCreatedAt() {
@@ -132,6 +131,13 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
+    public String getProductCode() {
+        return product_code;
+    }
+
+    public void setProductCode(String product_code) {
+        this.product_code = product_code;
+    }
 
     public String toString() {
         return "Product{" +
@@ -144,15 +150,17 @@ public class Product {
                 ", salePrice=" + salePrice +
                 ", priceByUnit=" + priceByUnit +
                 ", priceByCarton=" + priceByCarton +
-                ", stockQuantity=" + stockQuantity +
+                ", stock_quantity=" + stock_quantity +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Product product = (Product) o;
         return productId == product.productId &&
                 vendorId == product.vendorId &&
@@ -161,7 +169,7 @@ public class Product {
                 Double.compare(product.salePrice, salePrice) == 0 &&
                 Double.compare(product.priceByUnit, priceByUnit) == 0 &&
                 Double.compare(product.priceByCarton, priceByCarton) == 0 &&
-                stockQuantity == product.stockQuantity &&
+                stock_quantity == product.stock_quantity &&
                 Objects.equals(name, product.name) &&
                 Objects.equals(category, product.category) &&
                 Objects.equals(createdAt, product.createdAt) &&
@@ -170,7 +178,7 @@ public class Product {
 
     public int hashCode() {
         return Objects.hash(productId, vendorId, branchId, name, category, originalPrice,
-                salePrice, priceByUnit, priceByCarton, stockQuantity, createdAt, updatedAt);
+                salePrice, priceByUnit, priceByCarton, stock_quantity, createdAt, updatedAt);
     }
-}
 
+}
