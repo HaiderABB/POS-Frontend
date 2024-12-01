@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class Branch {
     private int branch_id;
-    private String branch_code;
-    private String name;
-    private String city;
-    private String address;
-    private String phone;
+    private String branch_code; // U
+    private String name; // U
+    private String city; // U
+    private String address; // U
+    private String phone; // U
     private int total_employees;
     private int created_by;
     private boolean isActive;

@@ -5,8 +5,8 @@ import java.util.Objects;
 public class SaleItem {
     private int sale_item_id;
     private int sale_id; // Foreign Key to sales
-    private int productId; // Foreign Key to products
-    private int quantity;
+    private int productId; // U // Foreign Key to products
+    private int quantity; // U
     private double unitPrice;
     private double totalPrice;
 
