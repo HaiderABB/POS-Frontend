@@ -20,7 +20,7 @@ public class BranchSidebar extends JPanel {
         add(createButton("Dashboard", this::openDashboard));
         add(createButton("Cashiers", this::openCashier));
         add(createButton("Data Entry Operators", this::openManageDataEntryOperators));
-        add(createButton("Manage Inventory", this::openInventoryManagement));
+
         add(createButton("Settings", this::openSettings));
         add(createButton("Logout", this::performLogout));
     }
@@ -43,9 +43,7 @@ public class BranchSidebar extends JPanel {
         navigateToPage(new ManageDataEntryOperatorsPage());
     }
 
-    private void openInventoryManagement() {
-        navigateToPage(new InventoryManagementPage());
-    }
+
 
     private void openSettings() {
         navigateToPage(new SettingsPage());
