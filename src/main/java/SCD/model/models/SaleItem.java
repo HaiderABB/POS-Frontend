@@ -1,18 +1,18 @@
-package SCD.Model;
+package SCD.model.models;
 
 import java.util.Objects;
 
 public class SaleItem {
-    private int saleItemId;
-    private int saleId; // Foreign Key to sales
+    private int sale_item_id;
+    private int sale_id; // Foreign Key to sales
     private int productId; // Foreign Key to products
     private int quantity;
     private double unitPrice;
     private double totalPrice;
 
-    public SaleItem(int saleItemId, int saleId, int productId, int quantity, double unitPrice, double totalPrice) {
-        this.saleItemId = saleItemId;
-        this.saleId = saleId;
+    public SaleItem(int sale_item_id, int sale_id, int productId, int quantity, double unitPrice, double totalPrice) {
+        this.sale_item_id = sale_item_id;
+        this.sale_id = sale_id;
         this.productId = productId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
@@ -20,19 +20,19 @@ public class SaleItem {
     }
 
     public int getSaleItemId() {
-        return saleItemId;
+        return sale_item_id;
     }
 
-    public void setSaleItemId(int saleItemId) {
-        this.saleItemId = saleItemId;
+    public void setSaleItemId(int sale_item_id) {
+        this.sale_item_id = sale_item_id;
     }
 
     public int getSaleId() {
-        return saleId;
+        return sale_id;
     }
 
-    public void setSaleId(int saleId) {
-        this.saleId = saleId;
+    public void setSaleId(int sale_id) {
+        this.sale_id = sale_id;
     }
 
     public int getProductId() {
@@ -71,8 +71,8 @@ public class SaleItem {
 
     public String toString() {
         return "SaleItem{" +
-                "saleItemId=" + saleItemId +
-                ", saleId=" + saleId +
+                "sale_item_id=" + sale_item_id +
+                ", sale_id=" + sale_id +
                 ", productId=" + productId +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
@@ -81,11 +81,13 @@ public class SaleItem {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         SaleItem saleItem = (SaleItem) o;
-        return saleItemId == saleItem.saleItemId &&
-                saleId == saleItem.saleId &&
+        return sale_item_id == saleItem.sale_item_id &&
+                sale_id == saleItem.sale_id &&
                 productId == saleItem.productId &&
                 quantity == saleItem.quantity &&
                 Double.compare(saleItem.unitPrice, unitPrice) == 0 &&
@@ -93,7 +95,6 @@ public class SaleItem {
     }
 
     public int hashCode() {
-        return Objects.hash(saleItemId, saleId, productId, quantity, unitPrice, totalPrice);
+        return Objects.hash(sale_item_id, sale_id, productId, quantity, unitPrice, totalPrice);
     }
 }
-

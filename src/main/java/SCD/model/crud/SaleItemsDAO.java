@@ -1,11 +1,14 @@
-package SCD.Dao;
+package SCD.model.crud;
 
-import SCD.Connection.DBConnection;
-import SCD.Model.SaleItem;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import SCD.config.DBConnection;
+import SCD.model.models.SaleItem;
 
 public class SaleItemsDAO {
 
@@ -41,8 +44,6 @@ public class SaleItemsDAO {
                 rs.getInt("product_id"),
                 rs.getInt("quantity"),
                 rs.getDouble("unit_price"),
-                rs.getDouble("total_price")
-        );
+                rs.getDouble("total_price"));
     }
 }
-
