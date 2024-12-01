@@ -59,12 +59,10 @@ public class ManageUsersPage extends JFrame {
         formPanel.add(branchCodeLabel);
         formPanel.add(branchCodeField);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         JButton addButton = ButtonFactory.createStyledButton("Add");
-        JButton updateButton = ButtonFactory.createStyledButton("Update");
         JButton deleteButton = ButtonFactory.createStyledButton("Delete");
         buttonPanel.add(addButton);
-        buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
 
         contentPanel.add(formPanel, BorderLayout.SOUTH);
@@ -74,7 +72,7 @@ public class ManageUsersPage extends JFrame {
 
         setLocationRelativeTo(null);
 
-
+        // Add Branch Manager
         addButton.addActionListener(e -> {
             String empCode = empCodeField.getText().trim();
             String username = usernameField.getText().trim();
@@ -83,7 +81,6 @@ public class ManageUsersPage extends JFrame {
             String branchCode = branchCodeField.getText().trim();
 
             if (validateBranchManagerInputs(empCode, username, email, phone, branchCode)) {
-                // Check if the employee code already exists
                 if (isExistingEmployeeCode(empCode)) {
                     JOptionPane.showMessageDialog(this, "Employee Code already exists!", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
@@ -94,31 +91,7 @@ public class ManageUsersPage extends JFrame {
             }
         });
 
-
-        updateButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Please select a branch manager to update!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                String empCode = empCodeField.getText().trim();
-                String username = usernameField.getText().trim();
-                String email = emailField.getText().trim();
-                String phone = phoneField.getText().trim();
-                String branchCode = branchCodeField.getText().trim();
-
-                if (validateBranchManagerInputs(empCode, username, email, phone, branchCode)) {
-                    tableModel.setValueAt(empCode, selectedRow, 0);
-                    tableModel.setValueAt(username, selectedRow, 1);
-                    tableModel.setValueAt(email, selectedRow, 2);
-                    tableModel.setValueAt(phone, selectedRow, 3);
-                    tableModel.setValueAt(branchCode, selectedRow, 4);
-                    clearFields(empCodeField, usernameField, emailField, phoneField, branchCodeField);
-                    JOptionPane.showMessageDialog(this, "Branch Manager updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
-
-
+        // Delete Branch Manager
         deleteButton.addActionListener(e -> {
             int selectedRow = userTable.getSelectedRow();
             if (selectedRow == -1) {
