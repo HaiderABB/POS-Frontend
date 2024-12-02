@@ -19,9 +19,7 @@ public class cashierSidebar extends JPanel {
         add(logo);
 
         add(createButton("Dashboard", this::openDashboard));
-        add(createButton("Process Payment", this::openProcessPayment));
-        add(createButton("View Sales", this::openViewSales));
-        add(createButton("Refund", this::openRefund));
+        add(createButton("Cashier Interface", this::openCashierInterface));
         add(createButton("Settings", this::openSettings));
         add(createButton("Log Out", this::performLogout));
     }
@@ -44,12 +42,16 @@ public class cashierSidebar extends JPanel {
         navigateToPage(new ViewSales());
     }
 
+    private void openCashierInterface() {
+        navigateToPage(new CashierInterface());
+    }
+
     private void openRefund() {
         navigateToPage(new RefundFrame());
     }
 
     private void openSettings() {
-//        navigateToPage(new SettingsPage());
+        navigateToPage(new SettingsPage());
     }
 
     private void performLogout() {
