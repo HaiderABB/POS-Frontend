@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class User {
     private int user_id;
-    private String username;
-    private String password;
+    private String username; // U
+    private String password; // U
     private String role;
-    private String branch_code;
-    private String employee_code;
-    private String email;
-    private String phone_number;
+    private String branch_code; // U
+    private String employee_code; // U
+    private String email; // U
+    private String phone_number; // U
     private double salary;
     private boolean isFirstLogin;
     private Date createdAt;
