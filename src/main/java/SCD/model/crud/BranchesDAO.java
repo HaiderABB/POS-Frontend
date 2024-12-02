@@ -1,54 +1,77 @@
 package SCD.model.crud;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Date;
 
-import SCD.config.DBConnection;
-import SCD.model.models.Branch;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import SCD.model.entities.Branch;
+import SCD.utils.HibernateUtil;
 
 public class BranchesDAO {
 
-    public void addBranch(Branch branch) throws SQLException {
-        String sql = "INSERT INTO branches (branch_code, name, city, address, phone, no_of_employees, created_by, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, branch.getbranch_code());
-            stmt.setString(2, branch.getName());
-            stmt.setString(3, branch.getCity());
-            stmt.setString(4, branch.getAddress());
-            stmt.setString(5, branch.getPhone());
-            stmt.setInt(6, branch.gettotal_employees());
-            stmt.setInt(7, branch.getcreated_by());
-            stmt.setBoolean(8, branch.isActive());
-            stmt.executeUpdate();
-        }
-    }
-
-    public Branch getBranchByCode(String branchCode) throws SQLException {
-        String sql = "SELECT * FROM branches WHERE branch_code = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, branchCode);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToBranch(rs);
+    public boolean addBranch(Branch branch) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = null;
+        boolean result;
+        try {
+            transaction = session.beginTransaction();
+            branch.setCreatedAt(new Date());
+            session.persist(branch); // Use persist instead of save to avoid deprecation
+            transaction.commit();
+            result = true;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
             }
+            result = false;
+
+        } finally {
+            session.close();
         }
-        return null;
+        return result;
+
     }
 
-    private Branch mapResultSetToBranch(ResultSet rs) throws SQLException {
-        return new Branch(
-                rs.getInt("branch_id"),
-                rs.getString("branch_code"),
-                rs.getString("name"),
-                rs.getString("city"),
-                rs.getString("address"),
-                rs.getString("phone"),
-                rs.getInt("no_of_employees"),
-                rs.getInt("created_by"),
-                rs.getBoolean("is_active"),
-                rs.getTimestamp("created_at"));
+    public Branch getBranchByCode(String branchCode) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            return session
+                    .createQuery("FROM Branch b WHERE b.branchCode = :branchCode AND b.isActive = true", Branch.class)
+                    .setParameter("branchCode", branchCode)
+                    .uniqueResult();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
+    public boolean deleteBranch(String branchCode) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Branch branch = session.createQuery("FROM Branch b WHERE b.branchCode = :branchCode", Branch.class)
+                    .setParameter("branchCode", branchCode)
+                    .uniqueResult();
+
+            if (branch != null) {
+                branch.setActive(false);
+                session.merge(branch); // Use merge instead of update to avoid deprecation
+                transaction.commit();
+                return true;
+            } else {
+                transaction.rollback();
+                return false;
+            }
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
 }

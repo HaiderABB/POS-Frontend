@@ -2,14 +2,14 @@ package SCD.model.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "branches")
@@ -37,9 +37,6 @@ public class Branch {
 
   @Column(name = "total_employees", nullable = false)
   private int totalEmployees = 0; // Default to 0
-
-  @Column(name = "created_by", nullable = false)
-  private int createdBy;
 
   @Column(name = "is_active", nullable = false)
   private boolean isActive = true; // Default to true
@@ -104,14 +101,6 @@ public class Branch {
 
   public void setTotalEmployees(int totalEmployees) {
     this.totalEmployees = totalEmployees;
-  }
-
-  public int getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(int createdBy) {
-    this.createdBy = createdBy;
   }
 
   public boolean isActive() {
