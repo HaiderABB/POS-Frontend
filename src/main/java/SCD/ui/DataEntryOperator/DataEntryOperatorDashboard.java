@@ -2,15 +2,16 @@
 
 package SCD.ui.DataEntryOperator;
 
-import SCD.ui.Common.Sidebar;
+import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DataEntryOperatorDashboard extends JFrame {
 
-    private Sidebar sidebar;
+    private DEOSidebar sidebar;
     private JPanel mainContent;
     private boolean isSidebarVisible = true;
 
@@ -20,8 +21,7 @@ public class DataEntryOperatorDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        String[] menuItems = {"Dashboard", "Enter Data", "Update Records", "View Reports", "Pending Entries", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\dataEntryLogo.png");
+        sidebar = new DEOSidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
@@ -35,6 +35,7 @@ public class DataEntryOperatorDashboard extends JFrame {
         contentPanel.add(mainContent, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private JPanel createToggleBar() {
@@ -60,22 +61,43 @@ public class DataEntryOperatorDashboard extends JFrame {
         revalidate();
         repaint();
     }
-
     private JPanel createMainContent() {
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new GridLayout(2, 2, 20, 20));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Enter Data", "C:\\Users\\AMMAR\\Desktop\\icons\\enter_data.png"));
-        mainContent.add(createCard("Update Records", "C:\\Users\\AMMAR\\Desktop\\icons\\update.png"));
-        mainContent.add(createCard("View Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\reports.png"));
-        mainContent.add(createCard("Pending Entries", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png"));
+        mainContent.add(createCard("View Vendor Info", "C:\\Users\\AMMAR\\Desktop\\icons\\enter_data.png", this::openViewVendorsPage));
+        mainContent.add(createCard("Add New Vendor", "C:\\Users\\AMMAR\\Desktop\\icons\\update.png", this::openAddNewVendorPage));
+        mainContent.add(createCard("Add Products", "C:\\Users\\AMMAR\\Desktop\\icons\\reports.png", this::openAddProductsPage));
+        mainContent.add(createCard("View Products", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png", this::openViewProductsPage));
+        mainContent.add(createCard("Remove a Product", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png", e -> {}));
+        mainContent.add(createCard("Remove a vendor", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png", e -> {}));
 
         return mainContent;
     }
 
-    private JPanel createCard(String title, String iconPath) {
+    private void openViewVendorsPage(ActionEvent e) {
+        new ViewVendorsPage();
+        dispose();
+    }
+
+    private void openAddNewVendorPage(ActionEvent e) {
+        new AddNewVendorPage();
+        dispose();
+    }
+
+    private void openAddProductsPage(ActionEvent e) {
+        new AddProductPage();
+        dispose();
+    }
+
+    private void openViewProductsPage(ActionEvent e) {
+        new ViewProductsPage();
+        dispose();
+    }
+
+    private JPanel createCard(String title, String iconPath, ActionListener actionListener) {
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
         card.setLayout(new BorderLayout());
@@ -90,8 +112,14 @@ public class DataEntryOperatorDashboard extends JFrame {
 
         JLabel cardTitle = new JLabel(title, JLabel.CENTER);
         cardTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        cardTitle.setForeground(new Color(102, 153, 255));
+        cardTitle.setForeground(new Color(0, 0, 0));
         card.add(cardTitle, BorderLayout.SOUTH);
+
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+            }
+        });
 
         return card;
     }

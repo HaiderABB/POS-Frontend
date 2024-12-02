@@ -1,14 +1,13 @@
 package SCD.ui.Cashier;
 
-import SCD.ui.Common.Sidebar;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CashierDashboard extends JFrame {
 
-    private Sidebar sidebar;
+    private cashierSidebar sidebar;
     private JPanel mainContent;
     private boolean isSidebarVisible = true;
 
@@ -17,9 +16,7 @@ public class CashierDashboard extends JFrame {
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
-        String[] menuItems = {"Dashboard", "Process Payment", "View Sales", "Refund", "Settings", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\cashierLogo.png");
+        sidebar = new cashierSidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
@@ -65,15 +62,20 @@ public class CashierDashboard extends JFrame {
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Process Payment", "C:\\Users\\AMMAR\\Desktop\\icons\\payment.png"));
-        mainContent.add(createCard("View Sales", "C:\\Users\\AMMAR\\Desktop\\icons\\sales.png"));
-        mainContent.add(createCard("Refund", "C:\\Users\\AMMAR\\Desktop\\icons\\refund.png"));
-        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png"));
+        mainContent.add(createCard("Cashier Interface", "C:\\Users\\AMMAR\\Desktop\\icons\\payment.png", this::openCashierInterface));
+        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png",this::openSettings));
 
         return mainContent;
     }
-
+    private void performLogout() {
+        JOptionPane.showMessageDialog(this, "Logging out...");
+        System.exit(0);
+    }
     private JPanel createCard(String title, String iconPath) {
+        return createCard(title, iconPath, null);
+    }
+
+    private JPanel createCard(String title, String iconPath, ActionListener action) {
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
         card.setLayout(new BorderLayout());
@@ -88,10 +90,59 @@ public class CashierDashboard extends JFrame {
 
         JLabel cardTitle = new JLabel(title, JLabel.CENTER);
         cardTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        cardTitle.setForeground(new Color(102, 153, 255));
+        cardTitle.setForeground(new Color(0, 0, 0));
         card.add(cardTitle, BorderLayout.SOUTH);
 
+        if (action != null) {
+            card.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    card.setBackground(new Color(184, 184, 184, 255)); // Change background color on click
+                    action.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+                }
+            });
+        }
+
         return card;
+    }
+
+    private void openProcessPaymentPage(ActionEvent e) {
+        SwingUtilities.invokeLater(() -> {
+            ProcessPaymentPage page = new ProcessPaymentPage();
+            page.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openViewSalesPanel(ActionEvent e) {
+        SwingUtilities.invokeLater(() -> {
+            ViewSales viewSalesPage = new ViewSales();
+            viewSalesPage.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openRefundPanel(ActionEvent e) {
+        SwingUtilities.invokeLater(() -> {
+            RefundFrame refundFrame = new RefundFrame();
+            refundFrame.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openCashierInterface(ActionEvent e) {
+        SwingUtilities.invokeLater(() -> {
+            CashierInterface cashierInterface = new CashierInterface();
+            cashierInterface.setVisible(true);
+            dispose();
+        });
+    }
+
+    private void openSettings(ActionEvent e) {
+        SwingUtilities.invokeLater(() -> {
+            SettingsPage settingsPage = new SettingsPage();
+            settingsPage.setVisible(true);
+            dispose();
+        });
     }
 
     public static void main(String[] args) {

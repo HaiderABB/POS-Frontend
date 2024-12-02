@@ -1,17 +1,17 @@
-package SCD.Model;
+package SCD.model.models;
 
 import java.util.Date;
 import java.util.Objects;
 
 public class Branch {
-    private int branchId;
-    private String branchCode;
-    private String name;
-    private String city;
-    private String address;
-    private String phone;
-    private int noOfEmployees;
-    private int createdBy; // SuperAdmin created this branch
+    private int branch_id;
+    private String branch_code; // U
+    private String name; // U
+    private String city; // U
+    private String address; // U
+    private String phone; // U
+    private int total_employees;
+    private int created_by;
     private boolean isActive;
     private Date createdAt;
 
@@ -20,35 +20,34 @@ public class Branch {
         this.isActive = true;
     }
 
-    public Branch(int branchId, String branchCode, String name, String city, String address,
-                  String phone, int noOfEmployees, int createdBy, boolean isActive, Date createdAt) {
-        this.branchId = branchId;
-        this.branchCode = branchCode;
+    public Branch(int branch_id, String branch_code, String name, String city, String address,
+            String phone, int total_employees, int created_by, boolean isActive, Date createdAt) {
+        this.branch_id = branch_id;
+        this.branch_code = branch_code;
         this.name = name;
         this.city = city;
         this.address = address;
         this.phone = phone;
-        this.noOfEmployees = noOfEmployees;
-        this.createdBy = createdBy;
+        this.total_employees = total_employees;
+        this.created_by = created_by;
         this.isActive = isActive;
         this.createdAt = createdAt;
     }
 
-
-    public int getBranchId() {
-        return branchId;
+    public int getbranch_id() {
+        return branch_id;
     }
 
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
+    public void setbranch_id(int branch_id) {
+        this.branch_id = branch_id;
     }
 
-    public String getBranchCode() {
-        return branchCode;
+    public String getbranch_code() {
+        return branch_code;
     }
 
-    public void setBranchCode(String branchCode) {
-        this.branchCode = branchCode;
+    public void setbranch_code(String branch_code) {
+        this.branch_code = branch_code;
     }
 
     public String getName() {
@@ -83,20 +82,20 @@ public class Branch {
         this.phone = phone;
     }
 
-    public int getNoOfEmployees() {
-        return noOfEmployees;
+    public int gettotal_employees() {
+        return total_employees;
     }
 
-    public void setNoOfEmployees(int noOfEmployees) {
-        this.noOfEmployees = noOfEmployees;
+    public void settotal_employees(int total_employees) {
+        this.total_employees = total_employees;
     }
 
-    public int getCreatedBy() {
-        return createdBy;
+    public int getcreated_by() {
+        return created_by;
     }
 
-    public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
+    public void setcreated_by(int created_by) {
+        this.created_by = created_by;
     }
 
     public boolean isActive() {
@@ -115,33 +114,32 @@ public class Branch {
         this.createdAt = createdAt;
     }
 
-
     public String toString() {
         return "Branch{" +
-                "branchId=" + branchId +
-                ", branchCode='" + branchCode + '\'' +
+                "branch_id=" + branch_id +
+                ", branch_code='" + branch_code + '\'' +
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
-                ", noOfEmployees=" + noOfEmployees +
-                ", createdBy=" + createdBy +
+                ", total_employees=" + total_employees +
+                ", created_by=" + created_by +
                 ", isActive=" + isActive +
                 ", createdAt=" + createdAt +
                 '}';
     }
 
-    // Override equals() and hashCode() for comparing objects
-
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Branch branch = (Branch) o;
-        return branchId == branch.branchId &&
-                noOfEmployees == branch.noOfEmployees &&
-                createdBy == branch.createdBy &&
+        return branch_id == branch.branch_id &&
+                total_employees == branch.total_employees &&
+                created_by == branch.created_by &&
                 isActive == branch.isActive &&
-                Objects.equals(branchCode, branch.branchCode) &&
+                Objects.equals(branch_code, branch.branch_code) &&
                 Objects.equals(name, branch.name) &&
                 Objects.equals(city, branch.city) &&
                 Objects.equals(address, branch.address) &&
@@ -151,7 +149,7 @@ public class Branch {
 
     @Override
     public int hashCode() {
-        return Objects.hash(branchId, branchCode, name, city, address, phone, noOfEmployees, createdBy, isActive, createdAt);
+        return Objects.hash(branch_id, branch_code, name, city, address, phone, total_employees, created_by, isActive,
+                createdAt);
     }
 }
-

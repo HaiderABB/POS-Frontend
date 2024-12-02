@@ -1,17 +1,17 @@
 package SCD.ui.BranchManager;
 
-
-import SCD.ui.Common.Sidebar;
+import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class BranchManagerDashboard extends JFrame {
 
-    private Sidebar sidebar;
+    private BranchSidebar sidebar;
     private JPanel mainContent;
-    private boolean isSidebarVisible = true;
+    private NavBar navBar;
 
     public BranchManagerDashboard() {
         setTitle("Branch Manager Dashboard");
@@ -19,16 +19,16 @@ public class BranchManagerDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        String[] menuItems = {"Dashboard", "Manage Staff", "View Sales Reports", "Manage Inventory", "Settings", "Logout"};
-        sidebar = new Sidebar(menuItems, "C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\branchLogo.png");
+        sidebar = new BranchSidebar();
         add(sidebar, BorderLayout.WEST);
 
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BorderLayout());
+        JPanel contentPanel = new JPanel(new BorderLayout());
         add(contentPanel, BorderLayout.CENTER);
+        navBar = new NavBar();
+        contentPanel.add(navBar, BorderLayout.NORTH);
 
-        JPanel toggleBar = createToggleBar();
-        contentPanel.add(toggleBar, BorderLayout.NORTH);
+        // Set initial NavBar title
+        navBar.setTitle("Branch Manager Dashboard");
 
         mainContent = createMainContent();
         contentPanel.add(mainContent, BorderLayout.CENTER);
@@ -36,63 +36,50 @@ public class BranchManagerDashboard extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private JPanel createToggleBar() {
-        JPanel toggleBar = new JPanel(new BorderLayout());
-        toggleBar.setPreferredSize(new Dimension(1000, 50));
-        toggleBar.setBackground(new Color(240, 240, 240));
-
-        JButton toggleButton = new JButton("☰");
-        toggleButton.setFont(new Font("Arial", Font.BOLD, 18));
-        toggleButton.setFocusPainted(false);
-        toggleButton.setBackground(Color.WHITE);
-        toggleButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        toggleButton.addActionListener(this::toggleSidebar);
-
-        toggleBar.add(toggleButton, BorderLayout.WEST);
-
-        return toggleBar;
-    }
-
-    private void toggleSidebar(ActionEvent e) {
-        isSidebarVisible = !isSidebarVisible;
-        sidebar.setVisible(isSidebarVisible);
-        revalidate();
-        repaint();
-    }
-
     private JPanel createMainContent() {
-        JPanel mainContent = new JPanel();
-        mainContent.setLayout(new GridLayout(2, 2, 20, 20));
+        JPanel mainContent = new JPanel(new GridLayout(2, 2, 20, 20));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Manage Staff", "C:\\Users\\AMMAR\\Desktop\\icons\\staff.png"));
-        mainContent.add(createCard("View Sales Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\sales.png"));
-        mainContent.add(createCard("Inventory Management", "C:\\Users\\AMMAR\\Desktop\\icons\\inventory.png"));
-        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png"));
+        mainContent.add(createCard("Manage Cashiers", "C:\\Users\\AMMAR\\Desktop\\icons\\cashier.png", this::openManageCashiersPage));
+        mainContent.add(createCard("Manage Data Entry Operators", "C:\\Users\\AMMAR\\Desktop\\icons\\dataentry.png", this::openManageDataEntryOperatorsPage));
+        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png", this::openSettingsPage));
 
         return mainContent;
     }
 
-    private JPanel createCard(String title, String iconPath) {
-        JPanel card = new JPanel();
-        card.setBackground(Color.WHITE);
-        card.setLayout(new BorderLayout());
-        card.setBorder(BorderFactory.createCompoundBorder(
+    private JButton createCard(String title, String iconPath, ActionListener action) {
+        JButton button = new JButton(title, new ImageIcon(iconPath));
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setFocusPainted(false);
+        button.setBackground(Color.WHITE);
+        button.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
+        button.addActionListener(action);
+        return button;
+    }
 
-        JLabel icon = new JLabel(new ImageIcon(iconPath));
-        icon.setHorizontalAlignment(SwingConstants.CENTER);
-        card.add(icon, BorderLayout.CENTER);
+    private void openManageCashiersPage(ActionEvent e) {
+        navigateToPage(new ManageCashiersPage());
+    }
 
-        JLabel cardTitle = new JLabel(title, JLabel.CENTER);
-        cardTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        cardTitle.setForeground(new Color(102, 153, 255));
-        card.add(cardTitle, BorderLayout.SOUTH);
+    private void openManageDataEntryOperatorsPage(ActionEvent e) {
+        navigateToPage(new ManageDataEntryOperatorsPage());
+    }
 
-        return card;
+    private void openSettingsPage(ActionEvent e) {
+        navigateToPage(new SettingsPage());
+    }
+
+    private void navigateToPage(JFrame page) {
+        SwingUtilities.invokeLater(() -> {
+            page.setVisible(true);
+            dispose();
+        });
     }
 
     public static void main(String[] args) {
@@ -102,4 +89,3 @@ public class BranchManagerDashboard extends JFrame {
         });
     }
 }
-

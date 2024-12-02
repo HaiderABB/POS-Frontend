@@ -1,11 +1,14 @@
-package SCD.Dao;
+package SCD.model.crud;
 
-import SCD.Connection.DBConnection;
-import SCD.Model.Product;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import SCD.config.DBConnection;
+import SCD.model.models.Product;
 
 public class ProductsDAO {
 
@@ -52,7 +55,6 @@ public class ProductsDAO {
                 rs.getDouble("price_by_carton"),
                 rs.getInt("stock_quantity"),
                 rs.getTimestamp("created_at"),
-                rs.getTimestamp("updated_at")
-        );
+                rs.getTimestamp("updated_at"));
     }
 }
