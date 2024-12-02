@@ -30,24 +30,19 @@ public class BranchManagerDashboard extends JFrame {
         // Set initial NavBar title
         navBar.setTitle("Branch Manager Dashboard");
 
-
-
         mainContent = createMainContent();
         contentPanel.add(mainContent, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
     }
 
-
-
     private JPanel createMainContent() {
         JPanel mainContent = new JPanel(new GridLayout(2, 2, 20, 20));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Manage Staff", "C:\\Users\\AMMAR\\Desktop\\icons\\staff.png", this::openManageStaffPage));
-        mainContent.add(createCard("View Sales Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\sales.png", this::openViewSalesReportsPage));
-        mainContent.add(createCard("Inventory Management", "C:\\Users\\AMMAR\\Desktop\\icons\\inventory.png", this::openInventoryManagementPage));
+        mainContent.add(createCard("Manage Cashiers", "C:\\Users\\AMMAR\\Desktop\\icons\\cashier.png", this::openManageCashiersPage));
+        mainContent.add(createCard("Manage Data Entry Operators", "C:\\Users\\AMMAR\\Desktop\\icons\\dataentry.png", this::openManageDataEntryOperatorsPage));
         mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png", this::openSettingsPage));
 
         return mainContent;
@@ -68,16 +63,12 @@ public class BranchManagerDashboard extends JFrame {
         return button;
     }
 
-    private void openManageStaffPage(ActionEvent e) {
-        navigateToPage(new ManageStaffPage());
+    private void openManageCashiersPage(ActionEvent e) {
+        navigateToPage(new ManageCashiersPage());
     }
 
-    private void openViewSalesReportsPage(ActionEvent e) {
-        navigateToPage(new SalesReportsPage());
-    }
-
-    private void openInventoryManagementPage(ActionEvent e) {
-        navigateToPage(new InventoryManagementPage());
+    private void openManageDataEntryOperatorsPage(ActionEvent e) {
+        navigateToPage(new ManageDataEntryOperatorsPage());
     }
 
     private void openSettingsPage(ActionEvent e) {

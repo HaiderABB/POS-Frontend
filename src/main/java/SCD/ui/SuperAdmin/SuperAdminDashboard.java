@@ -37,14 +37,12 @@ public class SuperAdminDashboard extends JFrame {
         setLocationRelativeTo(null);
     }
 
-
-
     private JPanel createMainContent() {
         JPanel mainContent = new JPanel(new GridLayout(2, 2, 20, 20));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Manage Users", "C:\\Users\\AMMAR\\Desktop\\icons\\users.png", this::openManageUsersPage));
+        mainContent.add(createCard("Manage Branch Managers", "C:\\Users\\AMMAR\\Desktop\\icons\\users.png", this::openManageUsersPage));
         mainContent.add(createCard("Manage Branches", "C:\\Users\\AMMAR\\Desktop\\icons\\branches.png", this::openManageBranchesPage));
         mainContent.add(createCard("View Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\reports.png", this::openViewReportsPage));
         mainContent.add(createCard("System Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png", this::openSystemSettingsPage));
@@ -68,7 +66,7 @@ public class SuperAdminDashboard extends JFrame {
     }
 
     private void openManageUsersPage(ActionEvent e) {
-        navBar.setTitle("Manage Users");
+        navBar.setTitle("Manage Branch Managers");
         navigateToPage(new ManageUsersPage());
     }
 

@@ -13,11 +13,10 @@ public class SystemSettingsPage extends JFrame {
     private NavBar navBar;
 
     public SystemSettingsPage() {
-        setTitle("Settings");
+        setTitle("System Settings");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
-
 
         sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
@@ -27,11 +26,7 @@ public class SystemSettingsPage extends JFrame {
 
         navBar = new NavBar();
         contentPanel.add(navBar, BorderLayout.NORTH);
-
-        // Set initial NavBar title
-        navBar.setTitle("Settings");
-
-
+        navBar.setTitle("System Settings");
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -41,28 +36,9 @@ public class SystemSettingsPage extends JFrame {
         JButton changePasswordButton = ButtonFactory.createStyledButton("Change");
 
         changePasswordButton.setPreferredSize(new Dimension(150, 30));
-
         changePasswordButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JPanel passwordPanel = new JPanel(new GridLayout(2, 2));
-                JPasswordField oldPasswordField = new JPasswordField(15);
-                JPasswordField newPasswordField = new JPasswordField(15);
-                passwordPanel.add(new JLabel("Old Password:"));
-                passwordPanel.add(oldPasswordField);
-                passwordPanel.add(new JLabel("New Password:"));
-                passwordPanel.add(newPasswordField);
-
-                int option = JOptionPane.showConfirmDialog(null, passwordPanel, "Enter Old and New Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-                if (option == JOptionPane.OK_OPTION) {
-                    char[] oldPassword = oldPasswordField.getPassword();
-                    char[] newPassword = newPasswordField.getPassword();
-                    if (oldPassword.length > 0 && newPassword.length > 0) {
-                        JOptionPane.showMessageDialog(SystemSettingsPage.this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(SystemSettingsPage.this, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+                openPasswordChangeDialog();
             }
         });
 
@@ -74,6 +50,92 @@ public class SystemSettingsPage extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
+    }
+
+    private void openPasswordChangeDialog() {
+        JPanel passwordPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel oldPasswordLabel = new JLabel("Old Password:");
+        JPasswordField oldPasswordField = new JPasswordField(15);
+        JLabel newPasswordLabel = new JLabel("New Password:");
+        JPasswordField newPasswordField = new JPasswordField(15);
+        JLabel confirmPasswordLabel = new JLabel("Confirm Password:");
+        JPasswordField confirmPasswordField = new JPasswordField(15);
+
+        passwordPanel.add(oldPasswordLabel);
+        passwordPanel.add(oldPasswordField);
+        passwordPanel.add(newPasswordLabel);
+        passwordPanel.add(newPasswordField);
+        passwordPanel.add(confirmPasswordLabel);
+        passwordPanel.add(confirmPasswordField);
+
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                passwordPanel,
+                "Change Password",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (option == JOptionPane.OK_OPTION) {
+            String oldPassword = new String(oldPasswordField.getPassword());
+            String newPassword = new String(newPasswordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+
+            if (validatePasswordChange(oldPassword, newPassword, confirmPassword)) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Password changed successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        }
+    }
+
+    private boolean validatePasswordChange(String oldPassword, String newPassword, String confirmPassword) {
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "All fields are required.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+
+        if (!oldPassword.equals("existingPassword123")) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Old password is incorrect.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+
+        if (newPassword.length() < 8) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "New password must be at least 8 characters long.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "New password and confirm password do not match.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+
+        return true;
     }
 
     public static void main(String[] args) {
