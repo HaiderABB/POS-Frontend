@@ -16,7 +16,7 @@ public class SaleItemsDAO {
         String sql = "INSERT INTO sale_items (sale_id, product_id, quantity, unit_price, total_price) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, saleItem.getSaleId());
-            stmt.setInt(2, saleItem.getProductId());
+            stmt.setString(2, saleItem.getProductCode());
             stmt.setInt(3, saleItem.getQuantity());
             stmt.setDouble(4, saleItem.getUnitPrice());
             stmt.setDouble(5, saleItem.getTotalPrice());
@@ -41,7 +41,7 @@ public class SaleItemsDAO {
         return new SaleItem(
                 rs.getInt("sale_item_id"),
                 rs.getInt("sale_id"),
-                rs.getInt("product_id"),
+                rs.getString("product_code"),
                 rs.getInt("quantity"),
                 rs.getDouble("unit_price"),
                 rs.getDouble("total_price"));

@@ -19,9 +19,6 @@ public class Employee {
   @Column(name = "employee_code")
   private String employeeCode;
 
-  @Column(name = "username", nullable = false)
-  private String username;
-
   @Column(name = "password", nullable = false)
   private String password = "first1234";
 
@@ -60,14 +57,6 @@ public class Employee {
 
   public void setEmployeeCode(String employeeCode) {
     this.employeeCode = employeeCode;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
   }
 
   public String getPassword() {

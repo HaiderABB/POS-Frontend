@@ -51,30 +51,25 @@ public class BranchesDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                // Get the branch to be deactivated
+
                 Branch branchToDeactivate = session.get(Branch.class, branchCode);
 
                 if (branchToDeactivate != null) {
-                    // Set the isActive flag to false to deactivate the branch
                     branchToDeactivate.setActive(false);
 
-                    // Get the branch "MB-1234" where employees will be reassigned
                     Branch targetBranch = session.get(Branch.class, "MB-1234");
 
                     if (targetBranch != null) {
-                        // Get all employees in the branch to be deactivated
                         String hql = "FROM Employee WHERE branch.branchCode = :branchCode";
                         List<Employee> employees = session.createQuery(hql, Employee.class)
                                 .setParameter("branchCode", branchCode)
                                 .getResultList();
 
-                        // Reassign all employees to the "MB-1234" branch
                         for (Employee employee : employees) {
-                            employee.setBranch(targetBranch); // Set the new branch
-                            session.merge(employee); // Save the changes
+                            employee.setBranch(targetBranch);
+                            session.merge(employee);
                         }
 
-                        // Update the branch to set isActive to false
                         session.merge(branchToDeactivate);
                         transaction.commit();
                         result = true;
@@ -96,10 +91,8 @@ public class BranchesDAO {
     // Get the isActive status of a branch
     public Boolean getBranchActiveStatus(String branchCode) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Retrieve the branch by its branchCode
             Branch branch = session.get(Branch.class, branchCode);
 
-            // If the branch exists, return the isActive status, otherwise return null
             return branch != null ? branch.isActive() : null;
         } catch (Exception e) {
             return null;

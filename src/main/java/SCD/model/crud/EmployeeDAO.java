@@ -1,5 +1,7 @@
 package SCD.model.crud;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -9,11 +11,11 @@ import SCD.utils.HibernateUtil;
 
 public class EmployeeDAO {
 
-  public Employee login(String username, String password) {
-    // Automatically closes the session at the end of the try block
+  public Employee login(String employeeCode, String password) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      return session.createQuery("FROM Employee WHERE username = :username AND password = :password", Employee.class)
-          .setParameter("username", username)
+      return session
+          .createQuery("FROM Employee WHERE employeeCode = :employeeCode AND password = :password", Employee.class)
+          .setParameter("employeeCode", employeeCode)
           .setParameter("password", password)
           .uniqueResult();
     } catch (Exception e) {
@@ -83,6 +85,51 @@ public class EmployeeDAO {
       }
       return false;
     } catch (Exception e) {
+      return false;
+    }
+  }
+
+  // Fetch all employees with the "Cashier" role
+  public List<Employee> getEmployeesByRoleCashier() {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
+          .setParameter("role", "Cashier")
+          .getResultList();
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  // Fetch all employees with the "Data Entry Operator" role
+  public List<Employee> getEmployeesByRoleDataEntryOperator() {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
+          .setParameter("role", "Data Entry Operator")
+          .getResultList();
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public boolean updatePassword(String employeeCode, String newPassword) {
+    Transaction transaction = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+
+      Employee employee = session.get(Employee.class, employeeCode);
+
+      if (employee != null) {
+        employee.setPassword(newPassword);
+        session.merge(employee);
+        transaction.commit();
+        return true;
+      }
+
+      return false;
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
       return false;
     }
   }

@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class User {
     private int user_id;
-    private String username; // U
     private String password;
     private String role;
     private String branch_code; // U
@@ -25,7 +24,6 @@ public class User {
     public User(int user_id, String username, String password, String role, String branch_code, String employee_code,
             String email, double salary, boolean isFirstLogin, Date createdAt, Date updatedAt) {
         this.user_id = user_id;
-        this.username = username;
         this.password = password;
         this.role = role;
         this.branch_code = branch_code;
@@ -43,14 +41,6 @@ public class User {
 
     public void setuser_id(int user_id) {
         this.user_id = user_id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -133,10 +123,10 @@ public class User {
         this.phone_number = phone_number;
     }
 
+    @Override
     public String toString() {
         return "User{" +
                 "user_id=" + user_id +
-                ", username='" + username + '\'' +
                 ", role='" + role + '\'' +
                 ", branch_code=" + branch_code +
                 ", employee_code='" + employee_code + '\'' +
@@ -148,6 +138,7 @@ public class User {
                 '}';
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -157,7 +148,6 @@ public class User {
         return user_id == user.user_id &&
                 Double.compare(user.salary, salary) == 0 &&
                 isFirstLogin == user.isFirstLogin &&
-                Objects.equals(username, user.username) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(role, user.role) &&
                 Objects.equals(branch_code, user.branch_code) &&
@@ -169,7 +159,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(user_id, username, password, role, branch_code, employee_code, email, salary, isFirstLogin,
+        return Objects.hash(user_id, password, role, branch_code, employee_code, email, salary, isFirstLogin,
                 createdAt,
                 updatedAt);
     }

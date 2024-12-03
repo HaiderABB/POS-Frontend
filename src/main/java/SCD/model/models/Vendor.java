@@ -58,6 +58,7 @@ public class Vendor {
         this.address = address;
     }
 
+    @Override
     public String toString() {
         return "Vendor{" +
                 "vendorId=" + vendorId +
@@ -68,6 +69,7 @@ public class Vendor {
                 '}';
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -81,6 +83,7 @@ public class Vendor {
                 Objects.equals(address, vendor.address);
     }
 
+    @Override
     public int hashCode() {
         return Objects.hash(vendorId, name, phone_number, email, address);
     }
