@@ -6,7 +6,7 @@ import java.util.Objects;
 public class User {
     private int user_id;
     private String username; // U
-    private String password; // U
+    private String password;
     private String role;
     private String branch_code; // U
     private String employee_code; // U

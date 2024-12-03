@@ -1,77 +1,109 @@
 package SCD.model.crud;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import SCD.model.entities.Branch;
+import SCD.model.entities.Employee;
 import SCD.utils.HibernateUtil;
 
 public class BranchesDAO {
 
-    public boolean addBranch(Branch branch) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = null;
+    public boolean addBranch(Branch branch) { // returns true if added successfully else false
         boolean result;
-        try {
-            transaction = session.beginTransaction();
-            branch.setCreatedAt(new Date());
-            session.persist(branch); // Use persist instead of save to avoid deprecation
-            transaction.commit();
-            result = true;
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                branch.setCreatedAt(new Date());
+                session.persist(branch); // Use persist instead of save to avoid deprecation
+                transaction.commit();
+                result = true;
+            } catch (Exception e) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+                result = false;
             }
-            result = false;
-
-        } finally {
-            session.close();
         }
         return result;
-
     }
 
-    public Branch getBranchByCode(String branchCode) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            return session
+    public Branch getBranchByCode(String branchCode) { // Return null if not found
+        Branch b = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            b = session
                     .createQuery("FROM Branch b WHERE b.branchCode = :branchCode AND b.isActive = true", Branch.class)
                     .setParameter("branchCode", branchCode)
                     .uniqueResult();
         } catch (Exception e) {
-            throw e;
-        } finally {
-            session.close();
+            throw e; // You can handle the exception in a more specific way if needed
         }
+        return b;
     }
 
+    // Deactivate a branch and reassign all employees to branch "MB-1234"
     public boolean deleteBranch(String branchCode) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            Branch branch = session.createQuery("FROM Branch b WHERE b.branchCode = :branchCode", Branch.class)
-                    .setParameter("branchCode", branchCode)
-                    .uniqueResult();
+        boolean result = false;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                // Get the branch to be deactivated
+                Branch branchToDeactivate = session.get(Branch.class, branchCode);
 
-            if (branch != null) {
-                branch.setActive(false);
-                session.merge(branch); // Use merge instead of update to avoid deprecation
-                transaction.commit();
-                return true;
-            } else {
-                transaction.rollback();
-                return false;
+                if (branchToDeactivate != null) {
+                    // Set the isActive flag to false to deactivate the branch
+                    branchToDeactivate.setActive(false);
+
+                    // Get the branch "MB-1234" where employees will be reassigned
+                    Branch targetBranch = session.get(Branch.class, "MB-1234");
+
+                    if (targetBranch != null) {
+                        // Get all employees in the branch to be deactivated
+                        String hql = "FROM Employee WHERE branch.branchCode = :branchCode";
+                        List<Employee> employees = session.createQuery(hql, Employee.class)
+                                .setParameter("branchCode", branchCode)
+                                .getResultList();
+
+                        // Reassign all employees to the "MB-1234" branch
+                        for (Employee employee : employees) {
+                            employee.setBranch(targetBranch); // Set the new branch
+                            session.merge(employee); // Save the changes
+                        }
+
+                        // Update the branch to set isActive to false
+                        session.merge(branchToDeactivate);
+                        transaction.commit();
+                        result = true;
+                    } else {
+                        System.out.println("Branch MB-1234 does not exist!");
+                    }
+                } else {
+                    System.out.println("Branch not found!");
+                }
+            } catch (Exception e) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
             }
+        }
+        return result;
+    }
+
+    // Get the isActive status of a branch
+    public Boolean getBranchActiveStatus(String branchCode) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Retrieve the branch by its branchCode
+            Branch branch = session.get(Branch.class, branchCode);
+
+            // If the branch exists, return the isActive status, otherwise return null
+            return branch != null ? branch.isActive() : null;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        } finally {
-            session.close();
+            return null;
         }
     }
+
 }

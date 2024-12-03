@@ -6,16 +6,16 @@ import SCD.model.entities.Branch;
 public class SuperAdminService {
 
     public static void main(String[] args) {
-        SuperAdminService service = new SuperAdminService();
-        Branch branch = new Branch();
-        branch.setBranchCode("MB-1234");
-        branch.setName("Main Branch");
-        branch.setCity("Lahore");
-        branch.setAddress("Askari 10");
-        branch.setPhone("0321-9306126");
-        branch.setActive(true);
+        // SuperAdminService service = new SuperAdminService();
+        // Branch branch = new Branch();
+        // branch.setBranchCode("MB-1234");
+        // branch.setName("Main Branch");
+        // branch.setCity("Lahore");
+        // branch.setAddress("Askari 10");
+        // branch.setPhone("0321-9306126");
+        // branch.setActive(true);
 
-        service.createBranch(branch);
+        // service.createBranch(branch);
     }
 
     public boolean createBranch(Branch branch) {

@@ -30,6 +30,8 @@
 
         <!-- Mention annotated class -->
         <mapping class="SCD.model.entities.Branch"/>
+        <mapping class="SCD.model.entities.Employee"/>
+
     </session-factory>
 
 </hibernate-configuration>

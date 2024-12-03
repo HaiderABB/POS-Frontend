@@ -23,7 +23,7 @@ public class Employee {
   private String username;
 
   @Column(name = "password", nullable = false)
-  private String password;
+  private String password = "first1234";
 
   @Column(name = "role", nullable = false)
   private String role;
@@ -42,7 +42,7 @@ public class Employee {
   private double salary;
 
   @Column(name = "is_first_login")
-  private boolean isFirstLogin;
+  private boolean isFirstLogin = true;
 
   @Column(name = "created_at")
   @Temporal(TemporalType.TIMESTAMP)
