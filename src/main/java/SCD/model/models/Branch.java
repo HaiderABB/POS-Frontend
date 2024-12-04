@@ -114,6 +114,7 @@ public class Branch {
         this.createdAt = createdAt;
     }
 
+    @Override
     public String toString() {
         return "Branch{" +
                 "branch_id=" + branch_id +
@@ -129,6 +130,7 @@ public class Branch {
                 '}';
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

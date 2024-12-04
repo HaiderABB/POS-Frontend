@@ -8,6 +8,8 @@ import org.hibernate.Transaction;
 import SCD.model.entities.Branch;
 import SCD.model.entities.Employee;
 import SCD.utils.HibernateUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 public class EmployeeDAO {
 
@@ -24,13 +26,12 @@ public class EmployeeDAO {
   }
 
   public boolean setFirstLoginToFalse(String employeeCode) {
-    // Use try-with-resources to ensure session is automatically closed
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       Transaction transaction = session.beginTransaction();
       Employee employee = session.get(Employee.class, employeeCode);
       if (employee != null && employee.isFirstLogin()) {
         employee.setFirstLogin(false);
-        session.merge(employee); // Merge changes to the employee
+        session.merge(employee);
         transaction.commit();
         return true;
       }
@@ -93,7 +94,7 @@ public class EmployeeDAO {
   public List<Employee> getEmployeesByRoleCashier() {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
-          .setParameter("role", "Cashier")
+          .setParameter("role", "CASHIER")
           .getResultList();
     } catch (Exception e) {
       return null;
@@ -104,7 +105,7 @@ public class EmployeeDAO {
   public List<Employee> getEmployeesByRoleDataEntryOperator() {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
-          .setParameter("role", "Data Entry Operator")
+          .setParameter("role", "DATA_ENTRY_OPERATOR")
           .getResultList();
     } catch (Exception e) {
       return null;
@@ -131,6 +132,24 @@ public class EmployeeDAO {
         transaction.rollback();
       }
       return false;
+    }
+  }
+
+  public boolean employeeExistsByEmployeeCode(String employeeCode) {
+
+    try (EntityManager entityManager = HibernateUtil.getSessionFactory().createEntityManager() // Ensure EntityManager
+                                                                                               // is closed
+    // Get the EntityManager
+    ) {
+      // Query to check if an employee exists with the same employeeCode
+      Query query = entityManager.createQuery("SELECT COUNT(e) FROM Employee e WHERE e.employeeCode = :employeeCode");
+      query.setParameter("employeeCode", employeeCode);
+
+      Long count = (Long) query.getSingleResult();
+
+      return count != null && count > 0; // If count is greater than 0, then the employee exists
+    } catch (Exception e) {
+      return false; // Return false in case of any exception
     }
   }
 

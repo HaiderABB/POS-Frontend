@@ -40,7 +40,7 @@ public class BranchesDAO {
                     .setParameter("branchCode", branchCode)
                     .uniqueResult();
         } catch (Exception e) {
-            throw e; // You can handle the exception in a more specific way if needed
+            return null;
         }
         return b;
     }

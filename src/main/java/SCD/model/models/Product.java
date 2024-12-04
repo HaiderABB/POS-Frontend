@@ -139,6 +139,7 @@ public class Product {
         this.product_code = product_code;
     }
 
+    @Override
     public String toString() {
         return "Product{" +
                 "productId=" + productId +
@@ -156,6 +157,7 @@ public class Product {
                 '}';
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -176,6 +178,7 @@ public class Product {
                 Objects.equals(updatedAt, product.updatedAt);
     }
 
+    @Override
     public int hashCode() {
         return Objects.hash(productId, vendorId, branchId, name, category, originalPrice,
                 salePrice, priceByUnit, priceByCarton, stock_quantity, createdAt, updatedAt);
