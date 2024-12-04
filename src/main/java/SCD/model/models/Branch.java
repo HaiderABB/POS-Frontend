@@ -40,7 +40,6 @@ public class Branch {
   private Date createdAt;
 
   public Branch() {
-    // Default constructor required by JPA
   }
 
   public Branch(String branchCode, String name, String city, String address, String phone, int totalEmployees,

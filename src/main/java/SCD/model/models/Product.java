@@ -52,7 +52,6 @@ public class Product {
   private Date createdAt;
 
   public Product() {
-    // Default constructor required by Hibernate
   }
 
   public Product(String productCode, Vendor vendor, String name, String category,

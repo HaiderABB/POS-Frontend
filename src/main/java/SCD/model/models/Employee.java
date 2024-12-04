@@ -52,7 +52,8 @@ public class Employee {
   @Temporal(TemporalType.TIMESTAMP)
   private Date updatedAt;
 
-  // Getters and Setters
+  public Employee() {
+  }
 
   public String getEmployeeCode() {
     return employeeCode;

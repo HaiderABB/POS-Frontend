@@ -35,7 +35,6 @@ public class Sale {
   private Date saleDate;
 
   public Sale() {
-    // Default constructor required by JPA
   }
 
   public Sale(Employee cashier, double totalAmount, Date saleDate) {

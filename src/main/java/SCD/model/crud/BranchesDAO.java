@@ -12,13 +12,13 @@ import SCD.utils.HibernateUtil;
 
 public class BranchesDAO {
 
-    public boolean addBranch(Branch branch) { // returns true if added successfully else false
+    public boolean addBranch(Branch branch) {
         boolean result;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
                 branch.setCreatedAt(new Date());
-                session.persist(branch); // Use persist instead of save to avoid deprecation
+                session.persist(branch);
                 transaction.commit();
                 result = true;
             } catch (Exception e) {
@@ -31,7 +31,7 @@ public class BranchesDAO {
         return result;
     }
 
-    public Branch getBranchByCode(String branchCode) { // Return null if not found
+    public Branch getBranchByCode(String branchCode) {
         Branch b = null;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -45,7 +45,6 @@ public class BranchesDAO {
         return b;
     }
 
-    // Deactivate a branch and reassign all employees to branch "MB-1234"
     public boolean deleteBranch(String branchCode) {
         boolean result = false;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -88,7 +87,6 @@ public class BranchesDAO {
         return result;
     }
 
-    // Get the isActive status of a branch
     public Boolean getBranchActiveStatus(String branchCode) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Branch branch = session.get(Branch.class, branchCode);

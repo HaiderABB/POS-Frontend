@@ -41,7 +41,6 @@ public class SaleItem {
   private double totalPrice;
 
   public SaleItem() {
-    // Default constructor
   }
 
   public SaleItem(Sale sale, Product product, int quantity, double unitPrice) {

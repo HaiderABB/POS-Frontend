@@ -50,20 +50,16 @@ public class EmployeeDAO {
     }
   }
 
-  // Add another employee and update total employees in the branch
   public boolean addEmployee(Employee employee) {
-    // Use try-with-resources to ensure session is automatically closed
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       Transaction transaction = session.beginTransaction();
 
-      // Persist the new employee
       session.persist(employee);
 
-      // Get the associated branch and update total employees
       Branch branch = employee.getBranch();
       if (branch != null) {
         branch.setTotalEmployees(branch.getTotalEmployees() + 1);
-        session.merge(branch); // Merge the updated branch
+        session.merge(branch);
       }
 
       transaction.commit();
@@ -73,14 +69,12 @@ public class EmployeeDAO {
     }
   }
 
-  // Remove an employee
   public boolean removeEmployee(String employeeCode) {
-    // Use try-with-resources to ensure session is automatically closed
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       Transaction transaction = session.beginTransaction();
       Employee employee = session.get(Employee.class, employeeCode);
       if (employee != null) {
-        session.remove(employee); // Use remove to delete the employee
+        session.remove(employee);
         transaction.commit();
         return true;
       }
@@ -90,7 +84,6 @@ public class EmployeeDAO {
     }
   }
 
-  // Fetch all employees with the "Cashier" role
   public List<Employee> getEmployeesByRoleCashier() {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
@@ -101,7 +94,6 @@ public class EmployeeDAO {
     }
   }
 
-  // Fetch all employees with the "Data Entry Operator" role
   public List<Employee> getEmployeesByRoleDataEntryOperator() {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
@@ -137,19 +129,15 @@ public class EmployeeDAO {
 
   public boolean employeeExistsByEmployeeCode(String employeeCode) {
 
-    try (EntityManager entityManager = HibernateUtil.getSessionFactory().createEntityManager() // Ensure EntityManager
-                                                                                               // is closed
-    // Get the EntityManager
-    ) {
-      // Query to check if an employee exists with the same employeeCode
+    try (EntityManager entityManager = HibernateUtil.getSessionFactory().createEntityManager()) {
       Query query = entityManager.createQuery("SELECT COUNT(e) FROM Employee e WHERE e.employeeCode = :employeeCode");
       query.setParameter("employeeCode", employeeCode);
 
       Long count = (Long) query.getSingleResult();
 
-      return count != null && count > 0; // If count is greater than 0, then the employee exists
+      return count != null && count > 0;
     } catch (Exception e) {
-      return false; // Return false in case of any exception
+      return false;
     }
   }
 
