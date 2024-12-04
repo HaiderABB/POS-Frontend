@@ -1,4 +1,4 @@
-package SCD.model.entities;
+package SCD.model.models;
 
 import java.util.Date;
 
@@ -21,6 +21,9 @@ public class Employee {
 
   @Column(name = "password", nullable = false)
   private String password = "first1234";
+
+  @Column(name = "name", nullable = false)
+  private String name;
 
   @Column(name = "role", nullable = false)
   private String role;
@@ -129,5 +132,13 @@ public class Employee {
 
   public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

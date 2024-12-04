@@ -2,97 +2,112 @@ package SCD.model.models;
 
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "vendors")
 public class Vendor {
-    private int vendorId;
-    private String vendor_code; // U
-    private String name; // U
-    private String phone_number; // U
-    private String email; // U
-    private String address; // U
 
-    public Vendor(int vendorId, int branchId, String name, String phone_number, String email, String address) {
-        this.vendorId = vendorId;
-        this.name = name;
-        this.phone_number = phone_number;
-        this.email = email;
-        this.address = address;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "vendor_id")
+  private int vendorId;
 
-    public int getVendorId() {
-        return vendorId;
-    }
+  @Column(name = "vendor_code", nullable = false, unique = true)
+  private String vendorCode;
 
-    public void setVendorId(int vendorId) {
-        this.vendorId = vendorId;
-    }
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  @Column(name = "phone_number", nullable = false)
+  private String phoneNumber;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(name = "address")
+  private String address;
 
-    public String getContactInfo() {
-        return phone_number;
-    }
+  public Vendor() {
+  }
 
-    public void setContactInfo(String phone_number) {
-        this.phone_number = phone_number;
-    }
+  public Vendor(int vendorId, String vendorCode, String name, String phoneNumber, String email, String address) {
+    this.vendorId = vendorId;
+    this.vendorCode = vendorCode;
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public int getVendorId() {
+    return vendorId;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setVendorId(int vendorId) {
+    this.vendorId = vendorId;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public String getVendorCode() {
+    return vendorCode;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public void setVendorCode(String vendorCode) {
+    this.vendorCode = vendorCode;
+  }
 
-    @Override
-    public String toString() {
-        return "Vendor{" +
-                "vendorId=" + vendorId +
-                ", name='" + name + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
+  public String getName() {
+    return name;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Vendor vendor = (Vendor) o;
-        return vendorId == vendor.vendorId &&
-                Objects.equals(name, vendor.name) &&
-                Objects.equals(phone_number, vendor.phone_number) &&
-                Objects.equals(email, vendor.email) &&
-                Objects.equals(address, vendor.address);
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(vendorId, name, phone_number, email, address);
-    }
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-    public String getVendor_code() {
-        return vendor_code;
-    }
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
-    public void setVendor_code(String vendor_code) {
-        this.vendor_code = vendor_code;
-    }
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  @Override
+  public String toString() {
+    return "Vendor{" +
+        "vendorId=" + vendorId +
+        ", vendorCode='" + vendorCode + '\'' +
+        ", name='" + name + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' + '\'' +
+        ", address='" + address + '\'' +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Vendor vendor = (Vendor) o;
+    return vendorId == vendor.vendorId &&
+        Objects.equals(vendorCode, vendor.vendorCode) &&
+        Objects.equals(name, vendor.name) &&
+        Objects.equals(phoneNumber, vendor.phoneNumber) &&
+        Objects.equals(address, vendor.address);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(vendorId, vendorCode, name, phoneNumber, address);
+  }
 }

@@ -2,7 +2,7 @@ package SCD.model.service.SuperAdminService;
 
 import SCD.model.crud.BranchesDAO;
 import SCD.model.crud.EmployeeDAO;
-import SCD.model.entities.Branch;
+import SCD.model.models.Branch;
 import SCD.model.service.AddResponseClass;
 
 public class SuperAdminService {

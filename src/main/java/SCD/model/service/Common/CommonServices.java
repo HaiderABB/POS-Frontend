@@ -2,7 +2,7 @@ package SCD.model.service.Common;
 
 import SCD.model.crud.BranchesDAO;
 import SCD.model.crud.EmployeeDAO;
-import SCD.model.entities.Employee;
+import SCD.model.models.Employee;
 import SCD.model.service.AddResponseClass;
 
 public class CommonServices {

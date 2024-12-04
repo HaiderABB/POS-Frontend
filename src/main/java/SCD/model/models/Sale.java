@@ -3,88 +3,107 @@ package SCD.model.models;
 import java.util.Date;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
+@Entity
+@Table(name = "sales")
 public class Sale {
-    private int sale_id; // incremented in the database
-    private String cashier_code; // Foreign Key to users where role = 'Cashier'
-    private String branch_code; // Foreign Key to branches
-    private double total_amount;
-    private Date saleDate;
 
-    public Sale(int sale_id, String cashier_code, String branch_code, double total_amount, Date saleDate) {
-        this.sale_id = sale_id;
-        this.cashier_code = cashier_code;
-        this.branch_code = branch_code;
-        this.total_amount = total_amount;
-        this.saleDate = saleDate;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY) // Primary key auto-incremented by the database
+  @Column(name = "sale_id")
+  private int saleId;
 
-    public int getSaleId() {
-        return sale_id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "cashier_code", referencedColumnName = "employee_code", nullable = false)
+  private Employee cashier; // Links to the Employee entity (users/employees table)
 
-    public void setSaleId(int sale_id) {
-        this.sale_id = sale_id;
-    }
+  @Column(name = "total_amount", nullable = false)
+  private double totalAmount;
 
-    public double getTotalAmount() {
-        return total_amount;
-    }
+  @Column(name = "sale_date", nullable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date saleDate;
 
-    public void setTotalAmount(double total_amount) {
-        this.total_amount = total_amount;
-    }
+  public Sale() {
+    // Default constructor required by JPA
+  }
 
-    public Date getSaleDate() {
-        return saleDate;
-    }
+  public Sale(Employee cashier, double totalAmount, Date saleDate) {
+    this.cashier = cashier;
+    this.totalAmount = totalAmount;
+    this.saleDate = saleDate;
+  }
 
-    public void setSaleDate(Date saleDate) {
-        this.saleDate = saleDate;
-    }
+  // Getters and Setters
 
-    @Override
-    public String toString() {
-        return "Sale{" +
-                "sale_id=" + sale_id +
-                ", cashier_code=" + cashier_code +
-                ", branch_code=" + branch_code +
-                ", total_amount=" + total_amount +
-                ", saleDate=" + saleDate +
-                '}';
-    }
+  public int getSaleId() {
+    return saleId;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Sale sale = (Sale) o;
-        return sale_id == sale.sale_id &&
-                (cashier_code == null ? sale.cashier_code == null : cashier_code.equals(sale.cashier_code)) &&
-                (branch_code == null ? sale.branch_code == null : branch_code.equals(sale.branch_code)) &&
-                Double.compare(sale.total_amount, total_amount) == 0 &&
-                Objects.equals(saleDate, sale.saleDate);
-    }
+  public void setSaleId(int saleId) {
+    this.saleId = saleId;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(sale_id, cashier_code, branch_code, total_amount, saleDate);
-    }
+  public Employee getCashier() {
+    return cashier;
+  }
 
-    public String getCashierCode() {
-        return cashier_code;
-    }
+  public void setCashier(Employee cashier) {
+    this.cashier = cashier;
+  }
 
-    public void setCashierCode(String cashier_code) {
-        this.cashier_code = cashier_code;
-    }
+  public double getTotalAmount() {
+    return totalAmount;
+  }
 
-    public String getBranchCode() {
-        return branch_code;
-    }
+  public void setTotalAmount(double totalAmount) {
+    this.totalAmount = totalAmount;
+  }
 
-    public void setBranchCode(String branch_code) {
-        this.branch_code = branch_code;
-    }
+  public Date getSaleDate() {
+    return saleDate;
+  }
+
+  public void setSaleDate(Date saleDate) {
+    this.saleDate = saleDate;
+  }
+
+  @Override
+  public String toString() {
+    return "Sale{" +
+        "saleId=" + saleId +
+        ", cashier=" + (cashier != null ? cashier.getEmployeeCode() : "CC-0011") +
+        ", totalAmount=" + totalAmount +
+        ", saleDate=" + saleDate +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Sale sale = (Sale) o;
+    return saleId == sale.saleId &&
+        Double.compare(sale.totalAmount, totalAmount) == 0 &&
+        Objects.equals(cashier, sale.cashier) &&
+        saleDate.equals(sale.saleDate);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(saleId, cashier, totalAmount, saleDate);
+  }
+
 }

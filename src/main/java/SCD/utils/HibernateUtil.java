@@ -3,7 +3,7 @@ package SCD.utils;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import SCD.model.entities.Branch;
+import SCD.model.models.Branch;
 
 public class HibernateUtil {
 

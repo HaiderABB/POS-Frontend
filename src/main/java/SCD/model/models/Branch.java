@@ -1,157 +1,137 @@
 package SCD.model.models;
 
 import java.util.Date;
-import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
+@Entity
+@Table(name = "branches")
 public class Branch {
-    private int branch_id;
-    private String branch_code; // U
-    private String name; // U
-    private String city; // U
-    private String address; // U
-    private String phone; // U
-    private int total_employees;
-    private int created_by;
-    private boolean isActive;
-    private Date createdAt;
 
-    public Branch() {
-        this.createdAt = new Date();
-        this.isActive = true;
-    }
+  @Id
+  @Column(name = "branch_code", nullable = false, unique = true) // Primary key
+  private String branchCode;
 
-    public Branch(int branch_id, String branch_code, String name, String city, String address,
-            String phone, int total_employees, int created_by, boolean isActive, Date createdAt) {
-        this.branch_id = branch_id;
-        this.branch_code = branch_code;
-        this.name = name;
-        this.city = city;
-        this.address = address;
-        this.phone = phone;
-        this.total_employees = total_employees;
-        this.created_by = created_by;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-    }
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    public int getbranch_id() {
-        return branch_id;
-    }
+  @Column(name = "city", nullable = false)
+  private String city;
 
-    public void setbranch_id(int branch_id) {
-        this.branch_id = branch_id;
-    }
+  @Column(name = "address", nullable = false)
+  private String address;
 
-    public String getbranch_code() {
-        return branch_code;
-    }
+  @Column(name = "phone", nullable = false)
+  private String phone;
 
-    public void setbranch_code(String branch_code) {
-        this.branch_code = branch_code;
-    }
+  @Column(name = "total_employees", nullable = false)
+  private int totalEmployees = 0; // Default to 0
 
-    public String getName() {
-        return name;
-    }
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true; // Default to true
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(name = "created_at")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date createdAt;
 
-    public String getCity() {
-        return city;
-    }
+  public Branch() {
+    // Default constructor required by JPA
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public Branch(String branchCode, String name, String city, String address, String phone, int totalEmployees,
+      boolean isActive, Date createdAt) {
+    this.branchCode = branchCode;
+    this.name = name;
+    this.city = city;
+    this.address = address;
+    this.phone = phone;
+    this.totalEmployees = totalEmployees;
+    this.isActive = isActive;
+    this.createdAt = createdAt;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  // Getters and Setters
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getBranchCode() {
+    return branchCode;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setBranchCode(String branchCode) {
+    this.branchCode = branchCode;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public int gettotal_employees() {
-        return total_employees;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void settotal_employees(int total_employees) {
-        this.total_employees = total_employees;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public int getcreated_by() {
-        return created_by;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public void setcreated_by(int created_by) {
-        this.created_by = created_by;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public boolean isActive() {
-        return isActive;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+  public int getTotalEmployees() {
+    return totalEmployees;
+  }
 
-    @Override
-    public String toString() {
-        return "Branch{" +
-                "branch_id=" + branch_id +
-                ", branch_code='" + branch_code + '\'' +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", address='" + address + '\'' +
-                ", phone='" + phone + '\'' +
-                ", total_employees=" + total_employees +
-                ", created_by=" + created_by +
-                ", isActive=" + isActive +
-                ", createdAt=" + createdAt +
-                '}';
-    }
+  public void setTotalEmployees(int totalEmployees) {
+    this.totalEmployees = totalEmployees;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Branch branch = (Branch) o;
-        return branch_id == branch.branch_id &&
-                total_employees == branch.total_employees &&
-                created_by == branch.created_by &&
-                isActive == branch.isActive &&
-                Objects.equals(branch_code, branch.branch_code) &&
-                Objects.equals(name, branch.name) &&
-                Objects.equals(city, branch.city) &&
-                Objects.equals(address, branch.address) &&
-                Objects.equals(phone, branch.phone) &&
-                Objects.equals(createdAt, branch.createdAt);
-    }
+  public boolean isActive() {
+    return isActive;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(branch_id, branch_code, name, city, address, phone, total_employees, created_by, isActive,
-                createdAt);
-    }
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  @Override
+  public String toString() {
+    return "Branch{" +
+        "branchCode='" + branchCode + '\'' +
+        ", name='" + name + '\'' +
+        ", city='" + city + '\'' +
+        ", address='" + address + '\'' +
+        ", phone='" + phone + '\'' +
+        ", totalEmployees=" + totalEmployees +
+        ", isActive=" + isActive +
+        ", createdAt=" + createdAt +
+        '}';
+  }
 }

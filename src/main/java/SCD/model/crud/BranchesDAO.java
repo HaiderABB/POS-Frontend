@@ -6,8 +6,8 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import SCD.model.entities.Branch;
-import SCD.model.entities.Employee;
+import SCD.model.models.Branch;
+import SCD.model.models.Employee;
 import SCD.utils.HibernateUtil;
 
 public class BranchesDAO {

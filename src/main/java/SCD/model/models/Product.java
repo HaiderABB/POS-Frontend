@@ -3,185 +3,191 @@ package SCD.model.models;
 import java.util.Date;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
+@Entity
+@Table(name = "products") // Specify the table name in the database
 public class Product {
-    private int productId;
-    private int vendorId;
-    private int branchId;
-    private String product_code; // U
-    private String name; // U
-    private String category; // U
-    private double originalPrice; // U
-    private double salePrice; // U
-    private double priceByUnit; // U
-    private double priceByCarton; // U
-    private int stock_quantity; // U
-    private Date createdAt;
-    private Date updatedAt;
 
-    public Product(int productId, int vendorId, int branchId, String name, String category,
-            double originalPrice, double salePrice, double priceByUnit,
-            double priceByCarton, int stock_quantity, Date createdAt, Date updatedAt) {
-        this.productId = productId;
-        this.vendorId = vendorId;
-        this.branchId = branchId;
-        this.name = name;
-        this.category = category;
-        this.originalPrice = originalPrice;
-        this.salePrice = salePrice;
-        this.priceByUnit = priceByUnit;
-        this.priceByCarton = priceByCarton;
-        this.stock_quantity = stock_quantity;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+  @Id
+  @Column(name = "product_code", nullable = false, unique = true) // Primary key
+  private String productCode;
 
-    public int getProductId() {
-        return productId;
-    }
+  @ManyToOne(cascade = CascadeType.ALL) // Define the relationship with the Vendor entity
+  @JoinColumn(name = "vendor_code", referencedColumnName = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "fk_vendor_code"))
+  private Vendor vendor; // Reference to the Vendor entity
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
+  @Column(name = "name", nullable = false) // Map the name attribute to a database column
+  private String name;
 
-    public int getVendorId() {
-        return vendorId;
-    }
+  @Column(name = "category") // Map the category attribute to a database column
+  private String category;
 
-    public void setVendorId(int vendorId) {
-        this.vendorId = vendorId;
-    }
+  @Column(name = "original_price", nullable = false) // Map the price attributes to columns
+  private double originalPrice;
 
-    public int getBranchId() {
-        return branchId;
-    }
+  @Column(name = "sale_price", nullable = false)
+  private double salePrice;
 
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
+  @Column(name = "price_by_unit", nullable = false)
+  private double priceByUnit;
 
-    public String getName() {
-        return name;
-    }
+  @Column(name = "price_by_carton", nullable = false)
+  private double priceByCarton;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(name = "stock_quantity", nullable = false)
+  private int stockQuantity;
 
-    public String getCategory() {
-        return category;
-    }
+  @Temporal(TemporalType.TIMESTAMP) // Map the date attribute
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private Date createdAt;
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+  public Product() {
+    // Default constructor required by Hibernate
+  }
 
-    public double getOriginalPrice() {
-        return originalPrice;
-    }
+  public Product(String productCode, Vendor vendor, String name, String category,
+      double originalPrice, double salePrice, double priceByUnit,
+      double priceByCarton, int stockQuantity, Date createdAt) {
+    this.productCode = productCode;
+    this.vendor = vendor;
+    this.name = name;
+    this.category = category;
+    this.originalPrice = originalPrice;
+    this.salePrice = salePrice;
+    this.priceByUnit = priceByUnit;
+    this.priceByCarton = priceByCarton;
+    this.stockQuantity = stockQuantity;
+    this.createdAt = createdAt;
+  }
 
-    public void setOriginalPrice(double originalPrice) {
-        this.originalPrice = originalPrice;
-    }
+  public String getProductCode() {
+    return productCode;
+  }
 
-    public double getSalePrice() {
-        return salePrice;
-    }
+  public void setProductCode(String productCode) {
+    this.productCode = productCode;
+  }
 
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
+  public Vendor getVendor() {
+    return vendor;
+  }
 
-    public double getPriceByUnit() {
-        return priceByUnit;
-    }
+  public void setVendor(Vendor vendor) {
+    this.vendor = vendor;
+  }
 
-    public void setPriceByUnit(double priceByUnit) {
-        this.priceByUnit = priceByUnit;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public double getPriceByCarton() {
-        return priceByCarton;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setPriceByCarton(double priceByCarton) {
-        this.priceByCarton = priceByCarton;
-    }
+  public String getCategory() {
+    return category;
+  }
 
-    public int getStockQuantity() {
-        return stock_quantity;
-    }
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-    public void setStockQuantity(int stock_quantity) {
-        this.stock_quantity = stock_quantity;
-    }
+  public double getOriginalPrice() {
+    return originalPrice;
+  }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+  public void setOriginalPrice(double originalPrice) {
+    this.originalPrice = originalPrice;
+  }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+  public double getSalePrice() {
+    return salePrice;
+  }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
+  public void setSalePrice(double salePrice) {
+    this.salePrice = salePrice;
+  }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+  public double getPriceByUnit() {
+    return priceByUnit;
+  }
 
-    public String getProductCode() {
-        return product_code;
-    }
+  public void setPriceByUnit(double priceByUnit) {
+    this.priceByUnit = priceByUnit;
+  }
 
-    public void setProductCode(String product_code) {
-        this.product_code = product_code;
-    }
+  public double getPriceByCarton() {
+    return priceByCarton;
+  }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", vendorId=" + vendorId +
-                ", branchId=" + branchId +
-                ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
-                ", originalPrice=" + originalPrice +
-                ", salePrice=" + salePrice +
-                ", priceByUnit=" + priceByUnit +
-                ", priceByCarton=" + priceByCarton +
-                ", stock_quantity=" + stock_quantity +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
+  public void setPriceByCarton(double priceByCarton) {
+    this.priceByCarton = priceByCarton;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Product product = (Product) o;
-        return productId == product.productId &&
-                vendorId == product.vendorId &&
-                branchId == product.branchId &&
-                Double.compare(product.originalPrice, originalPrice) == 0 &&
-                Double.compare(product.salePrice, salePrice) == 0 &&
-                Double.compare(product.priceByUnit, priceByUnit) == 0 &&
-                Double.compare(product.priceByCarton, priceByCarton) == 0 &&
-                stock_quantity == product.stock_quantity &&
-                Objects.equals(name, product.name) &&
-                Objects.equals(category, product.category) &&
-                Objects.equals(createdAt, product.createdAt) &&
-                Objects.equals(updatedAt, product.updatedAt);
-    }
+  public int getStockQuantity() {
+    return stockQuantity;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(productId, vendorId, branchId, name, category, originalPrice,
-                salePrice, priceByUnit, priceByCarton, stock_quantity, createdAt, updatedAt);
-    }
+  public void setStockQuantity(int stockQuantity) {
+    this.stockQuantity = stockQuantity;
+  }
 
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  @Override
+  public String toString() {
+    return "Product{" +
+        "productCode='" + productCode + '\'' +
+        ", vendor=" + vendor +
+        ", name='" + name + '\'' +
+        ", category='" + category + '\'' +
+        ", originalPrice=" + originalPrice +
+        ", salePrice=" + salePrice +
+        ", priceByUnit=" + priceByUnit +
+        ", priceByCarton=" + priceByCarton +
+        ", stockQuantity=" + stockQuantity +
+        ", createdAt=" + createdAt +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Product product = (Product) o;
+    return Objects.equals(productCode, product.productCode) &&
+        Objects.equals(vendor, product.vendor) &&
+        Objects.equals(name, product.name) &&
+        Objects.equals(category, product.category) &&
+        Double.compare(product.originalPrice, originalPrice) == 0 &&
+        Double.compare(product.salePrice, salePrice) == 0 &&
+        Double.compare(product.priceByUnit, priceByUnit) == 0 &&
+        Double.compare(product.priceByCarton, priceByCarton) == 0 &&
+        stockQuantity == product.stockQuantity &&
+        Objects.equals(createdAt, product.createdAt);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(productCode, vendor, name, category, originalPrice,
+        salePrice, priceByUnit, priceByCarton, stockQuantity, createdAt);
+  }
 }
