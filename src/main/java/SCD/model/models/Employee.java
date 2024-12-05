@@ -32,9 +32,6 @@ public class Employee {
   @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
   private Branch branch; // Foreign key referring to Branch table
 
-  @Column(name = "email", nullable = false)
-  private String email;
-
   @Column(name = "phone_number", nullable = false)
   private String phoneNumber;
 
@@ -85,14 +82,6 @@ public class Employee {
 
   public void setBranch(Branch branch) {
     this.branch = branch;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public String getPhoneNumber() {

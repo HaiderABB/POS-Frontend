@@ -27,6 +27,10 @@ public class Sale {
   @JoinColumn(name = "cashier_code", referencedColumnName = "employee_code", nullable = false)
   private Employee cashier; // Links to the Employee entity (users/employees table)
 
+  @ManyToOne
+  @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
+  private Branch branch; // Links to the Branch entity (branch table)
+
   @Column(name = "total_amount", nullable = false)
   private double totalAmount;
 
@@ -37,8 +41,9 @@ public class Sale {
   public Sale() {
   }
 
-  public Sale(Employee cashier, double totalAmount, Date saleDate) {
+  public Sale(Employee cashier, Branch branch, double totalAmount, Date saleDate) {
     this.cashier = cashier;
+    this.branch = branch;
     this.totalAmount = totalAmount;
     this.saleDate = saleDate;
   }
@@ -61,6 +66,14 @@ public class Sale {
     this.cashier = cashier;
   }
 
+  public Branch getBranch() {
+    return branch;
+  }
+
+  public void setBranch(Branch branch) {
+    this.branch = branch;
+  }
+
   public double getTotalAmount() {
     return totalAmount;
   }
@@ -81,7 +94,8 @@ public class Sale {
   public String toString() {
     return "Sale{" +
         "saleId=" + saleId +
-        ", cashier=" + (cashier != null ? cashier.getEmployeeCode() : "CC-0011") +
+        ", cashier=" + (cashier != null ? cashier.getEmployeeCode() : "Unknown") +
+        ", branch=" + (branch != null ? branch.getBranchCode() : "Unknown") +
         ", totalAmount=" + totalAmount +
         ", saleDate=" + saleDate +
         '}';
@@ -97,12 +111,12 @@ public class Sale {
     return saleId == sale.saleId &&
         Double.compare(sale.totalAmount, totalAmount) == 0 &&
         Objects.equals(cashier, sale.cashier) &&
+        Objects.equals(branch, sale.branch) &&
         saleDate.equals(sale.saleDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(saleId, cashier, totalAmount, saleDate);
+    return Objects.hash(saleId, cashier, branch, totalAmount, saleDate);
   }
-
 }

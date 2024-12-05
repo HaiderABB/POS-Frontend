@@ -64,19 +64,14 @@ public class ProductDAO {
     return result;
   }
 
-  public boolean updateProduct(Product product) {
-    boolean result = false;
-    Transaction transaction = null;
+  public List<Product> getAllProductsSortedByCode() {
+    List<Product> products = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      transaction = session.beginTransaction();
-      session.merge(product);
-      transaction.commit();
-      result = true;
+      products = session.createQuery("from Product p order by p.productCode asc", Product.class).list();
     } catch (Exception e) {
-      if (transaction != null) {
-        transaction.rollback();
-      }
+
     }
-    return result;
+    return products;
   }
+
 }
