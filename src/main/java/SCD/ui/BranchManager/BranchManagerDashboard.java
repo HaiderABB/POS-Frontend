@@ -4,8 +4,6 @@ import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class BranchManagerDashboard extends JFrame {
 
@@ -24,13 +22,10 @@ public class BranchManagerDashboard extends JFrame {
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         add(contentPanel, BorderLayout.CENTER);
+
         navBar = new NavBar();
         contentPanel.add(navBar, BorderLayout.NORTH);
-
-        // Set initial NavBar title
         navBar.setTitle("Branch Manager Dashboard");
-
-
 
         mainContent = createMainContent();
         contentPanel.add(mainContent, BorderLayout.CENTER);
@@ -38,57 +33,36 @@ public class BranchManagerDashboard extends JFrame {
         setLocationRelativeTo(null);
     }
 
-
-
     private JPanel createMainContent() {
-        JPanel mainContent = new JPanel(new GridLayout(2, 2, 20, 20));
+        JPanel mainContent = new JPanel();
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Manage Staff", "C:\\Users\\AMMAR\\Desktop\\icons\\staff.png", this::openManageStaffPage));
-        mainContent.add(createCard("View Sales Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\sales.png", this::openViewSalesReportsPage));
-        mainContent.add(createCard("Inventory Management", "C:\\Users\\AMMAR\\Desktop\\icons\\inventory.png", this::openInventoryManagementPage));
-        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png", this::openSettingsPage));
+        JLabel welcomeLabel = new JLabel("Welcome to the Branch Manager Dashboard");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextArea responsibilityArea = new JTextArea(
+                "Responsibilities of the Branch Manager:\n\n" +
+                        "1. Manage cashiers within the branch.\n" +
+                        "2. Oversee data entry operators for accurate record maintenance.\n" +
+                        "3. Ensure proper branch operations and data integrity.\n" +
+                        "4. Collaborate with the central team to meet operational goals.\n" +
+                        "5. Handle any branch-level issues and ensure smooth workflows."
+        );
+        responsibilityArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        responsibilityArea.setEditable(false);
+        responsibilityArea.setWrapStyleWord(true);
+        responsibilityArea.setLineWrap(true);
+        responsibilityArea.setOpaque(false);
+        responsibilityArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        mainContent.add(welcomeLabel);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 20)));
+        mainContent.add(responsibilityArea);
 
         return mainContent;
-    }
-
-    private JButton createCard(String title, String iconPath, ActionListener action) {
-        JButton button = new JButton(title, new ImageIcon(iconPath));
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setVerticalTextPosition(SwingConstants.BOTTOM);
-        button.setFocusPainted(false);
-        button.setBackground(Color.WHITE);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
-        button.addActionListener(action);
-        return button;
-    }
-
-    private void openManageStaffPage(ActionEvent e) {
-        navigateToPage(new ManageStaffPage());
-    }
-
-    private void openViewSalesReportsPage(ActionEvent e) {
-        navigateToPage(new SalesReportsPage());
-    }
-
-    private void openInventoryManagementPage(ActionEvent e) {
-        navigateToPage(new InventoryManagementPage());
-    }
-
-    private void openSettingsPage(ActionEvent e) {
-        navigateToPage(new SettingsPage());
-    }
-
-    private void navigateToPage(JFrame page) {
-        SwingUtilities.invokeLater(() -> {
-            page.setVisible(true);
-            dispose();
-        });
     }
 
     public static void main(String[] args) {

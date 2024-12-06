@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SettingsPage extends JFrame {
-    private Sidebar sidebar;
+    private BranchSidebar sidebar;
     private NavBar navBar;
 
     public SettingsPage() {
@@ -23,7 +23,7 @@ public class SettingsPage extends JFrame {
         setLayout(new BorderLayout());
 
 
-        sidebar = new Sidebar();
+        sidebar = new BranchSidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());

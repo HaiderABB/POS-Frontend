@@ -1,10 +1,12 @@
 package SCD.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import io.github.cdimascio.dotenv.Dotenv;
+//import io.github.cdimascio.dotenv.Dotenv;
 
 public class DBConnection {
     private static final Dotenv dotenv = Dotenv.load();
