@@ -41,6 +41,12 @@ public class Employee {
   @Column(name = "is_first_login")
   private boolean isFirstLogin = true;
 
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true; // New field with default value true
+
+  @Column(name = "email", nullable = false, unique = true)
+  private String email; // New field for email
+
   @Column(name = "created_at")
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdAt;
@@ -50,6 +56,19 @@ public class Employee {
   private Date updatedAt;
 
   public Employee() {
+  }
+
+  public Employee(String employeeCode, String name, String role, Branch branch, String phoneNumber, double salary,
+      String email, Date createdAt, Date updatedAt) {
+    this.employeeCode = employeeCode;
+    this.name = name;
+    this.role = role;
+    this.branch = branch;
+    this.phoneNumber = phoneNumber;
+    this.salary = salary;
+    this.email = email;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   public String getEmployeeCode() {
@@ -108,6 +127,22 @@ public class Employee {
     isFirstLogin = firstLogin;
   }
 
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   public Date getCreatedAt() {
     return createdAt;
   }
@@ -131,4 +166,5 @@ public class Employee {
   public void setName(String name) {
     this.name = name;
   }
+
 }

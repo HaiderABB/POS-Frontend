@@ -32,7 +32,7 @@ public class BranchesDAO {
     }
 
     public Branch getBranchByCode(String branchCode) {
-        Branch b = null;
+        Branch b;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             b = session

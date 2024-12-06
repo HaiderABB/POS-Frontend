@@ -15,24 +15,24 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "products") // Specify the table name in the database
+@Table(name = "products")
 public class Product {
 
   @Id
   @Column(name = "product_code", nullable = false, unique = true) // Primary key
   private String productCode;
 
-  @ManyToOne(cascade = CascadeType.ALL) // Define the relationship with the Vendor entity
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "vendor_code", referencedColumnName = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "fk_vendor_code"))
-  private Vendor vendor; // Reference to the Vendor entity
+  private Vendor vendor;
 
-  @Column(name = "name", nullable = false) // Map the name attribute to a database column
+  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "category") // Map the category attribute to a database column
+  @Column(name = "category")
   private String category;
 
-  @Column(name = "original_price", nullable = false) // Map the price attributes to columns
+  @Column(name = "original_price", nullable = false)
   private double originalPrice;
 
   @Column(name = "sale_price", nullable = false)
@@ -47,9 +47,12 @@ public class Product {
   @Column(name = "stock_quantity", nullable = false)
   private int stockQuantity;
 
-  @Temporal(TemporalType.TIMESTAMP) // Map the date attribute
+  @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "created_at", nullable = false, updatable = false)
   private Date createdAt;
+
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true;
 
   public Product() {
   }
@@ -67,6 +70,7 @@ public class Product {
     this.priceByCarton = priceByCarton;
     this.stockQuantity = stockQuantity;
     this.createdAt = createdAt;
+    this.isActive = true;
   }
 
   public String getProductCode() {
@@ -149,6 +153,14 @@ public class Product {
     this.createdAt = createdAt;
   }
 
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
   @Override
   public String toString() {
     return "Product{" +
@@ -162,6 +174,7 @@ public class Product {
         ", priceByCarton=" + priceByCarton +
         ", stockQuantity=" + stockQuantity +
         ", createdAt=" + createdAt +
+        ", isActive=" + isActive +
         '}';
   }
 
@@ -172,21 +185,22 @@ public class Product {
     if (o == null || getClass() != o.getClass())
       return false;
     Product product = (Product) o;
-    return Objects.equals(productCode, product.productCode) &&
-        Objects.equals(vendor, product.vendor) &&
-        Objects.equals(name, product.name) &&
-        Objects.equals(category, product.category) &&
-        Double.compare(product.originalPrice, originalPrice) == 0 &&
+    return Double.compare(product.originalPrice, originalPrice) == 0 &&
         Double.compare(product.salePrice, salePrice) == 0 &&
         Double.compare(product.priceByUnit, priceByUnit) == 0 &&
         Double.compare(product.priceByCarton, priceByCarton) == 0 &&
         stockQuantity == product.stockQuantity &&
+        isActive == product.isActive &&
+        Objects.equals(productCode, product.productCode) &&
+        Objects.equals(vendor, product.vendor) &&
+        Objects.equals(name, product.name) &&
+        Objects.equals(category, product.category) &&
         Objects.equals(createdAt, product.createdAt);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(productCode, vendor, name, category, originalPrice,
-        salePrice, priceByUnit, priceByCarton, stockQuantity, createdAt);
+        salePrice, priceByUnit, priceByCarton, stockQuantity, createdAt, isActive);
   }
 }

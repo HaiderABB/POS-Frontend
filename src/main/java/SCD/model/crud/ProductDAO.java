@@ -44,22 +44,31 @@ public class ProductDAO {
     return products;
   }
 
-  public boolean deleteProduct(String productCode) {
+  public boolean deactivateProduct(String productCode) {
     boolean result = false;
     Transaction transaction = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
+
+      // Retrieve the product by its productCode
       Product product = session.get(Product.class, productCode);
+
       if (product != null) {
-        session.remove(product);
+        product.setActive(false);
+        session.merge(product);
+
         transaction.commit();
         result = true;
+
+        System.out.println("Product " + productCode + " deactivated successfully.");
+      } else {
+        System.out.println("Product not found with code: " + productCode);
       }
     } catch (Exception e) {
       if (transaction != null) {
         transaction.rollback();
       }
-      return false;
+      e.printStackTrace();
     }
     return result;
   }

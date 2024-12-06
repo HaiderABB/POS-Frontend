@@ -1,11 +1,7 @@
 package SCD.model.models;
 
-import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -14,10 +10,6 @@ import jakarta.persistence.Table;
 public class Vendor {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "vendor_id")
-  private int vendorId;
-
   @Column(name = "vendor_code", nullable = false, unique = true)
   private String vendorCode;
 
@@ -30,23 +22,18 @@ public class Vendor {
   @Column(name = "address")
   private String address;
 
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true; // New field with default value
+
   public Vendor() {
   }
 
-  public Vendor(int vendorId, String vendorCode, String name, String phoneNumber, String email, String address) {
-    this.vendorId = vendorId;
+  public Vendor(String vendorCode, String name, String phoneNumber, String address) {
     this.vendorCode = vendorCode;
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;
-  }
-
-  public int getVendorId() {
-    return vendorId;
-  }
-
-  public void setVendorId(int vendorId) {
-    this.vendorId = vendorId;
+    this.isActive = true; // Default value for parameterized constructor
   }
 
   public String getVendorCode() {
@@ -81,33 +68,22 @@ public class Vendor {
     this.address = address;
   }
 
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
   @Override
   public String toString() {
-    return "Vendor{" +
-        "vendorId=" + vendorId +
-        ", vendorCode='" + vendorCode + '\'' +
+    return "Vendor{'vendorCode='" + vendorCode + '\'' +
         ", name='" + name + '\'' +
-        ", phoneNumber='" + phoneNumber + '\'' + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
         ", address='" + address + '\'' +
+        ", isActive=" + isActive +
         '}';
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-    Vendor vendor = (Vendor) o;
-    return vendorId == vendor.vendorId &&
-        Objects.equals(vendorCode, vendor.vendorCode) &&
-        Objects.equals(name, vendor.name) &&
-        Objects.equals(phoneNumber, vendor.phoneNumber) &&
-        Objects.equals(address, vendor.address);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(vendorId, vendorCode, name, phoneNumber, address);
-  }
 }

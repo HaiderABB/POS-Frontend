@@ -8,17 +8,18 @@ import org.hibernate.Transaction;
 import SCD.model.models.Branch;
 import SCD.model.models.Employee;
 import SCD.utils.HibernateUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 
 public class EmployeeDAO {
 
-  public Employee login(String employeeCode, String password) {
+  public Employee loginWithRole(String employeeCode, String password, String role) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session
-          .createQuery("FROM Employee WHERE employeeCode = :employeeCode AND password = :password", Employee.class)
+          .createQuery(
+              "FROM Employee WHERE employeeCode = :employeeCode AND password = :password AND role = :role AND isActive = true",
+              Employee.class)
           .setParameter("employeeCode", employeeCode)
           .setParameter("password", password)
+          .setParameter("role", role)
           .uniqueResult();
     } catch (Exception e) {
       return null;
@@ -50,6 +51,18 @@ public class EmployeeDAO {
     }
   }
 
+  public boolean isEmailExists(String email) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      Long count = session
+          .createQuery("SELECT COUNT(e) FROM Employee e WHERE e.email = :email AND e.isActive = true", Long.class)
+          .setParameter("email", email)
+          .uniqueResult();
+      return count != null && count > 0;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   public boolean addEmployee(Employee employee) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       Transaction transaction = session.beginTransaction();
@@ -69,17 +82,28 @@ public class EmployeeDAO {
     }
   }
 
-  public boolean removeEmployee(String employeeCode) {
+  public boolean deactivateEmployee(String employeeCode) {
+    Transaction transaction = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      Transaction transaction = session.beginTransaction();
-      Employee employee = session.get(Employee.class, employeeCode);
+      transaction = session.beginTransaction();
+
+      Employee employee = session
+          .createQuery("FROM Employee WHERE employeeCode = :employeeCode", Employee.class)
+          .setParameter("employeeCode", employeeCode)
+          .uniqueResult();
+
       if (employee != null) {
-        session.remove(employee);
+        employee.setActive(false);
+        session.merge(employee);
         transaction.commit();
         return true;
+      } else {
+        return false;
       }
-      return false;
     } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
       return false;
     }
   }
@@ -128,12 +152,11 @@ public class EmployeeDAO {
   }
 
   public boolean employeeExistsByEmployeeCode(String employeeCode) {
-
-    try (EntityManager entityManager = HibernateUtil.getSessionFactory().createEntityManager()) {
-      Query query = entityManager.createQuery("SELECT COUNT(e) FROM Employee e WHERE e.employeeCode = :employeeCode");
-      query.setParameter("employeeCode", employeeCode);
-
-      Long count = (Long) query.getSingleResult();
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      Long count = session
+          .createQuery("SELECT COUNT(e) FROM Employee e WHERE e.employeeCode = :employeeCode", Long.class)
+          .setParameter("employeeCode", employeeCode)
+          .uniqueResult();
 
       return count != null && count > 0;
     } catch (Exception e) {

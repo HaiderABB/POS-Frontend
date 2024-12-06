@@ -15,9 +15,9 @@ public class CommonServices {
     branchesDAO = new BranchesDAO();
   }
 
-  public Employee Login(String emp_code, String password) {
+  public Employee Login(String emp_code, String password, String role) {
 
-    return employeeDAO.login(emp_code, password);
+    return employeeDAO.loginWithRole(emp_code, password, role);
 
   }
 
@@ -35,7 +35,7 @@ public class CommonServices {
 
   public AddResponseClass AddEmployee(Employee employee) {
 
-    boolean res = employeeDAO.employeeExistsByEmployeeCode(employee.getEmployeeCode());
+    boolean res = employeeDAO.isEmailExists(employee.getEmail());
 
     if (res) {
       return new AddResponseClass("Employee already exists", false);
@@ -58,7 +58,7 @@ public class CommonServices {
       return new AddResponseClass("Employee does not exist", false);
     }
 
-    res = employeeDAO.removeEmployee(emp_code);
+    res = employeeDAO.deactivateEmployee(emp_code);
 
     if (!res) {
       return new AddResponseClass("Employee cannot be removed", false);
@@ -66,6 +66,10 @@ public class CommonServices {
 
     return new AddResponseClass("Employee removed successfully", true);
 
+  }
+
+  public String LowerCaseEmail(String email) {
+    return email.toLowerCase();
   }
 
 }
