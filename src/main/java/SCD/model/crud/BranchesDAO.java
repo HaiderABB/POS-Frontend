@@ -12,6 +12,22 @@ import SCD.utils.HibernateUtil;
 
 public class BranchesDAO {
 
+    private static BranchesDAO instance;
+
+    private BranchesDAO() {
+    }
+
+    public static BranchesDAO getInstance() {
+        if (instance == null) {
+            synchronized (BranchesDAO.class) {
+                if (instance == null) {
+                    instance = new BranchesDAO();
+                }
+            }
+        }
+        return instance;
+    }
+
     public boolean addBranch(Branch branch) {
         boolean result;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

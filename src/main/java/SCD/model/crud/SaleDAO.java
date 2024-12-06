@@ -13,6 +13,22 @@ import SCD.utils.HibernateUtil;
 
 public class SaleDAO {
 
+  private static SaleDAO instance;
+
+  private SaleDAO() {
+  }
+
+  public static SaleDAO getInstance() {
+    if (instance == null) {
+      synchronized (SaleDAO.class) {
+        if (instance == null) {
+          instance = new SaleDAO();
+        }
+      }
+    }
+    return instance;
+  }
+
   public boolean addSale(String cashierCode, String branchCode, double totalAmount) {
     boolean result = false;
     Transaction transaction = null;

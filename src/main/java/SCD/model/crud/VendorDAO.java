@@ -13,6 +13,22 @@ import jakarta.persistence.TypedQuery;
 
 public class VendorDAO {
 
+  private static VendorDAO instance;
+
+  private VendorDAO() {
+  }
+
+  public static VendorDAO getInstance() {
+    if (instance == null) {
+      synchronized (VendorDAO.class) {
+        if (instance == null) {
+          instance = new VendorDAO();
+        }
+      }
+    }
+    return instance;
+  }
+
   public Vendor getVendorByCode(String vendorCode) {
     Vendor vendor = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {

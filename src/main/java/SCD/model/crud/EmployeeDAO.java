@@ -11,6 +11,22 @@ import SCD.utils.HibernateUtil;
 
 public class EmployeeDAO {
 
+  private static EmployeeDAO instance;
+
+  private EmployeeDAO() {
+  }
+
+  public static EmployeeDAO getInstance() {
+    if (instance == null) {
+      synchronized (EmployeeDAO.class) {
+        if (instance == null) {
+          instance = new EmployeeDAO();
+        }
+      }
+    }
+    return instance;
+  }
+
   public Employee loginWithRole(String employeeCode, String password, String role) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session

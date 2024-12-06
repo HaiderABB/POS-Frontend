@@ -10,7 +10,7 @@ public class BranchManagerService {
   EmployeeDAO employeeDAO;
 
   public BranchManagerService() {
-    employeeDAO = new EmployeeDAO();
+    employeeDAO = EmployeeDAO.getInstance();
   }
 
   public List<Employee> getDataEntryOperators() {

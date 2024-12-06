@@ -1,18 +1,15 @@
 package SCD.model.service.SuperAdminService;
 
 import SCD.model.crud.BranchesDAO;
-import SCD.model.crud.EmployeeDAO;
 import SCD.model.models.Branch;
 import SCD.model.service.AddResponseClass;
 
 public class SuperAdminService {
 
     BranchesDAO branchesDAO;
-    EmployeeDAO employeeDAO;
 
     public SuperAdminService() {
-        branchesDAO = new BranchesDAO();
-        employeeDAO = new EmployeeDAO();
+        branchesDAO = BranchesDAO.getInstance();
     }
 
     public AddResponseClass createBranch(Branch branch) {

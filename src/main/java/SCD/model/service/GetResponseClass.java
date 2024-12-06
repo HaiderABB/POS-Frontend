@@ -1,20 +1,15 @@
 package SCD.model.service;
 
-public class GetResponseClass {
-  boolean success;
+import java.util.List;
+
+public class GetResponseClass<T> {
+
+  List<T> data;
   String message;
 
-  public GetResponseClass(String message, boolean success) {
-    this.success = success;
+  public GetResponseClass(String message, List<T> data) {
     this.message = message;
-  }
-
-  public boolean isSuccess() {
-    return success;
-  }
-
-  public void setSuccess(boolean success) {
-    this.success = success;
+    this.data = data;
   }
 
   public String getMessage() {
@@ -23,5 +18,13 @@ public class GetResponseClass {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public List<T> getData() {
+    return data;
+  }
+
+  public void setData(List<T> data) {
+    this.data = data;
   }
 }

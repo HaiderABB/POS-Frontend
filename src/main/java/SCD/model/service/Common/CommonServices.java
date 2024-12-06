@@ -11,8 +11,8 @@ public class CommonServices {
   BranchesDAO branchesDAO;
 
   public CommonServices() {
-    employeeDAO = new EmployeeDAO();
-    branchesDAO = new BranchesDAO();
+    employeeDAO = EmployeeDAO.getInstance();
+    branchesDAO = BranchesDAO.getInstance();
   }
 
   public Employee Login(String emp_code, String password, String role) {
