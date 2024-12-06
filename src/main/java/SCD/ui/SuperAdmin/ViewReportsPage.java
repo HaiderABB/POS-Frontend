@@ -38,12 +38,12 @@ public class ViewReportsPage extends JFrame {
         JComboBox<String> reportDurationComboBox = new JComboBox<>(reportDurations);
 
         JLabel reportTypeLabel = new JLabel("Select Report Type:");
-        String[] reportTypes = {"Sales", "Remaining Stock", "Profit"};
+        String[] reportTypes = {"Remaining Stock", "Sales", "Profit"};
         JComboBox<String> reportTypeComboBox = new JComboBox<>(reportTypes);
 
         JLabel branchCodeLabel = new JLabel("Branch Code (Required, BH-1234):");
         JTextField branchCodeField = new JTextField();
-
+        branchCodeField.setEnabled(false); // Disable by default
 
         JLabel startDateLabel = new JLabel("Date From:");
         JSpinner startDateSpinner = new JSpinner(new SpinnerDateModel());
@@ -79,7 +79,6 @@ public class ViewReportsPage extends JFrame {
         JButton generateReportButton = ButtonFactory.createStyledButton("Generate Report");
         buttonPanel.add(generateReportButton);
 
-
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.add(datePanel, BorderLayout.CENTER);
         southPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -91,6 +90,11 @@ public class ViewReportsPage extends JFrame {
 
         setLocationRelativeTo(null);
 
+        // Enable/Disable Branch Code based on Report Type
+        reportTypeComboBox.addActionListener(e -> {
+            String selectedReportType = (String) reportTypeComboBox.getSelectedItem();
+            branchCodeField.setEnabled("Sales".equals(selectedReportType));
+        });
 
         reportDurationComboBox.addActionListener(e -> {
             String selectedDuration = (String) reportDurationComboBox.getSelectedItem();
@@ -102,33 +106,30 @@ public class ViewReportsPage extends JFrame {
             contentPanel.repaint();
         });
 
-        generateReportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedDuration = (String) reportDurationComboBox.getSelectedItem();
-                String selectedReportType = (String) reportTypeComboBox.getSelectedItem();
-                String selectedGraphType = (String) graphTypeComboBox.getSelectedItem();
-                String branchCode = branchCodeField.getText().trim();
+        generateReportButton.addActionListener(e -> {
+            String selectedDuration = (String) reportDurationComboBox.getSelectedItem();
+            String selectedReportType = (String) reportTypeComboBox.getSelectedItem();
+            String selectedGraphType = (String) graphTypeComboBox.getSelectedItem();
+            String branchCode = branchCodeField.getText().trim();
 
-                Date startDate = (Date) startDateSpinner.getValue();
-                Date endDate = (Date) endDateSpinner.getValue();
+            Date startDate = (Date) startDateSpinner.getValue();
+            Date endDate = (Date) endDateSpinner.getValue();
 
-                if (!validateBranchCode(branchCode)) {
-                    JOptionPane.showMessageDialog(ViewReportsPage.this, "Branch Code is required and must follow the format 'BH-1234'.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (!validateInputs(selectedDuration, startDate, endDate)) {
-                    return;
-                }
-
-                String message = "Generating " + selectedReportType + " report for " + selectedDuration +
-                        "\nBranch Code: " + branchCode +
-                        "\nDate From: " + startDate +
-                        "\nDate To: " + endDate +
-                        "\nGraph Type: " + selectedGraphType;
-                JOptionPane.showMessageDialog(ViewReportsPage.this, message, "Info", JOptionPane.INFORMATION_MESSAGE);
+            if ("Sales".equals(selectedReportType) && !validateBranchCode(branchCode)) {
+                JOptionPane.showMessageDialog(ViewReportsPage.this, "Branch Code is required and must follow the format 'BH-1234'.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            if (!validateInputs(selectedDuration, startDate, endDate)) {
+                return;
+            }
+
+            String message = "Generating " + selectedReportType + " report for " + selectedDuration +
+                    "\nBranch Code: " + branchCode +
+                    "\nDate From: " + startDate +
+                    "\nDate To: " + endDate +
+                    "\nGraph Type: " + selectedGraphType;
+            JOptionPane.showMessageDialog(ViewReportsPage.this, message, "Info", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 

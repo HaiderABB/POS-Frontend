@@ -4,21 +4,19 @@ import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SuperAdminDashboard extends JFrame {
 
     private Sidebar sidebar;
     private NavBar navBar;
     private JPanel mainContent;
-    private boolean isSidebarVisible = true;
 
     public SuperAdminDashboard() {
         setTitle("Super Admin Dashboard");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+
 
         sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
@@ -27,9 +25,8 @@ public class SuperAdminDashboard extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
 
         navBar = new NavBar();
-        contentPanel.add(navBar, BorderLayout.NORTH);
-
         navBar.setTitle("Dashboard");
+        contentPanel.add(navBar, BorderLayout.NORTH);
 
         mainContent = createMainContent();
         contentPanel.add(mainContent, BorderLayout.CENTER);
@@ -38,58 +35,35 @@ public class SuperAdminDashboard extends JFrame {
     }
 
     private JPanel createMainContent() {
-        JPanel mainContent = new JPanel(new GridLayout(2, 2, 20, 20));
-        mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel mainContent = new JPanel();
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
+        mainContent.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Manage Branch Managers", "C:\\Users\\AMMAR\\Desktop\\icons\\users.png", this::openManageUsersPage));
-        mainContent.add(createCard("Manage Branches", "C:\\Users\\AMMAR\\Desktop\\icons\\branches.png", this::openManageBranchesPage));
-        mainContent.add(createCard("View Reports", "C:\\Users\\AMMAR\\Desktop\\icons\\reports.png", this::openViewReportsPage));
-        mainContent.add(createCard("System Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png", this::openSystemSettingsPage));
+        JLabel welcomeLabel = new JLabel("Welcome to the Super Admin Dashboard!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextArea responsibilityArea = new JTextArea(
+                "As a Super Admin, you are responsible for:\n\n" +
+                        "1. Managing branches and their details.\n" +
+                        "2. Managing branch managers and their details.\n" +
+                        "3. Monitoring reports for better decision-making.\n" +
+                        "4. Configuring system settings for password Change.\n\n" +
+                        "Navigate through the sidebar to access the respective modules."
+        );
+        responsibilityArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        responsibilityArea.setEditable(false);
+        responsibilityArea.setWrapStyleWord(true);
+        responsibilityArea.setLineWrap(true);
+        responsibilityArea.setOpaque(false);
+        responsibilityArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        mainContent.add(welcomeLabel);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 20)));
+        mainContent.add(responsibilityArea);
 
         return mainContent;
-    }
-
-    private JButton createCard(String title, String iconPath, ActionListener action) {
-        JButton button = new JButton(title, new ImageIcon(iconPath));
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setVerticalTextPosition(SwingConstants.BOTTOM);
-        button.setFocusPainted(false);
-        button.setBackground(Color.WHITE);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
-        button.addActionListener(action);
-        return button;
-    }
-
-    private void openManageUsersPage(ActionEvent e) {
-        navBar.setTitle("Manage Branch Managers");
-        navigateToPage(new ManageUsersPage());
-    }
-
-    private void openManageBranchesPage(ActionEvent e) {
-        navBar.setTitle("Manage Branches");
-        navigateToPage(new ManageBranchesPage());
-    }
-
-    private void openViewReportsPage(ActionEvent e) {
-        navBar.setTitle("View Reports");
-        navigateToPage(new ViewReportsPage());
-    }
-
-    private void openSystemSettingsPage(ActionEvent e) {
-        navBar.setTitle("System Settings");
-        navigateToPage(new SystemSettingsPage());
-    }
-
-    private void navigateToPage(JFrame page) {
-        SwingUtilities.invokeLater(() -> {
-            page.setVisible(true);
-            dispose();
-        });
     }
 
     public static void main(String[] args) {

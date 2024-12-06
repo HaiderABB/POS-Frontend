@@ -1,10 +1,13 @@
 package SCD.ui.SuperAdmin;
 
 import SCD.ui.Common.ButtonFactory;
-import SCD.ui.SuperAdmin.ManageBranchesPage;
-import SCD.ui.SuperAdmin.ManageUsersPage;
-import SCD.ui.SuperAdmin.SystemSettingsPage;
-import SCD.ui.SuperAdmin.ViewReportsPage;
+import SCD.ui.SuperAdmin.ManageBranchManager.AddBranchManagerPage;
+import SCD.ui.SuperAdmin.ManageBranchManager.DeleteBranchManagerPage;
+import SCD.ui.SuperAdmin.ManageBranchManager.ViewBranchManagersPage;
+import SCD.ui.SuperAdmin.ManageBranches.AddBranchPage;
+import SCD.ui.SuperAdmin.ManageBranches.DeleteBranchPage;
+import SCD.ui.SuperAdmin.ManageBranches.ViewBranchesPage;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +15,7 @@ import java.awt.*;
 public class Sidebar extends JPanel {
 
     public Sidebar() {
-        setPreferredSize(new Dimension(200, 700));
+        setPreferredSize(new Dimension(240, 800));
         setBackground(new Color(255, 102, 102));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -21,10 +24,14 @@ public class Sidebar extends JPanel {
         logo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(logo);
 
-
         add(createDashboardButton());
-        add(createManageUsersButton());
-        add(createManageBranchesButton());
+
+        add(createAddBranchButton());
+        add(createDeleteBranchButton());
+        add(createViewBranchesButton());
+        add(createAddBranchManagerButton());
+        add(createDeleteBranchManagerButton());
+        add(createViewBranchManagersButton());
         add(createViewReportsButton());
         add(createSystemSettingsButton());
         add(createLogoutButton());
@@ -36,17 +43,43 @@ public class Sidebar extends JPanel {
         return button;
     }
 
-    private JButton createManageUsersButton() {
-        JButton button = ButtonFactory.createStyledButton("Manage Users");
-        button.addActionListener(e -> openManageUsersPage());
+
+    private JButton createAddBranchButton() {
+        JButton button = ButtonFactory.createStyledButton("Add Branch");
+        button.addActionListener(e -> openAddBranchPage());
         return button;
     }
 
-    private JButton createManageBranchesButton() {
-        JButton button = ButtonFactory.createStyledButton("Manage Branches");
-        button.addActionListener(e -> openManageBranchesPage());
+    private JButton createDeleteBranchButton() {
+        JButton button = ButtonFactory.createStyledButton("Delete Branch");
+        button.addActionListener(e -> openDeleteBranchPage());
         return button;
     }
+
+    private JButton createViewBranchesButton() {
+        JButton button = ButtonFactory.createStyledButton("View Branches");
+        button.addActionListener(e -> openViewBranchesPage());
+        return button;
+    }
+
+    private JButton createAddBranchManagerButton() {
+        JButton button = ButtonFactory.createStyledButton("Add Branch Manager");
+        button.addActionListener(e -> navigateToPage(new AddBranchManagerPage()));
+        return button;
+    }
+
+    private JButton createDeleteBranchManagerButton() {
+        JButton button = ButtonFactory.createStyledButton("Delete Branch Manager");
+        button.addActionListener(e -> navigateToPage(new DeleteBranchManagerPage()));
+        return button;
+    }
+
+    private JButton createViewBranchManagersButton() {
+        JButton button = ButtonFactory.createStyledButton("View Branch Managers");
+        button.addActionListener(e -> navigateToPage(new ViewBranchManagersPage()));
+        return button;
+    }
+
 
     private JButton createViewReportsButton() {
         JButton button = ButtonFactory.createStyledButton("View Reports");
@@ -66,18 +99,32 @@ public class Sidebar extends JPanel {
         return button;
     }
 
-
     private void openDashboard() {
-       navigateToPage(new SuperAdminDashboard());
-
+        navigateToPage(new SuperAdminDashboard());
     }
 
-    private void openManageUsersPage() {
-        navigateToPage(new ManageUsersPage());
+    private void openAddBranchPage() {
+        navigateToPage(new AddBranchPage());
     }
 
-    private void openManageBranchesPage() {
-        navigateToPage(new ManageBranchesPage());
+    private void openDeleteBranchPage() {
+        navigateToPage(new DeleteBranchPage());
+    }
+
+    private void openViewBranchesPage() {
+        navigateToPage(new ViewBranchesPage());
+    }
+
+    private void openAddBranchManagerPage() {
+        navigateToPage(new AddBranchManagerPage());
+    }
+
+    private void openDeleteBranchManagerPage() {
+        navigateToPage(new DeleteBranchManagerPage());
+    }
+
+    private void openViewBranchManagersPage() {
+        navigateToPage(new ViewBranchManagersPage());
     }
 
     private void openViewReportsPage() {
@@ -90,7 +137,6 @@ public class Sidebar extends JPanel {
 
     private void navigateToPage(JFrame page) {
         SwingUtilities.invokeLater(() -> {
-
             Window topLevelWindow = SwingUtilities.getWindowAncestor(this);
             if (topLevelWindow instanceof JFrame) {
                 ((JFrame) topLevelWindow).dispose();
@@ -98,7 +144,6 @@ public class Sidebar extends JPanel {
             page.setVisible(true);
         });
     }
-
 
     private void performLogout() {
         JOptionPane.showMessageDialog(this, "Logging out...");
