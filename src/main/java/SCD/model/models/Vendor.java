@@ -1,95 +1,89 @@
 package SCD.model.models;
 
-import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "vendors")
 public class Vendor {
-    private int vendorId;
-    private String vendor_code; // U
-    private String name; // U
-    private String phone_number; // U
-    private String email; // U
-    private String address; // U
 
-    public Vendor(int vendorId, int branchId, String name, String phone_number, String email, String address) {
-        this.vendorId = vendorId;
-        this.name = name;
-        this.phone_number = phone_number;
-        this.email = email;
-        this.address = address;
-    }
+  @Id
+  @Column(name = "vendor_code", nullable = false, unique = true)
+  private String vendorCode;
 
-    public int getVendorId() {
-        return vendorId;
-    }
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    public void setVendorId(int vendorId) {
-        this.vendorId = vendorId;
-    }
+  @Column(name = "phone_number", nullable = false)
+  private String phoneNumber;
 
-    public String getName() {
-        return name;
-    }
+  @Column(name = "address")
+  private String address;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true; // New field with default value
 
-    public String getContactInfo() {
-        return phone_number;
-    }
+  public Vendor() {
+  }
 
-    public void setContactInfo(String phone_number) {
-        this.phone_number = phone_number;
-    }
+  public Vendor(String vendorCode, String name, String phoneNumber, String address) {
+    this.vendorCode = vendorCode;
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.isActive = true; // Default value for parameterized constructor
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getVendorCode() {
+    return vendorCode;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setVendorCode(String vendorCode) {
+    this.vendorCode = vendorCode;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String toString() {
-        return "Vendor{" +
-                "vendorId=" + vendorId +
-                ", name='" + name + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Vendor vendor = (Vendor) o;
-        return vendorId == vendor.vendorId &&
-                Objects.equals(name, vendor.name) &&
-                Objects.equals(phone_number, vendor.phone_number) &&
-                Objects.equals(email, vendor.email) &&
-                Objects.equals(address, vendor.address);
-    }
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
-    public int hashCode() {
-        return Objects.hash(vendorId, name, phone_number, email, address);
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public String getVendor_code() {
-        return vendor_code;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setVendor_code(String vendor_code) {
-        this.vendor_code = vendor_code;
-    }
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
+  @Override
+  public String toString() {
+    return "Vendor{'vendorCode='" + vendorCode + '\'' +
+        ", name='" + name + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", address='" + address + '\'' +
+        ", isActive=" + isActive +
+        '}';
+  }
+
 }
