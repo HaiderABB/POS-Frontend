@@ -7,6 +7,9 @@ import org.hibernate.Transaction;
 
 import SCD.model.models.Product;
 import SCD.utils.HibernateUtil;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 
 public class ProductDAO {
 
@@ -27,6 +30,9 @@ public class ProductDAO {
   }
 
   public boolean addProduct(Product product) {
+
+    System.out.println("IN THE QUERY");
+
     boolean result = false;
     Transaction transaction = null;
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -36,6 +42,7 @@ public class ProductDAO {
       result = true;
     } catch (Exception e) {
       if (transaction != null) {
+        System.out.println(e.getMessage());
         transaction.rollback();
       }
     }
@@ -52,6 +59,33 @@ public class ProductDAO {
     } catch (Exception e) {
     }
     return product;
+  }
+
+  public void deactivateProductsByVendor(String vendorCode) {
+    Transaction transaction = null;
+
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+
+      CriteriaBuilder cb = session.getCriteriaBuilder();
+      CriteriaUpdate<Product> criteriaUpdate = cb.createCriteriaUpdate(Product.class);
+
+      Root<Product> root = criteriaUpdate.from(Product.class);
+
+      criteriaUpdate.set(root.get("isActive"), false);
+
+      criteriaUpdate.where(cb.equal(root.get("vendorCode").get("vendorCode"), vendorCode));
+
+      int affectedRows = session.createMutationQuery(criteriaUpdate).executeUpdate();
+
+      transaction.commit();
+      System.out.println("Products associated with vendorCode: " + vendorCode + " have been deactivated.");
+      System.out.println("Number of products deactivated: " + affectedRows);
+    } catch (Exception e) {
+      if (transaction != null && transaction.getStatus().canRollback()) {
+        transaction.rollback();
+      }
+    }
   }
 
   public List<Product> getAllActiveProducts() {

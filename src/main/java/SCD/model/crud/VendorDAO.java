@@ -6,10 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import SCD.model.models.Product;
 import SCD.model.models.Vendor;
 import SCD.utils.HibernateUtil;
-import jakarta.persistence.TypedQuery;
 
 public class VendorDAO {
 
@@ -70,33 +68,26 @@ public class VendorDAO {
   public boolean deactivateVendor(String vendorCode) {
     boolean result = false;
     Transaction transaction = null;
+
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
+      // Fetch the vendor
       Vendor vendor = session.get(Vendor.class, vendorCode);
 
-      if (vendor != null) {
-        vendor.setActive(false);
-        session.merge(vendor);
+      // Deactivate the vendor
+      vendor.setActive(false);
+      session.merge(vendor);
+      transaction.commit();
+      result = true;
 
-        String hql = "UPDATE Product p SET p.isActive = false WHERE p.vendor.vendorCode = :vendorCode";
-        TypedQuery<Product> query = session.createQuery(hql, Product.class);
-        query.setParameter("vendorCode", vendorCode);
-        int updatedEntities = query.executeUpdate();
-
-        transaction.commit();
-        result = true;
-
-        System.out.println("Deactivated " + updatedEntities + " products for vendor " + vendorCode);
-      } else {
-        System.out.println("Vendor not found with code: " + vendorCode);
-      }
     } catch (Exception e) {
-      if (transaction != null) {
-        transaction.rollback();
+      if (transaction != null && transaction.getStatus().canRollback()) {
+        transaction.rollback(); // Rollback only if the transaction is active
       }
-
+      e.printStackTrace();
     }
+
     return result;
   }
 

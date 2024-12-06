@@ -14,10 +14,10 @@ public class SuperAdminService {
 
     public AddResponseClass createBranch(Branch branch) {
 
-        Branch br = branchesDAO.getBranchByCode(branch.getBranchCode());
+        boolean br = branchesDAO.doesBranchExistWithPhone(branch.getPhone());
 
-        if (br != null) {
-            return new AddResponseClass("Branch Exists", false);
+        if (br) {
+            return new AddResponseClass("Branch Exists with phone number", false);
         }
         boolean res = branchesDAO.addBranch(branch);
 

@@ -126,7 +126,7 @@ public class EmployeeDAO {
 
   public List<Employee> getEmployeesByRoleCashier() {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
+      return session.createQuery("FROM Employee WHERE role = :role AND isActive = true", Employee.class)
           .setParameter("role", "CASHIER")
           .getResultList();
     } catch (Exception e) {
@@ -136,7 +136,7 @@ public class EmployeeDAO {
 
   public List<Employee> getEmployeesByRoleDataEntryOperator() {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-      return session.createQuery("FROM Employee WHERE role = :role", Employee.class)
+      return session.createQuery("FROM Employee WHERE role = :role AND isActive = true", Employee.class)
           .setParameter("role", "DATA_ENTRY_OPERATOR")
           .getResultList();
     } catch (Exception e) {

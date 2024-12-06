@@ -1,6 +1,5 @@
 package SCD.model.crud;
 
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -33,7 +32,6 @@ public class BranchesDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                branch.setCreatedAt(new Date());
                 session.persist(branch);
                 transaction.commit();
                 result = true;
@@ -111,6 +109,22 @@ public class BranchesDAO {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public boolean doesBranchExistWithPhone(String phone) {
+        boolean exists = false;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Branch b WHERE b.phone = :phone";
+            Branch branch = session.createQuery(hql, Branch.class)
+                    .setParameter("phone", phone)
+                    .uniqueResult();
+
+            if (branch != null) {
+                exists = true;
+            }
+        } catch (Exception e) {
+        }
+        return exists;
     }
 
 }

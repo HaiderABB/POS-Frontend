@@ -1,15 +1,11 @@
 package SCD.model.models;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "employees")
@@ -47,19 +43,11 @@ public class Employee {
   @Column(name = "email", nullable = false, unique = true)
   private String email; // New field for email
 
-  @Column(name = "created_at")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date createdAt;
-
-  @Column(name = "updated_at")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date updatedAt;
-
   public Employee() {
   }
 
   public Employee(String employeeCode, String name, String role, Branch branch, String phoneNumber, double salary,
-      String email, Date createdAt, Date updatedAt) {
+      String email) {
     this.employeeCode = employeeCode;
     this.name = name;
     this.role = role;
@@ -67,8 +55,6 @@ public class Employee {
     this.phoneNumber = phoneNumber;
     this.salary = salary;
     this.email = email;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 
   public String getEmployeeCode() {
@@ -143,22 +129,6 @@ public class Employee {
     this.email = email;
   }
 
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public Date getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(Date updatedAt) {
-    this.updatedAt = updatedAt;
-  }
-
   public String getName() {
     return name;
   }
@@ -167,4 +137,18 @@ public class Employee {
     this.name = name;
   }
 
+  @Override
+  public String toString() {
+    return "Employee{" +
+        "employeeCode='" + employeeCode + '\'' +
+        ", name='" + name + '\'' +
+        ", role='" + role + '\'' +
+        ", branch=" + (branch != null ? branch.getBranchCode() : "null") + // Assuming Branch has a method getBranchCode
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", salary=" + salary +
+        ", isFirstLogin=" + isFirstLogin +
+        ", isActive=" + isActive +
+        ", email='" + email + '\'' +
+        '}';
+  }
 }

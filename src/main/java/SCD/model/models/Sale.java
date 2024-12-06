@@ -1,6 +1,5 @@
 package SCD.model.models;
 
-import java.util.Date;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -11,8 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "sales")
@@ -34,18 +31,13 @@ public class Sale {
   @Column(name = "total_amount", nullable = false)
   private double totalAmount;
 
-  @Column(name = "sale_date", nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date saleDate;
-
   public Sale() {
   }
 
-  public Sale(Employee cashier, Branch branch, double totalAmount, Date saleDate) {
+  public Sale(Employee cashier, Branch branch, double totalAmount) {
     this.cashier = cashier;
     this.branch = branch;
     this.totalAmount = totalAmount;
-    this.saleDate = saleDate;
   }
 
   // Getters and Setters
@@ -82,14 +74,6 @@ public class Sale {
     this.totalAmount = totalAmount;
   }
 
-  public Date getSaleDate() {
-    return saleDate;
-  }
-
-  public void setSaleDate(Date saleDate) {
-    this.saleDate = saleDate;
-  }
-
   @Override
   public String toString() {
     return "Sale{" +
@@ -97,7 +81,7 @@ public class Sale {
         ", cashier=" + (cashier != null ? cashier.getEmployeeCode() : "Unknown") +
         ", branch=" + (branch != null ? branch.getBranchCode() : "Unknown") +
         ", totalAmount=" + totalAmount +
-        ", saleDate=" + saleDate +
+        ", saleDate=" +
         '}';
   }
 
@@ -111,12 +95,11 @@ public class Sale {
     return saleId == sale.saleId &&
         Double.compare(sale.totalAmount, totalAmount) == 0 &&
         Objects.equals(cashier, sale.cashier) &&
-        Objects.equals(branch, sale.branch) &&
-        saleDate.equals(sale.saleDate);
+        Objects.equals(branch, sale.branch);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(saleId, cashier, branch, totalAmount, saleDate);
+    return Objects.hash(saleId, cashier, branch, totalAmount);
   }
 }

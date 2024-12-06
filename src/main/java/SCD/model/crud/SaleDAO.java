@@ -1,6 +1,5 @@
 package SCD.model.crud;
 
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -48,7 +47,7 @@ public class SaleDAO {
         return false;
       }
 
-      Sale sale = new Sale(cashier, branch, totalAmount, new Date());
+      Sale sale = new Sale(cashier, branch, totalAmount);
 
       session.persist(sale);
       transaction.commit();

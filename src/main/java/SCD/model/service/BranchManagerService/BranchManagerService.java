@@ -4,6 +4,7 @@ import java.util.List;
 
 import SCD.model.crud.EmployeeDAO;
 import SCD.model.models.Employee;
+import SCD.model.service.GetResponseClass;
 
 public class BranchManagerService {
 
@@ -13,19 +14,29 @@ public class BranchManagerService {
     employeeDAO = EmployeeDAO.getInstance();
   }
 
-  public List<Employee> getDataEntryOperators() {
+  public GetResponseClass<Employee> getDataEntryOperators() {
 
     List<Employee> emps = employeeDAO.getEmployeesByRoleDataEntryOperator();
 
-    return emps;
+    if (emps.isEmpty()) {
+      return new GetResponseClass<>("Employees not found", emps);
+
+    }
+
+    return new GetResponseClass<>("Employees found", emps);
 
   }
 
-  public List<Employee> getCashiers() {
+  public GetResponseClass<Employee> getCashiers() {
 
     List<Employee> emps = employeeDAO.getEmployeesByRoleCashier();
 
-    return emps;
+    if (emps.isEmpty()) {
+      return new GetResponseClass<>("Employees not found", emps);
+
+    }
+
+    return new GetResponseClass<>("Employees found", emps);
 
   }
 

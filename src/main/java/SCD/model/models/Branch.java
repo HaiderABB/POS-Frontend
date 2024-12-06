@@ -1,13 +1,9 @@
 package SCD.model.models;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "branches")
@@ -35,23 +31,16 @@ public class Branch {
   @Column(name = "is_active", nullable = false)
   private boolean isActive = true; // Default to true
 
-  @Column(name = "created_at")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date createdAt;
-
   public Branch() {
   }
 
-  public Branch(String branchCode, String name, String city, String address, String phone, int totalEmployees,
-      boolean isActive, Date createdAt) {
+  public Branch(String branchCode, String name, String city, String address, String phone) {
     this.branchCode = branchCode;
     this.name = name;
     this.city = city;
     this.address = address;
     this.phone = phone;
-    this.totalEmployees = totalEmployees;
-    this.isActive = isActive;
-    this.createdAt = createdAt;
+
   }
 
   // Getters and Setters
@@ -112,14 +101,6 @@ public class Branch {
     isActive = active;
   }
 
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
   @Override
   public String toString() {
     return "Branch{" +
@@ -130,7 +111,6 @@ public class Branch {
         ", phone='" + phone + '\'' +
         ", totalEmployees=" + totalEmployees +
         ", isActive=" + isActive +
-        ", createdAt=" + createdAt +
         '}';
   }
 }

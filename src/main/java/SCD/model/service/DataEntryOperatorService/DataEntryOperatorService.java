@@ -38,6 +38,7 @@ public class DataEntryOperatorService {
 
     Vendor ven;
     ven = vendorDAO.getVendorByCode(product.getVendor().getVendorCode());
+    System.err.println(ven.getVendorCode());
 
     if (ven == null) {
       return new AddResponseClass("Could not find Vendor", false);
@@ -61,9 +62,9 @@ public class DataEntryOperatorService {
     List<Product> products = productDAO.getAllActiveProducts();
 
     if (products.isEmpty()) {
-      return new GetResponseClass<>("No Vendors", products);
+      return new GetResponseClass<>("No Products", products);
     }
-    return new GetResponseClass<>("Found Vendors", products);
+    return new GetResponseClass<>("Found Products", products);
   }
 
   public AddResponseClass removeProduct(String code) {
@@ -88,6 +89,9 @@ public class DataEntryOperatorService {
     if (ven == null) {
       return new AddResponseClass("Could not find vendor", false);
     }
+
+    vendorDAO.deactivateVendor(code);
+    productDAO.deactivateProductsByVendor(code);
 
     return new AddResponseClass("Vendor removed", true);
 

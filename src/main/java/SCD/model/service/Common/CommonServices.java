@@ -21,7 +21,7 @@ public class CommonServices {
 
   }
 
-  public boolean setActiveStatus(String emp_code) {
+  public boolean setFirstLoginStatus(String emp_code) {
 
     return employeeDAO.setFirstLoginToFalse(emp_code);
 
@@ -45,6 +45,7 @@ public class CommonServices {
       return new AddResponseClass("Branch does not exist", false);
     }
 
+    employee.setEmail(LowerCaseEmail(employee.getEmail()));
     employeeDAO.addEmployee(employee);
 
     return new AddResponseClass("Employee added successfully", true);

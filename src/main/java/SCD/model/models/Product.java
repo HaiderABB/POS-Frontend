@@ -1,9 +1,5 @@
 package SCD.model.models;
 
-import java.util.Date;
-import java.util.Objects;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -11,20 +7,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "products")
 public class Product {
 
   @Id
-  @Column(name = "product_code", nullable = false, unique = true) // Primary key
+  @Column(name = "product_code", nullable = false, unique = true)
   private String productCode;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "vendor_code", referencedColumnName = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "fk_vendor_code"))
-  private Vendor vendor;
+  // Define the foreign key relationship with Vendor
+  @ManyToOne
+  @JoinColumn(name = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "FK_product_vendor"))
+  private Vendor vendorCode;
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -47,21 +42,17 @@ public class Product {
   @Column(name = "stock_quantity", nullable = false)
   private int stockQuantity;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private Date createdAt;
-
   @Column(name = "is_active", nullable = false)
   private boolean isActive = true;
 
   public Product() {
   }
 
-  public Product(String productCode, Vendor vendor, String name, String category,
+  public Product(String productCode, Vendor vendorCode, String name, String category,
       double originalPrice, double salePrice, double priceByUnit,
-      double priceByCarton, int stockQuantity, Date createdAt) {
+      double priceByCarton, int stockQuantity) {
     this.productCode = productCode;
-    this.vendor = vendor;
+    this.vendorCode = vendorCode;
     this.name = name;
     this.category = category;
     this.originalPrice = originalPrice;
@@ -69,7 +60,6 @@ public class Product {
     this.priceByUnit = priceByUnit;
     this.priceByCarton = priceByCarton;
     this.stockQuantity = stockQuantity;
-    this.createdAt = createdAt;
     this.isActive = true;
   }
 
@@ -79,14 +69,6 @@ public class Product {
 
   public void setProductCode(String productCode) {
     this.productCode = productCode;
-  }
-
-  public Vendor getVendor() {
-    return vendor;
-  }
-
-  public void setVendor(Vendor vendor) {
-    this.vendor = vendor;
   }
 
   public String getName() {
@@ -145,14 +127,6 @@ public class Product {
     this.stockQuantity = stockQuantity;
   }
 
-  public Date getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Date createdAt) {
-    this.createdAt = createdAt;
-  }
-
   public boolean isActive() {
     return isActive;
   }
@@ -165,7 +139,7 @@ public class Product {
   public String toString() {
     return "Product{" +
         "productCode='" + productCode + '\'' +
-        ", vendor=" + vendor +
+        ", vendorCode='" + vendorCode + '\'' +
         ", name='" + name + '\'' +
         ", category='" + category + '\'' +
         ", originalPrice=" + originalPrice +
@@ -173,34 +147,15 @@ public class Product {
         ", priceByUnit=" + priceByUnit +
         ", priceByCarton=" + priceByCarton +
         ", stockQuantity=" + stockQuantity +
-        ", createdAt=" + createdAt +
         ", isActive=" + isActive +
         '}';
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-    Product product = (Product) o;
-    return Double.compare(product.originalPrice, originalPrice) == 0 &&
-        Double.compare(product.salePrice, salePrice) == 0 &&
-        Double.compare(product.priceByUnit, priceByUnit) == 0 &&
-        Double.compare(product.priceByCarton, priceByCarton) == 0 &&
-        stockQuantity == product.stockQuantity &&
-        isActive == product.isActive &&
-        Objects.equals(productCode, product.productCode) &&
-        Objects.equals(vendor, product.vendor) &&
-        Objects.equals(name, product.name) &&
-        Objects.equals(category, product.category) &&
-        Objects.equals(createdAt, product.createdAt);
+  public Vendor getVendor() {
+    return vendorCode;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(productCode, vendor, name, category, originalPrice,
-        salePrice, priceByUnit, priceByCarton, stockQuantity, createdAt, isActive);
+  public void setVendor(Vendor vendor) {
+    this.vendorCode = vendor;
   }
 }
