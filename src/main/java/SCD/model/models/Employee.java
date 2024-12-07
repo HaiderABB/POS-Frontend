@@ -1,5 +1,7 @@
 package SCD.model.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,7 +28,7 @@ public class Employee {
 
   @ManyToOne
   @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
-  private Branch branch; // Foreign key referring to Branch table
+  private Branch branch;
 
   @Column(name = "phone_number", nullable = false)
   private String phoneNumber;
@@ -38,10 +40,16 @@ public class Employee {
   private boolean isFirstLogin = true;
 
   @Column(name = "is_active", nullable = false)
-  private boolean isActive = true; // New field with default value true
+  private boolean isActive = true;
 
   @Column(name = "email", nullable = false, unique = true)
-  private String email; // New field for email
+  private String email;
+
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   public Employee() {
   }
@@ -55,6 +63,8 @@ public class Employee {
     this.phoneNumber = phoneNumber;
     this.salary = salary;
     this.email = email;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   public String getEmployeeCode() {
@@ -137,18 +147,36 @@ public class Employee {
     this.name = name;
   }
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public String toString() {
     return "Employee{" +
         "employeeCode='" + employeeCode + '\'' +
         ", name='" + name + '\'' +
         ", role='" + role + '\'' +
-        ", branch=" + (branch != null ? branch.getBranchCode() : "null") + // Assuming Branch has a method getBranchCode
+        ", branch=" + (branch != null ? branch.getBranchCode() : "null") +
         ", phoneNumber='" + phoneNumber + '\'' +
         ", salary=" + salary +
         ", isFirstLogin=" + isFirstLogin +
         ", isActive=" + isActive +
         ", email='" + email + '\'' +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
         '}';
   }
 }
