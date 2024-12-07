@@ -5,6 +5,7 @@ import SCD.ui.Common.ButtonFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 public class ViewProductsPage extends JFrame {
 
@@ -33,15 +34,11 @@ public class ViewProductsPage extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.WHITE);
 
-        String[] columnNames = {"Name", "Category", "Original Price", "Sale Price", "Price by Unit", "Price by Carton"};
+        String[] columnNames = {"Name", "Category", "Original Price", "Sale Price", "Price by Unit", "Price by Carton", "Stock Quantity"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable productTable = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(productTable);
         mainPanel.add(tableScrollPane, BorderLayout.CENTER);
-
-        // Sample data
-        tableModel.addRow(new Object[]{"Product A", "Category 1", "10.00", "12.00", "1.00", "10.00"});
-        tableModel.addRow(new Object[]{"Product B", "Category 2", "20.00", "25.00", "2.50", "20.00"});
 
         add(mainPanel, BorderLayout.CENTER);
 
@@ -62,9 +59,25 @@ public class ViewProductsPage extends JFrame {
         setVisible(true);
     }
 
+    public void populateTable(List<Product> products) {
+        tableModel.setRowCount(0); // Clear existing data
+        for (Product product : products) {
+            tableModel.addRow(new Object[]{
+                    product.getName(),
+                    product.getCategory(),
+                    product.getOriginalPrice(),
+                    product.getSalePrice(),
+                    product.getPriceByUnit(),
+                    product.getPriceByCarton(),
+                    product.getStockQuantity()
+            });
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new ViewProductsPage().setVisible(true);
+            ViewProductsPage frame = new ViewProductsPage();
+            frame.setVisible(true);
         });
     }
 }

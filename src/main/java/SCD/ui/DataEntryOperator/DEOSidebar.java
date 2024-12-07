@@ -8,7 +8,7 @@ import java.awt.*;
 public class DEOSidebar extends JPanel {
 
     public DEOSidebar() {
-        setPreferredSize(new Dimension(200, 700));
+        setPreferredSize(new Dimension(240, 800)); // Set the same size as the SuperAdmin sidebar
         setBackground(new Color(255, 102, 102));
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -53,12 +53,12 @@ public class DEOSidebar extends JPanel {
     }
 
     private void openAddProductPage() {
-    navigateToPage(new AddProductPage());
+        navigateToPage(new AddProductPage());
     }
 
     private void openRemoveVendorPage() {
         navigateToPage(new RemoveVendorPage());
-        }
+    }
 
     private void openRemoveProductPage() {
         navigateToPage(new RemoveProductPage());

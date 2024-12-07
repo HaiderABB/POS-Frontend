@@ -1,9 +1,9 @@
 package SCD.ui.DataEntryOperator;
 
 import SCD.ui.Common.ButtonFactory;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.regex.Pattern;
 
 public class RemoveProductPage extends JFrame {
 
@@ -49,6 +49,17 @@ public class RemoveProductPage extends JFrame {
 
         JButton removeButton = ButtonFactory.createStyledButton("Remove");
         removeButton.addActionListener(e -> {
+            String productId = productIdField.getText().trim();
+
+            if (!validateProductId(productId)) {
+                return;
+            }
+
+            if (!checkProductExists(productId)) {
+                JOptionPane.showMessageDialog(this, "Product ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             // Implement remove logic here
             JOptionPane.showMessageDialog(this, "Product Removed Successfully!");
         });
@@ -64,6 +75,26 @@ public class RemoveProductPage extends JFrame {
 
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
+    }
+
+    private boolean validateProductId(String productId) {
+        if (productId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a Product ID!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!Pattern.matches("PM-\\d{4}", productId)) {
+            JOptionPane.showMessageDialog(this, "Product ID must follow the format 'PM-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkProductExists(String productId) {
+        // Placeholder for database check
+        // Replace with actual database call
+        return productId.equals("PM-0001"); // Example: only "PM-0001" exists
     }
 
     public static void main(String[] args) {
