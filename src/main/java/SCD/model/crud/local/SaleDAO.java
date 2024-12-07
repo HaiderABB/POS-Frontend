@@ -1,4 +1,4 @@
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -88,6 +88,14 @@ public class SaleDAO {
     }
 
     return sales;
+  }
+
+  public Sale getSaleById(Long saleId) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      return session.get(Sale.class, saleId);
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   // Method to get all sales for a specific day and branch

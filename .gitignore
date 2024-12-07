@@ -39,3 +39,5 @@ build/
 .env
 reqs.txt
 src/main/resources/hibernate-remote.cfg.xml
+src/main/java/SCD/utils/HibernateUtil.java
+src/main/java/SCD/utils/HibernateUtil.java

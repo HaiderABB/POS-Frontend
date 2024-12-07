@@ -1,11 +1,12 @@
 package SCD.model.service;
 
-import SCD.model.crud.CodesDAO;
+import SCD.model.crud.local.CodesDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Codes;
 import SCD.model.models.Employee;
 import SCD.model.service.Common.CommonServices;
 import SCD.model.service.SuperAdminService.SuperAdminService;
+import SCD.model.service.SyncService.DataSync;
 
 public class TestService {
 
@@ -14,6 +15,7 @@ public class TestService {
                 CommonServices commonServices = new CommonServices();
                 SuperAdminService superAdminService = new SuperAdminService();
                 CodesDAO codesDAO = CodesDAO.getInstance();
+                DataSync dataSync = new DataSync();
 
                 Codes codes1 = new Codes("0000", "EMPLOYEES");
                 Codes codes2 = new Codes("0000", "BRANCHES");
@@ -34,6 +36,8 @@ public class TestService {
                                 "haider.a.moazzam@gmail.com");
 
                 commonServices.AddEmployee(employee);
+
+                dataSync.syncData();
 
         }
 

@@ -9,13 +9,17 @@ import SCD.model.models.Branch;
 public class HibernateUtil {
 
   private static final SessionFactory sessionFactory;
+  private static final SessionFactory remoteSessionFactory;
 
   static {
     try {
-      // Create the SessionFactory using Hibernate Configuration
+
+      remoteSessionFactory = new Configuration().configure("hibernate-remote.cfg.xml").addAnnotatedClass(Branch.class)
+          .buildSessionFactory();
+
       sessionFactory = new Configuration()
-          .configure("hibernate.cfg.xml") // This file contains Hibernate settings
-          .addAnnotatedClass(Branch.class) // Add your annotated entity classes here
+          .configure("hibernate.cfg.xml")
+          .addAnnotatedClass(Branch.class)
           .buildSessionFactory();
     } catch (HibernateException ex) {
       System.err.println("Initial SessionFactory creation failed." + ex);
@@ -27,17 +31,25 @@ public class HibernateUtil {
     return sessionFactory;
   }
 
+  public static SessionFactory getRemoteSessionFactory() {
+    return remoteSessionFactory;
+  }
+
   public static void shutdown() {
     // Close the SessionFactory when the application terminates
-    getSessionFactory().close();
+    if (sessionFactory != null) {
+      sessionFactory.close();
+    }
+    if (remoteSessionFactory != null) {
+      remoteSessionFactory.close();
+    }
   }
 
   public static void main(String[] args) {
-    // Attempt to get the SessionFactory
     try {
-      SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+      SessionFactory session = HibernateUtil.getRemoteSessionFactory();
 
-      if (sessionFactory != null) {
+      if (session != null) {
         System.out.println("SessionFactory successfully created.");
       } else {
         System.err.println("Failed to create SessionFactory.");

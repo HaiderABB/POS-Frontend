@@ -36,6 +36,8 @@
         <mapping class="SCD.model.models.Vendor"/>
         <mapping class="SCD.model.models.SaleItem"/>
         <mapping class="SCD.model.models.Codes"/>
+        <mapping class="SCD.model.models.SyncTable"/>
+
 
 
 

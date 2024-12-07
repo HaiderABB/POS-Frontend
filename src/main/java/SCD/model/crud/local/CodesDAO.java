@@ -1,5 +1,5 @@
 
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

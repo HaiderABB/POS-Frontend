@@ -2,27 +2,31 @@ package SCD.model.service.CashierService;
 
 import java.util.List;
 
-import SCD.model.crud.ProductDAO;
-import SCD.model.crud.SaleDAO;
-import SCD.model.crud.SaleItemDAO;
+import SCD.model.crud.local.ProductDAO;
+import SCD.model.crud.local.SaleDAO;
+import SCD.model.crud.local.SaleItemDAO;
+import SCD.model.crud.local.SyncTableDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Employee;
 import SCD.model.models.Product;
 import SCD.model.models.Sale;
 import SCD.model.models.SaleItem;
-import SCD.model.service.AddResponseJSON;
-import SCD.model.service.SaleItemJSON;
+import SCD.model.models.SyncTable;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.Json.SaleItemJSON;
 
 public class CashierService {
 
   ProductDAO productDAO;
   SaleDAO saleDAO;
   SaleItemDAO saleItemDAO;
+  SyncTableDAO syncTableDAO;
 
   public CashierService() {
     productDAO = ProductDAO.getInstance();
     saleDAO = SaleDAO.getInstance();
     saleItemDAO = SaleItemDAO.getInstance();
+    syncTableDAO = SyncTableDAO.getInstance();
   }
 
   public double GenerateBill(List<SaleItem> saleItems) {
@@ -112,6 +116,9 @@ public class CashierService {
       return new AddResponseJSON("Error Creating Sale", false);
     }
 
+    SyncTable s1 = new SyncTable("SALES", "INSERT", String.valueOf(sale.getSaleId()));
+    syncTableDAO.addSyncTable(s1);
+
     for (SaleItem sl : saleItems) {
       sl.setSale(sale);
 
@@ -119,6 +126,14 @@ public class CashierService {
 
     boolean result = saleItemDAO.addSaleItems(saleItems);
     if (result) {
+
+      for (SaleItem sl : saleItems) {
+
+        SyncTable s2 = new SyncTable("SALE_ITEMS", "INSERT", String.valueOf(sl.getSaleItemId()));
+        syncTableDAO.addSyncTable(s2);
+
+      }
+
       return new AddResponseJSON("Sale Created Successfully", true);
     } else {
       return new AddResponseJSON("Error Creating Sale", false);

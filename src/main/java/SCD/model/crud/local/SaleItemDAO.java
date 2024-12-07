@@ -1,4 +1,4 @@
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import java.util.List;
 
@@ -48,6 +48,14 @@ public class SaleItemDAO {
     }
 
     return result;
+  }
+
+  public SaleItem getSaleItemById(Long saleItemId) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      return session.get(SaleItem.class, saleItemId);
+    } catch (Exception e) {
+      return null;
+    }
   }
 
 }

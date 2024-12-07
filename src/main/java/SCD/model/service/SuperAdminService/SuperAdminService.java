@@ -3,16 +3,18 @@ package SCD.model.service.SuperAdminService;
 import java.time.LocalDate;
 import java.util.List;
 
-import SCD.model.crud.BranchesDAO;
-import SCD.model.crud.CodesDAO;
-import SCD.model.crud.ProductDAO;
-import SCD.model.crud.SaleDAO;
+import SCD.model.crud.local.BranchesDAO;
+import SCD.model.crud.local.CodesDAO;
+import SCD.model.crud.local.ProductDAO;
+import SCD.model.crud.local.SaleDAO;
+import SCD.model.crud.local.SyncTableDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Product;
 import SCD.model.models.Sale;
-import SCD.model.service.AddResponseJSON;
-import SCD.model.service.GetReportJSON;
-import SCD.model.service.GetResponseJSON;
+import SCD.model.models.SyncTable;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.Json.GetReportJSON;
+import SCD.model.service.Json.GetResponseJSON;
 
 public class SuperAdminService {
 
@@ -20,12 +22,14 @@ public class SuperAdminService {
     ProductDAO productDAO;
     SaleDAO saleDAO;
     CodesDAO codesDAO;
+    SyncTableDAO syncTableDAO;
 
     public SuperAdminService() {
         branchesDAO = BranchesDAO.getInstance();
         productDAO = ProductDAO.getInstance();
         saleDAO = SaleDAO.getInstance();
         codesDAO = CodesDAO.getInstance();
+        syncTableDAO = SyncTableDAO.getInstance();
 
     }
 
@@ -55,10 +59,15 @@ public class SuperAdminService {
         codesDAO.updateCodeByTableName("BRANCHES", empcode);
 
         boolean res = branchesDAO.addBranch(branch);
+        SyncTable st = new SyncTable("BRANCHES", "INSERT", temp);
+        syncTableDAO.addSyncTable(st);
+        SyncTable st1 = new SyncTable("CODES", "UPDATE", "BRANCHES");
+        syncTableDAO.addSyncTable(st1);
 
         if (res) {
             return new AddResponseJSON("Branch Creation Successful", true);
         }
+
         return new AddResponseJSON(null, false);
 
     }
@@ -77,6 +86,9 @@ public class SuperAdminService {
 
         res = branchesDAO.deleteBranch(branch_code);
 
+        SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch_code);
+        syncTableDAO.addSyncTable(st);
+
         return new AddResponseJSON("Branch Deletion Successful", res);
 
     }
@@ -93,6 +105,9 @@ public class SuperAdminService {
         if (!res) {
             return new AddResponseJSON("Branch Update Failed", false);
         }
+
+        SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch.getBranchCode());
+        syncTableDAO.addSyncTable(st);
 
         return new AddResponseJSON("Branch Update Successful", res);
 

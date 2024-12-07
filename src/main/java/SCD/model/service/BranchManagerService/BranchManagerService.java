@@ -2,9 +2,9 @@ package SCD.model.service.BranchManagerService;
 
 import java.util.List;
 
-import SCD.model.crud.EmployeeDAO;
+import SCD.model.crud.local.EmployeeDAO;
 import SCD.model.models.Employee;
-import SCD.model.service.GetResponseJSON;
+import SCD.model.service.Json.GetResponseJSON;
 
 public class BranchManagerService {
 
