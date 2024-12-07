@@ -15,6 +15,7 @@ public class SaleItemDAO {
   private SaleItemDAO() {
   }
 
+  @SuppressWarnings("DoubleCheckedLocking")
   public static SaleItemDAO getInstance() {
     if (instance == null) {
       synchronized (SaleItemDAO.class) {
@@ -44,7 +45,6 @@ public class SaleItemDAO {
       if (transaction != null) {
         transaction.rollback();
       }
-      e.printStackTrace();
     }
 
     return result;

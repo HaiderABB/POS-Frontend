@@ -81,7 +81,18 @@ public class SaleItem {
 
   public void setQuantity(int quantity) {
     this.quantity = quantity;
-    calculateTotalPrice(); // Update total price if quantity changes
+  }
+
+  public void increment(int quantity) {
+    this.quantity += quantity;
+    calculateTotalPrice(); // Update total price when quantity changes
+  }
+
+  public void decrement(int quantity) {
+    if (this.quantity >= quantity) {
+      this.quantity -= quantity;
+      calculateTotalPrice(); // Update total price when quantity changes
+    }
   }
 
   public double getSalePrice() {

@@ -16,6 +16,7 @@ public class EmployeeDAO {
   private EmployeeDAO() {
   }
 
+  @SuppressWarnings("DoubleCheckedLocking")
   public static EmployeeDAO getInstance() {
     if (instance == null) {
       synchronized (EmployeeDAO.class) {

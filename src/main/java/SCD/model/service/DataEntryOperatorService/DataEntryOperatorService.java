@@ -38,13 +38,16 @@ public class DataEntryOperatorService {
 
     Vendor ven;
     ven = vendorDAO.getVendorByCode(product.getVendor().getVendorCode());
-    System.err.println(ven.getVendorCode());
 
     if (ven == null) {
       return new AddResponseJSON("Could not find Vendor", false);
     }
 
-    productDAO.addProduct(product);
+    boolean res = productDAO.addProduct(product);
+    if (!res) {
+      return new AddResponseJSON("Error Adding product", true);
+    }
+
     return new AddResponseJSON("Added Successfully", true);
 
   }

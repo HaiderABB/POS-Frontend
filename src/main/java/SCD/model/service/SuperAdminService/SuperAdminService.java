@@ -6,7 +6,6 @@ import java.util.List;
 import SCD.model.crud.BranchesDAO;
 import SCD.model.crud.ProductDAO;
 import SCD.model.crud.SaleDAO;
-import SCD.model.crud.SaleItemDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Product;
 import SCD.model.models.Sale;
@@ -19,13 +18,11 @@ public class SuperAdminService {
     BranchesDAO branchesDAO;
     ProductDAO productDAO;
     SaleDAO saleDAO;
-    SaleItemDAO saleItemDAO;
 
     public SuperAdminService() {
         branchesDAO = BranchesDAO.getInstance();
         productDAO = ProductDAO.getInstance();
         saleDAO = SaleDAO.getInstance();
-        saleItemDAO = SaleItemDAO.getInstance();
 
     }
 

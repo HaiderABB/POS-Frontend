@@ -21,6 +21,7 @@ public class SaleDAO {
   private SaleDAO() {
   }
 
+  @SuppressWarnings("DoubleCheckedLocking")
   public static SaleDAO getInstance() {
     if (instance == null) {
       synchronized (SaleDAO.class) {
@@ -34,7 +35,7 @@ public class SaleDAO {
 
   public Sale addSale(String cashierCode, String branchCode, double totalAmount, double profit) {
     Transaction transaction = null;
-    Sale sale = null;
+    Sale sale;
 
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();

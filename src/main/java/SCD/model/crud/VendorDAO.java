@@ -16,6 +16,7 @@ public class VendorDAO {
   private VendorDAO() {
   }
 
+  @SuppressWarnings("DoubleCheckedLocking")
   public static VendorDAO getInstance() {
     if (instance == null) {
       synchronized (VendorDAO.class) {
@@ -85,7 +86,6 @@ public class VendorDAO {
       if (transaction != null && transaction.getStatus().canRollback()) {
         transaction.rollback(); // Rollback only if the transaction is active
       }
-      e.printStackTrace();
     }
 
     return result;
@@ -128,7 +128,6 @@ public class VendorDAO {
       if (transaction != null) {
         transaction.rollback();
       }
-      e.printStackTrace();
       return false;
     }
   }

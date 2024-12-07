@@ -16,6 +16,7 @@ public class BranchesDAO {
     private BranchesDAO() {
     }
 
+    @SuppressWarnings("DoubleCheckedLocking")
     public static BranchesDAO getInstance() {
         if (instance == null) {
             synchronized (BranchesDAO.class) {

@@ -18,6 +18,7 @@ public class ProductDAO {
   private ProductDAO() {
   }
 
+  @SuppressWarnings("DoubleCheckedLocking")
   public static ProductDAO getInstance() {
     if (instance == null) {
       synchronized (ProductDAO.class) {
