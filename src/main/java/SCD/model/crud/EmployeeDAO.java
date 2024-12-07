@@ -210,7 +210,6 @@ public class EmployeeDAO {
       if (transaction != null) {
         transaction.rollback();
       }
-      e.printStackTrace();
       return false;
     }
   }

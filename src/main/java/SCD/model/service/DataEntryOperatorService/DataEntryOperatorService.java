@@ -97,4 +97,32 @@ public class DataEntryOperatorService {
 
   }
 
+  public AddResponseClass updateVendor(Vendor vendor) {
+
+    Vendor ven = vendorDAO.getVendorByCode(vendor.getVendorCode());
+    if (ven == null) {
+      return new AddResponseClass("Vendor does not exist", false);
+    }
+    boolean res = vendorDAO.updateVendor(vendor);
+
+    if (res) {
+      return new AddResponseClass("Vendor Updated", true);
+    }
+    return new AddResponseClass("Vendor not updated", false);
+  }
+
+  public AddResponseClass updateProduct(Product product) {
+
+    Product prod = productDAO.getActiveProductByCode(product.getProductCode());
+    if (prod == null) {
+      return new AddResponseClass("Product does not exist", false);
+    }
+    boolean res = productDAO.updateProduct(product);
+    if (res) {
+      return new AddResponseClass("Product Updated", true);
+    }
+    return new AddResponseClass("Product not updated", false);
+
+  }
+
 }

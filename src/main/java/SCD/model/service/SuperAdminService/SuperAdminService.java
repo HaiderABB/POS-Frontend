@@ -46,4 +46,21 @@ public class SuperAdminService {
 
     }
 
+    public AddResponseClass updateBranch(Branch branch) {
+        Branch br = branchesDAO.getBranchByCode(branch.getBranchCode());
+        if (br == null) {
+            return new AddResponseClass("Branch does not exist", false);
+        }
+
+        boolean res;
+        res = branchesDAO.updateBranch(branch);
+
+        if (!res) {
+            return new AddResponseClass("Branch Update Failed", false);
+        }
+
+        return new AddResponseClass("Branch Update Successful", res);
+
+    }
+
 }

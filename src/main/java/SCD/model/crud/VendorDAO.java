@@ -100,4 +100,37 @@ public class VendorDAO {
     return vendors;
   }
 
+  public boolean updateVendor(Vendor updatedVendor) {
+    Transaction transaction = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+
+      // Retrieve the existing vendor from the database
+      Vendor existingVendor = getVendorByCode(updatedVendor.getVendorCode());
+
+      if (existingVendor != null) {
+        // Update the properties of the existing vendor using the setters
+        existingVendor.setName(updatedVendor.getName());
+        existingVendor.setPhoneNumber(updatedVendor.getPhoneNumber());
+        existingVendor.setAddress(updatedVendor.getAddress());
+        existingVendor.setUpdatedAt(updatedVendor.getUpdatedAt());
+
+        session.merge(existingVendor);
+
+        // Commit the transaction
+        transaction.commit();
+        return true;
+      } else {
+        // If the vendor is not found, return false
+        return false;
+      }
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+      e.printStackTrace();
+      return false;
+    }
+  }
+
 }

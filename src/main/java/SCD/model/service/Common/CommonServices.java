@@ -73,4 +73,17 @@ public class CommonServices {
     return email.toLowerCase();
   }
 
+  public AddResponseClass UpdateEmployee(Employee employee) {
+
+    boolean res = employeeDAO.employeeExistsByEmployeeCode(employee.getEmployeeCode());
+    if (!res) {
+      return new AddResponseClass("Employee does not exist", false);
+    }
+    res = employeeDAO.updateEmployee(employee);
+    if (!res) {
+      return new AddResponseClass("Employee cannot be updated", false);
+    }
+    return new AddResponseClass("Employee updated successfully", true);
+  }
+
 }

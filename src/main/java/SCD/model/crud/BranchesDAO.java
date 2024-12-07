@@ -143,10 +143,6 @@ public class BranchesDAO {
                 existingBranch.setCity(updatedBranch.getCity());
                 existingBranch.setUpdatedAt(updatedBranch.getUpdatedAt());
 
-                // You can update any other fields that might have been changed
-                // For example: existingBranch.setManager(updatedBranch.getManager());
-
-                // Merge the updated branch back into the session
                 session.merge(existingBranch);
 
                 // Commit the transaction
@@ -160,7 +156,6 @@ public class BranchesDAO {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
             return false;
         }
     }
