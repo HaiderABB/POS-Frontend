@@ -1,5 +1,7 @@
 package SCD.model.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -31,7 +33,16 @@ public class Branch {
   @Column(name = "is_active", nullable = false)
   private boolean isActive = true; // Default to true
 
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
+
   public Branch() {
+    // Initialize timestamps to current date and time
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   public Branch(String branchCode, String name, String city, String address, String phone) {
@@ -40,7 +51,8 @@ public class Branch {
     this.city = city;
     this.address = address;
     this.phone = phone;
-
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   // Getters and Setters
@@ -101,6 +113,22 @@ public class Branch {
     isActive = active;
   }
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public String toString() {
     return "Branch{" +
@@ -111,6 +139,8 @@ public class Branch {
         ", phone='" + phone + '\'' +
         ", totalEmployees=" + totalEmployees +
         ", isActive=" + isActive +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
         '}';
   }
 }

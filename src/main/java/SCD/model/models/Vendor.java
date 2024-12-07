@@ -1,5 +1,7 @@
 package SCD.model.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,7 +27,16 @@ public class Vendor {
   @Column(name = "is_active", nullable = false)
   private boolean isActive = true; // New field with default value
 
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
+
   public Vendor() {
+    // Initialize timestamps to current date and time
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
   public Vendor(String vendorCode, String name, String phoneNumber, String address) {
@@ -34,7 +45,11 @@ public class Vendor {
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.isActive = true; // Default value for parameterized constructor
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
+
+  // Getters and Setters
 
   public String getVendorCode() {
     return vendorCode;
@@ -76,14 +91,32 @@ public class Vendor {
     isActive = active;
   }
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public String toString() {
-    return "Vendor{'vendorCode='" + vendorCode + '\'' +
+    return "Vendor{" +
+        "vendorCode='" + vendorCode + '\'' +
         ", name='" + name + '\'' +
         ", phoneNumber='" + phoneNumber + '\'' +
         ", address='" + address + '\'' +
         ", isActive=" + isActive +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
         '}';
   }
-
 }

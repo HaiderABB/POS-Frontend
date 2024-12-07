@@ -5,6 +5,8 @@ import SCD.ui.Common.ButtonFactory;
 import javax.swing.*;
 import java.awt.*;
 
+import java.util.regex.Pattern;
+
 public class RemoveVendorPage extends JFrame {
 
     public RemoveVendorPage() {
@@ -36,6 +38,8 @@ public class RemoveVendorPage extends JFrame {
 
         vendorIdLabel.setFont(new Font("Arial", Font.PLAIN, 30));
         vendorIdField.setFont(new Font("Arial", Font.PLAIN, 26));
+        vendorIdField.setPreferredSize(new Dimension(200, 40));
+
         mainPanel.add(vendorIdLabel);
         mainPanel.add(vendorIdField);
 
@@ -48,6 +52,18 @@ public class RemoveVendorPage extends JFrame {
 
         JButton removeButton = ButtonFactory.createStyledButton("Remove");
         removeButton.addActionListener(e -> {
+
+            String vendorId = vendorIdField.getText().trim();
+
+            if (!validateVendorId(vendorId)) {
+                return;
+            }
+
+            if (!checkVendorExists(vendorId)) {
+                JOptionPane.showMessageDialog(this, "Vendor ID does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             // Implement remove logic here
             JOptionPane.showMessageDialog(this, "Vendor Removed Successfully!");
         });
@@ -63,6 +79,27 @@ public class RemoveVendorPage extends JFrame {
 
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
+    }
+
+
+    private boolean validateVendorId(String vendorId) {
+        if (vendorId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a Vendor ID!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!Pattern.matches("VM-\\d{4}", vendorId)) {
+            JOptionPane.showMessageDialog(this, "Vendor ID must follow the format 'VM-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkVendorExists(String vendorId) {
+        // Placeholder for database check
+        // Replace with actual database call
+        return vendorId.equals("VM-0001"); // Example: only "VM-0001" exists
     }
 
     public static void main(String[] args) {

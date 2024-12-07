@@ -1,11 +1,11 @@
 package SCD.model.service;
 
-public class AddResponseClass {
+public class AddResponseJSON {
 
   boolean success;
   String message;
 
-  public AddResponseClass(String message, boolean success) {
+  public AddResponseJSON(String message, boolean success) {
     this.success = success;
     this.message = message;
   }

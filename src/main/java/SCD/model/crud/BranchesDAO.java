@@ -16,6 +16,7 @@ public class BranchesDAO {
     private BranchesDAO() {
     }
 
+    @SuppressWarnings("DoubleCheckedLocking")
     public static BranchesDAO getInstance() {
         if (instance == null) {
             synchronized (BranchesDAO.class) {
@@ -125,6 +126,52 @@ public class BranchesDAO {
         } catch (Exception e) {
         }
         return exists;
+    }
+
+    public boolean updateBranch(Branch updatedBranch) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Retrieve the existing branch from the database
+            Branch existingBranch = session.get(Branch.class, updatedBranch.getBranchCode());
+
+            if (existingBranch != null) {
+                // Update the properties of the existing branch using the setters
+                existingBranch.setName(updatedBranch.getName());
+                existingBranch.setPhone(updatedBranch.getPhone());
+                existingBranch.setAddress(updatedBranch.getAddress());
+                existingBranch.setCity(updatedBranch.getCity());
+                existingBranch.setUpdatedAt(updatedBranch.getUpdatedAt());
+
+                session.merge(existingBranch);
+
+                // Commit the transaction
+                transaction.commit();
+                return true;
+            } else {
+                // If the branch is not found, return false
+                return false;
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return false;
+        }
+    }
+
+    public List<Branch> getAllActiveBranches() {
+        List<Branch> branches = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // HQL query to select all active branches
+            String hql = "FROM Branch b WHERE b.isActive = true";
+            branches = session.createQuery(hql, Branch.class).getResultList();
+        } catch (Exception e) {
+        }
+
+        return branches;
     }
 
 }

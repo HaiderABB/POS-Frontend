@@ -2,9 +2,7 @@ package SCD.model.service;
 
 import SCD.model.models.Branch;
 import SCD.model.models.Employee;
-import SCD.model.service.BranchManagerService.BranchManagerService;
 import SCD.model.service.Common.CommonServices;
-import SCD.model.service.DataEntryOperatorService.DataEntryOperatorService;
 import SCD.model.service.SuperAdminService.SuperAdminService;
 
 public class TestService {
@@ -13,8 +11,6 @@ public class TestService {
 
                 CommonServices commonServices = new CommonServices();
                 SuperAdminService superAdminService = new SuperAdminService();
-                BranchManagerService branchManagerService = new BranchManagerService();
-                DataEntryOperatorService dataEntryOperatorService = new DataEntryOperatorService();
 
                 Branch branch = new Branch("BR-0001", "Main Branch", "Lahore", "Gulberg Main Boulevard", "03219306126");
 

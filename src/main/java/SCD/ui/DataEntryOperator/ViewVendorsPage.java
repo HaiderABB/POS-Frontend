@@ -1,11 +1,13 @@
 package SCD.ui.DataEntryOperator;
 
 import SCD.ui.Common.ButtonFactory;
-import SCD.ui.DataEntryOperator.DEOSidebar;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+
+import java.util.List;
 
 public class ViewVendorsPage extends JFrame {
 
@@ -34,15 +36,13 @@ public class ViewVendorsPage extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.WHITE);
 
-        String[] columnNames = {"Vendor ID", "Vendor Name", "Contact Person", "Phone Number", "Email Address", "Address"};
+
+        String[] columnNames = {"Vendor Code", "Vendor Name", "Phone Number", "Address"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable vendorTable = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(vendorTable);
         mainPanel.add(tableScrollPane, BorderLayout.CENTER);
 
-        // Sample data
-        tableModel.addRow(new Object[]{"V001", "Vendor A", "John Doe", "123-456-7890", "vendorA@example.com", "123 Main St, City, State, 12345"});
-        tableModel.addRow(new Object[]{"V002", "Vendor B", "Jane Smith", "098-765-4321", "vendorB@example.com", "456 Elm St, City, State, 67890"});
 
         add(mainPanel, BorderLayout.CENTER);
 
@@ -57,15 +57,32 @@ public class ViewVendorsPage extends JFrame {
 
         footerPanel.add(closeButton);
 
+        tableModel.addRow(new Object[]{"V001", "Vendor A", "123-456-7890", "123 Main St, City, State, 12345"});
+        tableModel.addRow(new Object[]{"V002", "Vendor B", "098-765-4321", "456 Elm St, City, State, 67890"});
+
         add(footerPanel, BorderLayout.SOUTH);
 
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
     }
 
+
+    public void populateTable(List<Vendor> vendors) {
+        tableModel.setRowCount(0); // Clear existing data
+        for (Vendor vendor : vendors) {
+            tableModel.addRow(new Object[]{
+                    vendor.getVendorCode(),
+                    vendor.getVendorName(),
+                    vendor.getPhoneNumber(),
+                    vendor.getAddress()
+            });
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new ViewVendorsPage().setVisible(true);
+            ViewVendorsPage frame = new ViewVendorsPage();
+            frame.setVisible(true);
         });
     }
 }

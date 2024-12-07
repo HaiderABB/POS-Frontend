@@ -18,6 +18,7 @@ public class ProductDAO {
   private ProductDAO() {
   }
 
+  @SuppressWarnings("DoubleCheckedLocking")
   public static ProductDAO getInstance() {
     if (instance == null) {
       synchronized (ProductDAO.class) {
@@ -191,6 +192,45 @@ public class ProductDAO {
     } catch (Exception e) {
       if (transaction != null) {
         transaction.rollback();
+      }
+    }
+
+    return result;
+  }
+
+  public boolean updateProduct(Product updatedProduct) {
+    boolean result = false;
+    Transaction transaction = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+
+      // Retrieve the existing product from the database
+      Product existingProduct = session.get(Product.class, updatedProduct.getProductCode());
+
+      if (existingProduct != null) {
+        // Update the properties of the existing product using the setters
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
+        existingProduct.setCategory(updatedProduct.getCategory());
+        existingProduct.setOriginalPrice(updatedProduct.getOriginalPrice());
+        existingProduct.setPriceByCarton(updatedProduct.getPriceByCarton());
+        existingProduct.setUpdatedAt(updatedProduct.getUpdatedAt());
+        existingProduct.setPriceByUnit(updatedProduct.getPriceByUnit());
+        existingProduct.setSalePrice(updatedProduct.getSalePrice());
+
+        session.merge(existingProduct);
+
+        // Commit the transaction
+        transaction.commit();
+        result = true;
+        System.out.println("Product " + updatedProduct.getProductCode() + " updated successfully!");
+      } else {
+        // If the product is not found, return false
+        System.out.println("Product not found with code: " + updatedProduct.getProductCode());
+      }
+    } catch (Exception e) {
+      if (transaction != null && transaction.getStatus().canRollback()) {
+        transaction.rollback(); // Rollback only if the transaction is active
       }
     }
 

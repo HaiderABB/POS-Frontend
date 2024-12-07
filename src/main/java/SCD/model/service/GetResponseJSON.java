@@ -2,12 +2,12 @@ package SCD.model.service;
 
 import java.util.List;
 
-public class GetResponseClass<T> {
+public class GetResponseJSON<T> {
 
   List<T> data;
   String message;
 
-  public GetResponseClass(String message, List<T> data) {
+  public GetResponseJSON(String message, List<T> data) {
     this.message = message;
     this.data = data;
   }

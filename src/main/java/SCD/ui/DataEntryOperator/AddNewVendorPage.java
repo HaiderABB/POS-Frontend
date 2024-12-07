@@ -1,9 +1,23 @@
 package SCD.ui.DataEntryOperator;
 
-import SCD.ui.Common.ButtonFactory;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.text.NumberFormat;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.text.NumberFormatter;
+
+import SCD.ui.Common.ButtonFactory;
 
 public class AddNewVendorPage extends JFrame {
 
@@ -27,40 +41,33 @@ public class AddNewVendorPage extends JFrame {
         add(headerPanel, BorderLayout.NORTH);
 
         // Main content area
-        JPanel mainPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+
+        JPanel mainPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(Color.WHITE);
 
         JLabel vendorNameLabel = new JLabel("Vendor Name:");
         JTextField vendorNameField = new JTextField();
 
-        JLabel vendorIdLabel = new JLabel("Vendor ID:");
-        JTextField vendorIdField = new JTextField();
-
-        JLabel contactPersonLabel = new JLabel("Contact Person:");
-        JTextField contactPersonField = new JTextField();
-
-        JLabel phoneNumberLabel = new JLabel("Phone Number:");
-        JTextField phoneNumberField = new JTextField();
-
-        JLabel emailAddressLabel = new JLabel("Email Address:");
-        JTextField emailAddressField = new JTextField();
-
         JLabel addressLabel = new JLabel("Address:");
         JTextField addressField = new JTextField();
 
+        JLabel phoneNumberLabel = new JLabel("Phone Number:");
+        NumberFormat format = NumberFormat.getInstance();
+        format.setGroupingUsed(false);
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Long.class);
+        formatter.setAllowsInvalid(false);
+        formatter.setMinimum(0L);
+        JFormattedTextField phoneNumberField = new JFormattedTextField(formatter);
+
         mainPanel.add(vendorNameLabel);
         mainPanel.add(vendorNameField);
-        mainPanel.add(vendorIdLabel);
-        mainPanel.add(vendorIdField);
-        mainPanel.add(contactPersonLabel);
-        mainPanel.add(contactPersonField);
-        mainPanel.add(phoneNumberLabel);
-        mainPanel.add(phoneNumberField);
-        mainPanel.add(emailAddressLabel);
-        mainPanel.add(emailAddressField);
         mainPanel.add(addressLabel);
         mainPanel.add(addressField);
+        mainPanel.add(phoneNumberLabel);
+        mainPanel.add(phoneNumberField);
 
         add(mainPanel, BorderLayout.CENTER);
 
@@ -71,13 +78,28 @@ public class AddNewVendorPage extends JFrame {
 
         JButton saveButton = ButtonFactory.createStyledButton("Save");
         saveButton.addActionListener(e -> {
+
+            String vendorName = vendorNameField.getText().trim();
+            String address = addressField.getText().trim();
+            String phoneNumber = phoneNumberField.getText().trim();
+
+            if (vendorName.isEmpty() || address.isEmpty() || phoneNumber.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill out all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Assume vendor code will be received from backend
+            String vendorCode = receiveVendorCodeFromBackend();
+
             // Implement save logic here
-            JOptionPane.showMessageDialog(this, "Vendor Added Successfully!");
+            JOptionPane.showMessageDialog(this, "Vendor Added Successfully!\nVendor Code: " + vendorCode);
         });
 
         JButton cancelButton = ButtonFactory.createStyledButton("Cancel");
-        cancelButton.addActionListener(e -> dispose());
-        cancelButton.addActionListener(e -> new DataEntryOperatorDashboard());
+        cancelButton.addActionListener(e -> {
+            dispose();
+            new DataEntryOperatorDashboard().setVisible(true);
+        });
 
         footerPanel.add(saveButton);
         footerPanel.add(cancelButton);
@@ -86,6 +108,11 @@ public class AddNewVendorPage extends JFrame {
 
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
+    }
+
+    private String receiveVendorCodeFromBackend() {
+        // Placeholder for backend call to receive vendor code
+        return "VM-0001"; // Example code, replace with actual backend call
     }
 
     public static void main(String[] args) {
