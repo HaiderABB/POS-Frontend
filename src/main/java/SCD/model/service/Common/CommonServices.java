@@ -1,6 +1,7 @@
 package SCD.model.service.Common;
 
 import SCD.model.crud.BranchesDAO;
+import SCD.model.crud.CodesDAO;
 import SCD.model.crud.EmployeeDAO;
 import SCD.model.models.Employee;
 import SCD.model.service.AddResponseJSON;
@@ -9,10 +10,12 @@ public class CommonServices {
 
   EmployeeDAO employeeDAO;
   BranchesDAO branchesDAO;
+  CodesDAO codesDAO;
 
   public CommonServices() {
     employeeDAO = EmployeeDAO.getInstance();
     branchesDAO = BranchesDAO.getInstance();
+    codesDAO = CodesDAO.getInstance();
   }
 
   public Employee Login(String emp_code, String password, String role) {
@@ -45,11 +48,39 @@ public class CommonServices {
       return new AddResponseJSON("Branch does not exist", false);
     }
 
+    String employeeCode = codesDAO.getCodeByTableName("EMPLOYEES");
+
+    employeeCode = incrementCode(employeeCode);
+    String temp;
+    if (employee.getRole().equals("MANAGER")) {
+      temp = "BM-" + employeeCode;
+    } else if (employee.getRole().equals("DATA_ENTRY_OPERATOR")) {
+      temp = "DM-" + employeeCode;
+    } else if (employee.getRole().equals("CASHIER")) {
+      temp = "CM-" + employeeCode;
+    } else {
+      temp = "SM-" + employeeCode;
+    }
+
+    employee.setEmployeeCode(temp);
+
     employee.setEmail(LowerCaseEmail(employee.getEmail()));
     employeeDAO.addEmployee(employee);
 
+    codesDAO.updateCodeByTableName("EMPLOYEES", employeeCode);
+
     return new AddResponseJSON("Employee added successfully", true);
 
+  }
+
+  public String incrementCode(String code) {
+
+    int numericCode = Integer.parseInt(code);
+
+    // Increment the numeric part
+    numericCode++;
+
+    return String.format("%04d", numericCode);
   }
 
   public AddResponseJSON RemoveEmployee(String emp_code) {
