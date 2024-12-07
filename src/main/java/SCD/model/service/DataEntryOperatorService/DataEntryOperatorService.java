@@ -6,8 +6,8 @@ import SCD.model.crud.ProductDAO;
 import SCD.model.crud.VendorDAO;
 import SCD.model.models.Product;
 import SCD.model.models.Vendor;
-import SCD.model.service.AddResponseClass;
-import SCD.model.service.GetResponseClass;
+import SCD.model.service.AddResponseJSON;
+import SCD.model.service.GetResponseJSON;
 
 public class DataEntryOperatorService {
 
@@ -20,108 +20,108 @@ public class DataEntryOperatorService {
 
   }
 
-  public AddResponseClass addVendor(Vendor vendor) {
+  public AddResponseJSON addVendor(Vendor vendor) {
     boolean res;
     res = vendorDAO.vendorExistsWithPhoneNumberAndActiveStatus(vendor.getPhoneNumber());
 
     if (res) {
-      return new AddResponseClass("Phone Number Exists", false);
+      return new AddResponseJSON("Phone Number Exists", false);
     }
 
     vendorDAO.addVendor(vendor);
 
-    return new AddResponseClass("Added Successfully", true);
+    return new AddResponseJSON("Added Successfully", true);
 
   }
 
-  public AddResponseClass addProduct(Product product) {
+  public AddResponseJSON addProduct(Product product) {
 
     Vendor ven;
     ven = vendorDAO.getVendorByCode(product.getVendor().getVendorCode());
     System.err.println(ven.getVendorCode());
 
     if (ven == null) {
-      return new AddResponseClass("Could not find Vendor", false);
+      return new AddResponseJSON("Could not find Vendor", false);
     }
 
     productDAO.addProduct(product);
-    return new AddResponseClass("Added Successfully", true);
+    return new AddResponseJSON("Added Successfully", true);
 
   }
 
-  public GetResponseClass<Vendor> getVendors() {
+  public GetResponseJSON<Vendor> getVendors() {
     List<Vendor> vendors = vendorDAO.getAllActiveVendors();
 
     if (vendors.isEmpty()) {
-      return new GetResponseClass<>("No Vendors", vendors);
+      return new GetResponseJSON<>("No Vendors", vendors);
     }
-    return new GetResponseClass<>("Found Vendors", vendors);
+    return new GetResponseJSON<>("Found Vendors", vendors);
   }
 
-  public GetResponseClass<Product> getProducts() {
+  public GetResponseJSON<Product> getProducts() {
     List<Product> products = productDAO.getAllActiveProducts();
 
     if (products.isEmpty()) {
-      return new GetResponseClass<>("No Products", products);
+      return new GetResponseJSON<>("No Products", products);
     }
-    return new GetResponseClass<>("Found Products", products);
+    return new GetResponseJSON<>("Found Products", products);
   }
 
-  public AddResponseClass removeProduct(String code) {
+  public AddResponseJSON removeProduct(String code) {
 
     Product prod;
 
     prod = productDAO.getActiveProductByCode(code);
 
     if (prod == null) {
-      return new AddResponseClass("Could not find product", false);
+      return new AddResponseJSON("Could not find product", false);
     }
 
     productDAO.deactivateProduct(code);
-    return new AddResponseClass("product removed", true);
+    return new AddResponseJSON("product removed", true);
 
   }
 
-  public AddResponseClass removeVendor(String code) {
+  public AddResponseJSON removeVendor(String code) {
 
     Vendor ven = vendorDAO.getVendorByCode(code);
 
     if (ven == null) {
-      return new AddResponseClass("Could not find vendor", false);
+      return new AddResponseJSON("Could not find vendor", false);
     }
 
     vendorDAO.deactivateVendor(code);
     productDAO.deactivateProductsByVendor(code);
 
-    return new AddResponseClass("Vendor removed", true);
+    return new AddResponseJSON("Vendor removed", true);
 
   }
 
-  public AddResponseClass updateVendor(Vendor vendor) {
+  public AddResponseJSON updateVendor(Vendor vendor) {
 
     Vendor ven = vendorDAO.getVendorByCode(vendor.getVendorCode());
     if (ven == null) {
-      return new AddResponseClass("Vendor does not exist", false);
+      return new AddResponseJSON("Vendor does not exist", false);
     }
     boolean res = vendorDAO.updateVendor(vendor);
 
     if (res) {
-      return new AddResponseClass("Vendor Updated", true);
+      return new AddResponseJSON("Vendor Updated", true);
     }
-    return new AddResponseClass("Vendor not updated", false);
+    return new AddResponseJSON("Vendor not updated", false);
   }
 
-  public AddResponseClass updateProduct(Product product) {
+  public AddResponseJSON updateProduct(Product product) {
 
     Product prod = productDAO.getActiveProductByCode(product.getProductCode());
     if (prod == null) {
-      return new AddResponseClass("Product does not exist", false);
+      return new AddResponseJSON("Product does not exist", false);
     }
     boolean res = productDAO.updateProduct(product);
     if (res) {
-      return new AddResponseClass("Product Updated", true);
+      return new AddResponseJSON("Product Updated", true);
     }
-    return new AddResponseClass("Product not updated", false);
+    return new AddResponseJSON("Product not updated", false);
 
   }
 

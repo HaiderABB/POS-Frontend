@@ -107,7 +107,6 @@ public class SaleItem {
 
   public void setActualPrice(double actualPrice) {
     this.actualPrice = actualPrice;
-    calculateTotalPrice(); // Recalculate total price if actual price changes
   }
 
   private void calculateTotalPrice() {

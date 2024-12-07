@@ -10,7 +10,7 @@ import SCD.model.models.Employee;
 import SCD.model.models.Product;
 import SCD.model.models.Sale;
 import SCD.model.models.SaleItem;
-import SCD.model.service.AddResponseClass;
+import SCD.model.service.AddResponseJSON;
 
 public class CashierService {
 
@@ -36,17 +36,27 @@ public class CashierService {
 
   }
 
-  public AddResponseClass proceedPayment(List<SaleItem> saleItems, Employee cashier, Branch branch,
+  public AddResponseJSON proceedPayment(List<SaleItem> saleItems, Employee cashier, Branch branch,
       double totalAmount) {
 
     for (SaleItem sl : saleItems) {
       productDAO.decrementStockQuantity(sl.getProduct().getProductCode(), sl.getQuantity());
     }
 
-    Sale sale = saleDAO.addSale(cashier.getEmployeeCode(), branch.getBranchCode(), totalAmount);
+    double profit;
+
+    double actualCost = 0.0;
+
+    for (SaleItem sl : saleItems) {
+      actualCost += sl.getActualPrice() * sl.getQuantity();
+    }
+
+    profit = totalAmount - actualCost;
+
+    Sale sale = saleDAO.addSale(cashier.getEmployeeCode(), branch.getBranchCode(), totalAmount, profit);
 
     if (sale == null) {
-      return new AddResponseClass("Error Creating Sale", false);
+      return new AddResponseJSON("Error Creating Sale", false);
     }
 
     for (SaleItem sl : saleItems) {
@@ -56,9 +66,9 @@ public class CashierService {
 
     boolean result = saleItemDAO.addSaleItems(saleItems);
     if (result) {
-      return new AddResponseClass("Sale Created Successfully", true);
+      return new AddResponseJSON("Sale Created Successfully", true);
     } else {
-      return new AddResponseClass("Error Creating Sale", false);
+      return new AddResponseJSON("Error Creating Sale", false);
     }
 
   }

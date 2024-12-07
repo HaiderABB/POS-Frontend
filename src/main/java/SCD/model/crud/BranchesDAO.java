@@ -160,4 +160,17 @@ public class BranchesDAO {
         }
     }
 
+    public List<Branch> getAllActiveBranches() {
+        List<Branch> branches = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // HQL query to select all active branches
+            String hql = "FROM Branch b WHERE b.isActive = true";
+            branches = session.createQuery(hql, Branch.class).getResultList();
+        } catch (Exception e) {
+        }
+
+        return branches;
+    }
+
 }
