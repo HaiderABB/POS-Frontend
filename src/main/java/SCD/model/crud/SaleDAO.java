@@ -28,38 +28,47 @@ public class SaleDAO {
     return instance;
   }
 
-  public boolean addSale(String cashierCode, String branchCode, double totalAmount) {
-    boolean result = false;
+  public Sale addSale(String cashierCode, String branchCode, double totalAmount) {
     Transaction transaction = null;
+    Sale sale = null;
 
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
+      // Fetch the cashier and branch entities
       Employee cashier = session.get(Employee.class, cashierCode);
       if (cashier == null) {
         System.err.println("Cashier with code " + cashierCode + " not found.");
-        return false;
+        return null;
       }
 
       Branch branch = session.get(Branch.class, branchCode);
       if (branch == null) {
         System.err.println("Branch with code " + branchCode + " not found.");
-        return false;
+        return null;
       }
 
-      Sale sale = new Sale(cashier, branch, totalAmount);
+      // Create the Sale object
+      sale = new Sale(cashier, branch, totalAmount);
 
+      // Persist the Sale entity
       session.persist(sale);
+
+      // Commit the transaction
       transaction.commit();
-      result = true;
+
+      // Print the sale_id
+      System.out.println("Sale added successfully with sale_id: " + sale.getSaleId());
 
     } catch (Exception e) {
       if (transaction != null) {
         transaction.rollback();
       }
+      e.printStackTrace(); // Print the exception details for debugging
+      sale = null; // Return null in case of an exception
     }
 
-    return result;
+    return sale; // Return the Sale object after successful insertion
   }
 
   public List<Sale> getSalesByBranch(String branchCode) {

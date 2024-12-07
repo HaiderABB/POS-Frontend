@@ -127,4 +127,42 @@ public class BranchesDAO {
         return exists;
     }
 
+    public boolean updateBranch(Branch updatedBranch) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Retrieve the existing branch from the database
+            Branch existingBranch = session.get(Branch.class, updatedBranch.getBranchCode());
+
+            if (existingBranch != null) {
+                // Update the properties of the existing branch using the setters
+                existingBranch.setName(updatedBranch.getName());
+                existingBranch.setPhone(updatedBranch.getPhone());
+                existingBranch.setAddress(updatedBranch.getAddress());
+                existingBranch.setCity(updatedBranch.getCity());
+                existingBranch.setUpdatedAt(updatedBranch.getUpdatedAt());
+
+                // You can update any other fields that might have been changed
+                // For example: existingBranch.setManager(updatedBranch.getManager());
+
+                // Merge the updated branch back into the session
+                session.merge(existingBranch);
+
+                // Commit the transaction
+                transaction.commit();
+                return true;
+            } else {
+                // If the branch is not found, return false
+                return false;
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

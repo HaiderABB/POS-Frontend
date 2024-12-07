@@ -180,4 +180,39 @@ public class EmployeeDAO {
     }
   }
 
+  public boolean updateEmployee(Employee employee) {
+    Transaction transaction = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+
+      Employee existingEmployee = session.get(Employee.class, employee.getEmployeeCode());
+
+      if (existingEmployee != null) {
+        // Update employee details
+        existingEmployee.setName(employee.getName()); // Update name
+
+        existingEmployee.setPhoneNumber(employee.getPhoneNumber()); // Update phone number
+
+        existingEmployee.setSalary(employee.getSalary()); // Update salary
+
+        existingEmployee.setUpdatedAt(employee.getUpdatedAt()); // Update updatedAt
+
+        session.merge(existingEmployee);
+
+        // Commit the transaction
+        transaction.commit();
+        return true;
+      } else {
+        // Employee with this employeeCode does not exist
+        return false;
+      }
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+      e.printStackTrace();
+      return false;
+    }
+  }
+
 }

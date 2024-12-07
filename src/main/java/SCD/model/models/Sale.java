@@ -43,7 +43,7 @@ public class Sale {
     this.cashier = cashier;
     this.branch = branch;
     this.totalAmount = totalAmount;
-    this.createdAt = LocalDateTime.now(); // Initialize with the current timestamp
+    this.createdAt = LocalDateTime.now();
   }
 
   // Getters and Setters

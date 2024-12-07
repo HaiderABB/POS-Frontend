@@ -35,14 +35,17 @@ public class SaleItem {
   @Column(name = "total_price", nullable = false)
   private double totalPrice;
 
+  @Column(name = "actual_price", nullable = false)
+  private double actualPrice; // New field for the actual price
+
   public SaleItem() {
   }
 
-  public SaleItem(Product product, Sale sale, int quantity, double salePrice) {
+  public SaleItem(Product product, int quantity, double salePrice, double actualPrice) {
     this.product = product;
-    this.sale = sale;
     this.quantity = quantity;
     this.salePrice = salePrice;
+    this.actualPrice = actualPrice;
     this.totalPrice = quantity * salePrice; // Automatically calculate total price
   }
 
@@ -94,8 +97,21 @@ public class SaleItem {
     return totalPrice;
   }
 
+  public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+  }
+
+  public double getActualPrice() {
+    return actualPrice;
+  }
+
+  public void setActualPrice(double actualPrice) {
+    this.actualPrice = actualPrice;
+    calculateTotalPrice(); // Recalculate total price if actual price changes
+  }
+
   private void calculateTotalPrice() {
-    this.totalPrice = this.quantity * this.salePrice; // Calculate total price
+    this.totalPrice = this.quantity * this.salePrice; // Calculate total price based on sale price
   }
 
   @Override
@@ -106,6 +122,7 @@ public class SaleItem {
         ", sale=" + (sale != null ? sale.getSaleId() : "Unknown") +
         ", quantity=" + quantity +
         ", salePrice=" + salePrice +
+        ", actualPrice=" + actualPrice + // Include actual price in toString output
         ", totalPrice=" + totalPrice +
         '}';
   }
