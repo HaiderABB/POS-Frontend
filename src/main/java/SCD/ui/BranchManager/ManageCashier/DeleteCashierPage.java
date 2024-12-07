@@ -70,7 +70,7 @@ public class DeleteCashierPage extends JFrame {
         }
 
         if (!cashierCode.matches("CM-\\d{4}")) {
-            JOptionPane.showMessageDialog(this, "Cashier ID must follow the format 'CH-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cashier ID must follow the format 'CM-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

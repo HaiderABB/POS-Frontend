@@ -46,8 +46,8 @@ public class ViewDataEntryOperatorsPage extends JFrame {
     }
 
     private void loadSampleData() {
-        tableModel.addRow(new Object[]{"DM-1234", "John Doe", "john.doe@example.com", "BH-1234"});
-        tableModel.addRow(new Object[]{"DM-5678", "Jane Smith", "jane.smith@example.com", "BH-5678"});
+        tableModel.addRow(new Object[]{"DM-1234", "John Doe", "john.doe@example.com", "BR-1234"});
+        tableModel.addRow(new Object[]{"DM-5678", "Jane Smith", "jane.smith@example.com", "BR-5678"});
     }
 
     public static void main(String[] args) {

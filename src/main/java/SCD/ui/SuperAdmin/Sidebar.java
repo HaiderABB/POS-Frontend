@@ -3,9 +3,11 @@ package SCD.ui.SuperAdmin;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.SuperAdmin.ManageBranchManager.AddBranchManagerPage;
 import SCD.ui.SuperAdmin.ManageBranchManager.DeleteBranchManagerPage;
+import SCD.ui.SuperAdmin.ManageBranchManager.UpdateBranchManagerPage;
 import SCD.ui.SuperAdmin.ManageBranchManager.ViewBranchManagersPage;
 import SCD.ui.SuperAdmin.ManageBranches.AddBranchPage;
 import SCD.ui.SuperAdmin.ManageBranches.DeleteBranchPage;
+import SCD.ui.SuperAdmin.ManageBranches.UpdateBranchPage;
 import SCD.ui.SuperAdmin.ManageBranches.ViewBranchesPage;
 
 
@@ -27,14 +29,18 @@ public class Sidebar extends JPanel {
         add(createDashboardButton());
 
         add(createAddBranchButton());
+        add(createUpdateBranchButton());
         add(createDeleteBranchButton());
         add(createViewBranchesButton());
         add(createAddBranchManagerButton());
+        add(createUpdateBranchManagerButton());
         add(createDeleteBranchManagerButton());
         add(createViewBranchManagersButton());
         add(createViewReportsButton());
         add(createSystemSettingsButton());
         add(createLogoutButton());
+
+
     }
 
     private JButton createDashboardButton() {
@@ -47,6 +53,12 @@ public class Sidebar extends JPanel {
     private JButton createAddBranchButton() {
         JButton button = ButtonFactory.createStyledButton("Add Branch");
         button.addActionListener(e -> openAddBranchPage());
+        return button;
+    }
+
+    private JButton createUpdateBranchButton() {
+        JButton button = ButtonFactory.createStyledButton("Update Branch");
+        button.addActionListener(e -> openUpdateBranchPage());
         return button;
     }
 
@@ -65,6 +77,12 @@ public class Sidebar extends JPanel {
     private JButton createAddBranchManagerButton() {
         JButton button = ButtonFactory.createStyledButton("Add Branch Manager");
         button.addActionListener(e -> navigateToPage(new AddBranchManagerPage()));
+        return button;
+    }
+
+    private JButton createUpdateBranchManagerButton() {
+        JButton button = ButtonFactory.createStyledButton("Update Branch Manager");
+        button.addActionListener(e -> navigateToPage(new UpdateBranchManagerPage()));
         return button;
     }
 
@@ -105,6 +123,10 @@ public class Sidebar extends JPanel {
 
     private void openAddBranchPage() {
         navigateToPage(new AddBranchPage());
+    }
+
+    private void openUpdateBranchPage() {
+        navigateToPage(new UpdateBranchPage());
     }
 
     private void openDeleteBranchPage() {

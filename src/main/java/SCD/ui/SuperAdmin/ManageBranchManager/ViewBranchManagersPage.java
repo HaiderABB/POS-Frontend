@@ -19,21 +19,18 @@ public class ViewBranchManagersPage extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Sidebar
+
         sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
-        // Content Panel
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(contentPanel, BorderLayout.CENTER);
 
-        // NavBar
         navBar = new NavBar();
         navBar.setTitle("View Branch Managers");
         contentPanel.add(navBar, BorderLayout.NORTH);
 
-        // Table Panel
         JPanel tablePanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Branch Manager Code", "Name", "Email", "Branch Code"};
         tableModel = new DefaultTableModel(columnNames, 0);
@@ -46,7 +43,6 @@ public class ViewBranchManagersPage extends JFrame {
 
         setLocationRelativeTo(null);
 
-        // Load Sample Data
         loadSampleData();
     }
 
