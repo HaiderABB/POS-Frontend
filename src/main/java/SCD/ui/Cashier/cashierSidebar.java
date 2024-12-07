@@ -35,7 +35,7 @@ public class cashierSidebar extends JPanel {
     }
 
     private void openProcessPayment() {
-        navigateToPage(new ProcessPaymentPage());
+//        navigateToPage(new ProcessPaymentPage());
     }
 
     private void openViewSales() {
@@ -47,7 +47,7 @@ public class cashierSidebar extends JPanel {
     }
 
     private void openRefund() {
-        navigateToPage(new RefundFrame());
+//        navigateToPage(new RefundFrame());
     }
 
     private void openSettings() {

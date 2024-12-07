@@ -172,3 +172,4 @@ public class AddProductPage extends JFrame {
         });
     }
 
+}

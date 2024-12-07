@@ -62,17 +62,10 @@ public class CashierDashboard extends JFrame {
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("Cashier Interface", "C:\\Users\\AMMAR\\Desktop\\icons\\payment.png", this::openCashierInterface));
-        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png",this::openSettings));
+        mainContent.add(createCard("Sales Page", "C:\\Users\\AMMAR\\Desktop\\icons\\sales.png", this::openSalesPage));
+        mainContent.add(createCard("Settings", "C:\\Users\\AMMAR\\Desktop\\icons\\settings.png", this::openSettings));
 
         return mainContent;
-    }
-    private void performLogout() {
-        JOptionPane.showMessageDialog(this, "Logging out...");
-        System.exit(0);
-    }
-    private JPanel createCard(String title, String iconPath) {
-        return createCard(title, iconPath, null);
     }
 
     private JPanel createCard(String title, String iconPath, ActionListener action) {
@@ -105,34 +98,10 @@ public class CashierDashboard extends JFrame {
         return card;
     }
 
-    private void openProcessPaymentPage(ActionEvent e) {
+    private void openSalesPage(ActionEvent e) {
         SwingUtilities.invokeLater(() -> {
-            ProcessPaymentPage page = new ProcessPaymentPage();
-            page.setVisible(true);
-            dispose();
-        });
-    }
-
-    private void openViewSalesPanel(ActionEvent e) {
-        SwingUtilities.invokeLater(() -> {
-            ViewSales viewSalesPage = new ViewSales();
-            viewSalesPage.setVisible(true);
-            dispose();
-        });
-    }
-
-    private void openRefundPanel(ActionEvent e) {
-        SwingUtilities.invokeLater(() -> {
-            RefundFrame refundFrame = new RefundFrame();
-            refundFrame.setVisible(true);
-            dispose();
-        });
-    }
-
-    private void openCashierInterface(ActionEvent e) {
-        SwingUtilities.invokeLater(() -> {
-            CashierInterface cashierInterface = new CashierInterface();
-            cashierInterface.setVisible(true);
+            SalesPage salesPage = new SalesPage();
+            salesPage.setVisible(true);
             dispose();
         });
     }

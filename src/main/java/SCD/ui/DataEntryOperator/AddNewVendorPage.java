@@ -3,6 +3,7 @@ package SCD.ui.DataEntryOperator;
 import SCD.ui.Common.ButtonFactory;
 
 
+import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.text.NumberFormat;
