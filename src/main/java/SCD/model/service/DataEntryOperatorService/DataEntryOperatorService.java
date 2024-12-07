@@ -2,6 +2,7 @@ package SCD.model.service.DataEntryOperatorService;
 
 import java.util.List;
 
+import SCD.model.crud.CodesDAO;
 import SCD.model.crud.ProductDAO;
 import SCD.model.crud.VendorDAO;
 import SCD.model.models.Product;
@@ -13,10 +14,12 @@ public class DataEntryOperatorService {
 
   VendorDAO vendorDAO;
   ProductDAO productDAO;
+  CodesDAO codesDAO;
 
   public DataEntryOperatorService() {
     vendorDAO = VendorDAO.getInstance();
     productDAO = ProductDAO.getInstance();
+    codesDAO = CodesDAO.getInstance();
 
   }
 
@@ -27,6 +30,13 @@ public class DataEntryOperatorService {
     if (res) {
       return new AddResponseJSON("Phone Number Exists", false);
     }
+
+    String empcode = codesDAO.getCodeByTableName("VENDORS");
+
+    empcode = incrementCode(empcode);
+    String temp = "VM-" + empcode;
+    vendor.setVendorCode(temp);
+    codesDAO.updateCodeByTableName("VENDORS", empcode);
 
     vendorDAO.addVendor(vendor);
 
@@ -43,6 +53,13 @@ public class DataEntryOperatorService {
       return new AddResponseJSON("Could not find Vendor", false);
     }
 
+    String empcode = codesDAO.getCodeByTableName("PRODUCTS");
+
+    empcode = incrementCode(empcode);
+    String temp = "PM-" + empcode;
+    product.setProductCode(temp);
+    codesDAO.updateCodeByTableName("PRODUCTS", empcode);
+
     boolean res = productDAO.addProduct(product);
     if (!res) {
       return new AddResponseJSON("Error Adding product", true);
@@ -50,6 +67,16 @@ public class DataEntryOperatorService {
 
     return new AddResponseJSON("Added Successfully", true);
 
+  }
+
+  public String incrementCode(String code) {
+
+    int numericCode = Integer.parseInt(code);
+
+    // Increment the numeric part
+    numericCode++;
+
+    return String.format("%04d", numericCode);
   }
 
   public GetResponseJSON<Vendor> getVendors() {

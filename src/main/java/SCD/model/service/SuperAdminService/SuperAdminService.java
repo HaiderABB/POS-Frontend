@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import SCD.model.crud.BranchesDAO;
+import SCD.model.crud.CodesDAO;
 import SCD.model.crud.ProductDAO;
 import SCD.model.crud.SaleDAO;
 import SCD.model.models.Branch;
@@ -18,12 +19,24 @@ public class SuperAdminService {
     BranchesDAO branchesDAO;
     ProductDAO productDAO;
     SaleDAO saleDAO;
+    CodesDAO codesDAO;
 
     public SuperAdminService() {
         branchesDAO = BranchesDAO.getInstance();
         productDAO = ProductDAO.getInstance();
         saleDAO = SaleDAO.getInstance();
+        codesDAO = CodesDAO.getInstance();
 
+    }
+
+    public String incrementCode(String code) {
+
+        int numericCode = Integer.parseInt(code);
+
+        // Increment the numeric part
+        numericCode++;
+
+        return String.format("%04d", numericCode);
     }
 
     public AddResponseJSON createBranch(Branch branch) {
@@ -33,6 +46,14 @@ public class SuperAdminService {
         if (br) {
             return new AddResponseJSON("Branch Exists with phone number", false);
         }
+
+        String empcode = codesDAO.getCodeByTableName("BRANCHES");
+
+        empcode = incrementCode(empcode);
+        String temp = "BR-" + empcode;
+        branch.setBranchCode(temp);
+        codesDAO.updateCodeByTableName("BRANCHES", empcode);
+
         boolean res = branchesDAO.addBranch(branch);
 
         if (res) {

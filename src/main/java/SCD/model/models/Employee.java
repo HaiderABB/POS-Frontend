@@ -54,9 +54,8 @@ public class Employee {
   public Employee() {
   }
 
-  public Employee(String employeeCode, String name, String role, Branch branch, String phoneNumber, double salary,
+  public Employee(String name, String role, Branch branch, String phoneNumber, double salary,
       String email) {
-    this.employeeCode = employeeCode;
     this.name = name;
     this.role = role;
     this.branch = branch;
