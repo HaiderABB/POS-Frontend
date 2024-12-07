@@ -1,8 +1,4 @@
-
-
 package SCD.ui.DataEntryOperator;
-
-import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,65 +59,34 @@ public class DataEntryOperatorDashboard extends JFrame {
     }
     private JPanel createMainContent() {
         JPanel mainContent = new JPanel();
-        mainContent.setLayout(new GridLayout(2, 2, 20, 20));
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
 
-        mainContent.add(createCard("View Vendor Info", "C:\\Users\\AMMAR\\Desktop\\icons\\enter_data.png", this::openViewVendorsPage));
-        mainContent.add(createCard("Add New Vendor", "C:\\Users\\AMMAR\\Desktop\\icons\\update.png", this::openAddNewVendorPage));
-        mainContent.add(createCard("Add Products", "C:\\Users\\AMMAR\\Desktop\\icons\\reports.png", this::openAddProductsPage));
-        mainContent.add(createCard("View Products", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png", this::openViewProductsPage));
-        mainContent.add(createCard("Remove a Product", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png", e -> {}));
-        mainContent.add(createCard("Remove a vendor", "C:\\Users\\AMMAR\\Desktop\\icons\\pending.png", e -> {}));
+
+        JLabel welcomeLabel = new JLabel("Welcome to the Data Entry Operator Dashboard!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextArea responsibilityArea = new JTextArea(
+                "As a Data Entry Operator, you are responsible for:\n\n" +
+                        "1. Viewing and managing vendor information.\n" +
+                        "2. Adding new vendors and products.\n" +
+                        "3. Viewing and removing products and vendors.\n\n" +
+                        "Navigate through the sidebar to access the respective modules."
+        );
+        responsibilityArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        responsibilityArea.setEditable(false);
+        responsibilityArea.setWrapStyleWord(true);
+        responsibilityArea.setLineWrap(true);
+        responsibilityArea.setOpaque(false);
+        responsibilityArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        mainContent.add(welcomeLabel);
+        mainContent.add(Box.createRigidArea(new Dimension(0, 20)));
+        mainContent.add(responsibilityArea);
 
         return mainContent;
-    }
-
-    private void openViewVendorsPage(ActionEvent e) {
-        new ViewVendorsPage();
-        dispose();
-    }
-
-    private void openAddNewVendorPage(ActionEvent e) {
-        new AddNewVendorPage();
-        dispose();
-    }
-
-    private void openAddProductsPage(ActionEvent e) {
-        new AddProductPage();
-        dispose();
-    }
-
-    private void openViewProductsPage(ActionEvent e) {
-        new ViewProductsPage();
-        dispose();
-    }
-
-    private JPanel createCard(String title, String iconPath, ActionListener actionListener) {
-        JPanel card = new JPanel();
-        card.setBackground(Color.WHITE);
-        card.setLayout(new BorderLayout());
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
-
-        JLabel icon = new JLabel(new ImageIcon(iconPath));
-        icon.setHorizontalAlignment(SwingConstants.CENTER);
-        card.add(icon, BorderLayout.CENTER);
-
-        JLabel cardTitle = new JLabel(title, JLabel.CENTER);
-        cardTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        cardTitle.setForeground(new Color(0, 0, 0));
-        card.add(cardTitle, BorderLayout.SOUTH);
-
-        card.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
-            }
-        });
-
-        return card;
     }
 
     public static void main(String[] args) {
