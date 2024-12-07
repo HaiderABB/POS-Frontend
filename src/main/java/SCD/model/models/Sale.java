@@ -1,90 +1,134 @@
 package SCD.model.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "sales")
 public class Sale {
-    private int sale_id; // incremented in the database
-    private String cashier_code; // Foreign Key to users where role = 'Cashier'
-    private String branch_code; // Foreign Key to branches
-    private double total_amount;
-    private Date saleDate;
 
-    public Sale(int sale_id, String cashier_code, String branch_code, double total_amount, Date saleDate) {
-        this.sale_id = sale_id;
-        this.cashier_code = cashier_code;
-        this.branch_code = branch_code;
-        this.total_amount = total_amount;
-        this.saleDate = saleDate;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY) // Primary key auto-incremented by the database
+  @Column(name = "sale_id")
+  private int saleId;
 
-    public int getSaleId() {
-        return sale_id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "cashier_code", referencedColumnName = "employee_code", nullable = false)
+  private Employee cashier; // Links to the Employee entity (users/employees table)
 
-    public void setSaleId(int sale_id) {
-        this.sale_id = sale_id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
+  private Branch branch; // Links to the Branch entity (branch table)
 
-    public double getTotalAmount() {
-        return total_amount;
-    }
+  @Column(name = "total_amount", nullable = false)
+  private double totalAmount;
 
-    public void setTotalAmount(double total_amount) {
-        this.total_amount = total_amount;
-    }
+  @Column(name = "profit", nullable = false)
+  private double profit; // New field for profit
 
-    public Date getSaleDate() {
-        return saleDate;
-    }
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
 
-    public void setSaleDate(Date saleDate) {
-        this.saleDate = saleDate;
-    }
+  public Sale() {
+    this.createdAt = LocalDateTime.now(); // Initialize with the current timestamp
+  }
 
-    @Override
-    public String toString() {
-        return "Sale{" +
-                "sale_id=" + sale_id +
-                ", cashier_code=" + cashier_code +
-                ", branch_code=" + branch_code +
-                ", total_amount=" + total_amount +
-                ", saleDate=" + saleDate +
-                '}';
-    }
+  public Sale(Employee cashier, Branch branch, double totalAmount, double profit) {
+    this.cashier = cashier;
+    this.branch = branch;
+    this.totalAmount = totalAmount;
+    this.profit = profit;
+    this.createdAt = LocalDateTime.now();
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Sale sale = (Sale) o;
-        return sale_id == sale.sale_id &&
-                (cashier_code == null ? sale.cashier_code == null : cashier_code.equals(sale.cashier_code)) &&
-                (branch_code == null ? sale.branch_code == null : branch_code.equals(sale.branch_code)) &&
-                Double.compare(sale.total_amount, total_amount) == 0 &&
-                Objects.equals(saleDate, sale.saleDate);
-    }
+  // Getters and Setters
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(sale_id, cashier_code, branch_code, total_amount, saleDate);
-    }
+  public int getSaleId() {
+    return saleId;
+  }
 
-    public String getCashierCode() {
-        return cashier_code;
-    }
+  public void setSaleId(int saleId) {
+    this.saleId = saleId;
+  }
 
-    public void setCashierCode(String cashier_code) {
-        this.cashier_code = cashier_code;
-    }
+  public Employee getCashier() {
+    return cashier;
+  }
 
-    public String getBranchCode() {
-        return branch_code;
-    }
+  public void setCashier(Employee cashier) {
+    this.cashier = cashier;
+  }
 
-    public void setBranchCode(String branch_code) {
-        this.branch_code = branch_code;
-    }
+  public Branch getBranch() {
+    return branch;
+  }
+
+  public void setBranch(Branch branch) {
+    this.branch = branch;
+  }
+
+  public double getTotalAmount() {
+    return totalAmount;
+  }
+
+  public void setTotalAmount(double totalAmount) {
+    this.totalAmount = totalAmount;
+  }
+
+  public double getProfit() {
+    return profit;
+  }
+
+  public void setProfit(double profit) {
+    this.profit = profit;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  @Override
+  public String toString() {
+    return "Sale{" +
+        "saleId=" + saleId +
+        ", cashier=" + (cashier != null ? cashier.getEmployeeCode() : "Unknown") +
+        ", branch=" + (branch != null ? branch.getBranchCode() : "Unknown") +
+        ", totalAmount=" + totalAmount +
+        ", profit=" + profit +
+        ", createdAt=" + createdAt +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Sale sale = (Sale) o;
+    return saleId == sale.saleId &&
+        Double.compare(sale.totalAmount, totalAmount) == 0 &&
+        Double.compare(sale.profit, profit) == 0 &&
+        Objects.equals(cashier, sale.cashier) &&
+        Objects.equals(branch, sale.branch) &&
+        Objects.equals(createdAt, sale.createdAt);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(saleId, cashier, branch, totalAmount, profit, createdAt);
+  }
 }

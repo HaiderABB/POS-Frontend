@@ -5,6 +5,7 @@ import SCD.ui.Common.ButtonFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+
 import java.util.List;
 
 public class ViewProductsPage extends JFrame {
@@ -34,11 +35,13 @@ public class ViewProductsPage extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.WHITE);
 
+
         String[] columnNames = {"Name", "Category", "Original Price", "Sale Price", "Price by Unit", "Price by Carton", "Stock Quantity"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable productTable = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(productTable);
         mainPanel.add(tableScrollPane, BorderLayout.CENTER);
+
 
         add(mainPanel, BorderLayout.CENTER);
 

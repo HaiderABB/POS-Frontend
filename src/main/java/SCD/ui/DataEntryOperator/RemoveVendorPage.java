@@ -4,6 +4,7 @@ import SCD.ui.Common.ButtonFactory;
 
 import javax.swing.*;
 import java.awt.*;
+
 import java.util.regex.Pattern;
 
 public class RemoveVendorPage extends JFrame {
@@ -34,6 +35,7 @@ public class RemoveVendorPage extends JFrame {
 
         JLabel vendorIdLabel = new JLabel("Vendor ID:");
         JTextField vendorIdField = new JTextField();
+
         vendorIdLabel.setFont(new Font("Arial", Font.PLAIN, 30));
         vendorIdField.setFont(new Font("Arial", Font.PLAIN, 26));
         vendorIdField.setPreferredSize(new Dimension(200, 40));
@@ -50,6 +52,7 @@ public class RemoveVendorPage extends JFrame {
 
         JButton removeButton = ButtonFactory.createStyledButton("Remove");
         removeButton.addActionListener(e -> {
+
             String vendorId = vendorIdField.getText().trim();
 
             if (!validateVendorId(vendorId)) {
@@ -77,6 +80,7 @@ public class RemoveVendorPage extends JFrame {
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
     }
+
 
     private boolean validateVendorId(String vendorId) {
         if (vendorId.isEmpty()) {

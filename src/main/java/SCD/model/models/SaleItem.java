@@ -1,100 +1,128 @@
 package SCD.model.models;
 
-import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "sale_items")
 public class SaleItem {
-    private int sale_item_id;
-    private int sale_id; // Foreign Key to sales
-    private int productId; // U // Foreign Key to products
-    private int quantity; // U
-    private double unitPrice;
-    private double totalPrice;
 
-    public SaleItem(int sale_item_id, int sale_id, int productId, int quantity, double unitPrice, double totalPrice) {
-        this.sale_item_id = sale_item_id;
-        this.sale_id = sale_id;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "sale_item_id")
+  private int saleItemId;
 
-    public int getSaleItemId() {
-        return sale_item_id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "product_code", referencedColumnName = "product_code", nullable = false)
+  private Product product;
 
-    public void setSaleItemId(int sale_item_id) {
-        this.sale_item_id = sale_item_id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "sale_id", nullable = false)
+  private Sale sale;
 
-    public int getSaleId() {
-        return sale_id;
-    }
+  @Column(name = "quantity", nullable = false)
+  private int quantity;
 
-    public void setSaleId(int sale_id) {
-        this.sale_id = sale_id;
-    }
+  @Column(name = "sale_price", nullable = false)
+  private double salePrice;
 
-    public int getProductId() {
-        return productId;
-    }
+  @Column(name = "total_price", nullable = false)
+  private double totalPrice;
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
+  @Column(name = "actual_price", nullable = false)
+  private double actualPrice; // New field for the actual price
 
-    public int getQuantity() {
-        return quantity;
-    }
+  public SaleItem() {
+  }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-        updateTotalPrice();
-    }
+  public SaleItem(Product product, int quantity, double salePrice, double actualPrice) {
+    this.product = product;
+    this.quantity = quantity;
+    this.salePrice = salePrice;
+    this.actualPrice = actualPrice;
+    this.totalPrice = quantity * salePrice; // Automatically calculate total price
+  }
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
+  // Getters and Setters
 
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-        updateTotalPrice();
-    }
+  public int getSaleItemId() {
+    return saleItemId;
+  }
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
+  public void setSaleItemId(int saleItemId) {
+    this.saleItemId = saleItemId;
+  }
 
-    private void updateTotalPrice() {
-        this.totalPrice = this.unitPrice * this.quantity;
-    }
+  public Product getProduct() {
+    return product;
+  }
 
-    public String toString() {
-        return "SaleItem{" +
-                "sale_item_id=" + sale_item_id +
-                ", sale_id=" + sale_id +
-                ", productId=" + productId +
-                ", quantity=" + quantity +
-                ", unitPrice=" + unitPrice +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
+  public void setProduct(Product product) {
+    this.product = product;
+  }
 
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        SaleItem saleItem = (SaleItem) o;
-        return sale_item_id == saleItem.sale_item_id &&
-                sale_id == saleItem.sale_id &&
-                productId == saleItem.productId &&
-                quantity == saleItem.quantity &&
-                Double.compare(saleItem.unitPrice, unitPrice) == 0 &&
-                Double.compare(saleItem.totalPrice, totalPrice) == 0;
-    }
+  public Sale getSale() {
+    return sale;
+  }
 
-    public int hashCode() {
-        return Objects.hash(sale_item_id, sale_id, productId, quantity, unitPrice, totalPrice);
-    }
+  public void setSale(Sale sale) {
+    this.sale = sale;
+  }
+
+  public int getQuantity() {
+    return quantity;
+  }
+
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
+    calculateTotalPrice(); // Update total price if quantity changes
+  }
+
+  public double getSalePrice() {
+    return salePrice;
+  }
+
+  public void setSalePrice(double salePrice) {
+    this.salePrice = salePrice;
+    calculateTotalPrice(); // Update total price if sale price changes
+  }
+
+  public double getTotalPrice() {
+    return totalPrice;
+  }
+
+  public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+  }
+
+  public double getActualPrice() {
+    return actualPrice;
+  }
+
+  public void setActualPrice(double actualPrice) {
+    this.actualPrice = actualPrice;
+  }
+
+  private void calculateTotalPrice() {
+    this.totalPrice = this.quantity * this.salePrice; // Calculate total price based on sale price
+  }
+
+  @Override
+  public String toString() {
+    return "SaleItem{" +
+        "saleItemId=" + saleItemId +
+        ", product=" + (product != null ? product.getProductCode() : "Unknown") +
+        ", sale=" + (sale != null ? sale.getSaleId() : "Unknown") +
+        ", quantity=" + quantity +
+        ", salePrice=" + salePrice +
+        ", actualPrice=" + actualPrice + // Include actual price in toString output
+        ", totalPrice=" + totalPrice +
+        '}';
+  }
 }

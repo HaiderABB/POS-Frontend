@@ -57,12 +57,12 @@ public class DataEntryOperatorDashboard extends JFrame {
         revalidate();
         repaint();
     }
-
     private JPanel createMainContent() {
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainContent.setBackground(Color.WHITE);
+
 
         JLabel welcomeLabel = new JLabel("Welcome to the Data Entry Operator Dashboard!");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));

@@ -1,6 +1,7 @@
 package SCD.ui.DataEntryOperator;
 
 import SCD.ui.Common.ButtonFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.regex.Pattern;
@@ -49,6 +50,7 @@ public class RemoveProductPage extends JFrame {
 
         JButton removeButton = ButtonFactory.createStyledButton("Remove");
         removeButton.addActionListener(e -> {
+
             String productId = productIdField.getText().trim();
 
             if (!validateProductId(productId)) {

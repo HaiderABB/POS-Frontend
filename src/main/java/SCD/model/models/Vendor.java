@@ -1,95 +1,122 @@
 package SCD.model.models;
 
-import java.util.Objects;
+import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "vendors")
 public class Vendor {
-    private int vendorId;
-    private String vendor_code; // U
-    private String name; // U
-    private String phone_number; // U
-    private String email; // U
-    private String address; // U
 
-    public Vendor(int vendorId, int branchId, String name, String phone_number, String email, String address) {
-        this.vendorId = vendorId;
-        this.name = name;
-        this.phone_number = phone_number;
-        this.email = email;
-        this.address = address;
-    }
+  @Id
+  @Column(name = "vendor_code", nullable = false, unique = true)
+  private String vendorCode;
 
-    public int getVendorId() {
-        return vendorId;
-    }
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    public void setVendorId(int vendorId) {
-        this.vendorId = vendorId;
-    }
+  @Column(name = "phone_number", nullable = false)
+  private String phoneNumber;
 
-    public String getName() {
-        return name;
-    }
+  @Column(name = "address")
+  private String address;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive = true; // New field with default value
 
-    public String getContactInfo() {
-        return phone_number;
-    }
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
 
-    public void setContactInfo(String phone_number) {
-        this.phone_number = phone_number;
-    }
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
-    public String getEmail() {
-        return email;
-    }
+  public Vendor() {
+    // Initialize timestamps to current date and time
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public Vendor(String vendorCode, String name, String phoneNumber, String address) {
+    this.vendorCode = vendorCode;
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.isActive = true; // Default value for parameterized constructor
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  // Getters and Setters
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getVendorCode() {
+    return vendorCode;
+  }
 
-    public String toString() {
-        return "Vendor{" +
-                "vendorId=" + vendorId +
-                ", name='" + name + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
+  public void setVendorCode(String vendorCode) {
+    this.vendorCode = vendorCode;
+  }
 
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Vendor vendor = (Vendor) o;
-        return vendorId == vendor.vendorId &&
-                Objects.equals(name, vendor.name) &&
-                Objects.equals(phone_number, vendor.phone_number) &&
-                Objects.equals(email, vendor.email) &&
-                Objects.equals(address, vendor.address);
-    }
+  public String getName() {
+    return name;
+  }
 
-    public int hashCode() {
-        return Objects.hash(vendorId, name, phone_number, email, address);
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getVendor_code() {
-        return vendor_code;
-    }
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-    public void setVendor_code(String vendor_code) {
-        this.vendor_code = vendor_code;
-    }
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  @Override
+  public String toString() {
+    return "Vendor{" +
+        "vendorCode='" + vendorCode + '\'' +
+        ", name='" + name + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", address='" + address + '\'' +
+        ", isActive=" + isActive +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
+        '}';
+  }
 }

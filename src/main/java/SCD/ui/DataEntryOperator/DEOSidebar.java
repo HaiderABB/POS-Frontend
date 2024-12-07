@@ -8,6 +8,7 @@ import java.awt.*;
 public class DEOSidebar extends JPanel {
 
     public DEOSidebar() {
+
         setPreferredSize(new Dimension(240, 800)); // Set the same size as the SuperAdmin sidebar
         setBackground(new Color(255, 102, 102));
 
@@ -53,6 +54,7 @@ public class DEOSidebar extends JPanel {
     }
 
     private void openAddProductPage() {
+
         navigateToPage(new AddProductPage());
     }
 
@@ -78,4 +80,5 @@ public class DEOSidebar extends JPanel {
             page.setVisible(true);
         });
     }
+
 }

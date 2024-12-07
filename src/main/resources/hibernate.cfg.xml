@@ -29,7 +29,15 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Mention annotated class -->
-        <mapping class="java.SCD.model.entities"/>
+        <mapping class="SCD.model.models.Branch"/>
+        <mapping class="SCD.model.models.Employee"/>
+        <mapping class="SCD.model.models.Product"/>
+        <mapping class="SCD.model.models.Sale"/>
+        <mapping class="SCD.model.models.Vendor"/>
+        <mapping class="SCD.model.models.SaleItem"/>
+
+
+
     </session-factory>
 
 </hibernate-configuration>

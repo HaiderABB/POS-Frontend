@@ -27,6 +27,7 @@ public class AddProductPage extends JFrame {
         add(headerPanel, BorderLayout.NORTH);
 
         // Main content area
+
         JPanel mainPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(Color.WHITE);
@@ -35,6 +36,7 @@ public class AddProductPage extends JFrame {
         JTextField nameField = new JTextField();
 
         JLabel categoryLabel = new JLabel("Category:");
+
         String[] categories = {
                 "Electronics", "Home Appliances", "Fashion",
                 "Health & Beauty", "Grocery", "Books & Stationery",
@@ -55,6 +57,7 @@ public class AddProductPage extends JFrame {
         JLabel priceByCartonLabel = new JLabel("Price by Carton:");
         JTextField priceByCartonField = new JTextField();
 
+
         JLabel stockQuantityLabel = new JLabel("Stock Quantity:");
         JTextField stockQuantityField = new JTextField();
 
@@ -70,6 +73,7 @@ public class AddProductPage extends JFrame {
         mainPanel.add(priceByUnitField);
         mainPanel.add(priceByCartonLabel);
         mainPanel.add(priceByCartonField);
+
         mainPanel.add(stockQuantityLabel);
         mainPanel.add(stockQuantityField);
 
@@ -82,6 +86,7 @@ public class AddProductPage extends JFrame {
 
         JButton saveButton = ButtonFactory.createStyledButton("Save");
         saveButton.addActionListener(e -> {
+
             String name = nameField.getText().trim();
             String category = (String) categoryComboBox.getSelectedItem();
             String originalPriceText = originalPriceField.getText().trim();
@@ -166,4 +171,4 @@ public class AddProductPage extends JFrame {
             new AddProductPage().setVisible(true);
         });
     }
-}
+
