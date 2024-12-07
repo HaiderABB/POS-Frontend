@@ -1,12 +1,23 @@
 package SCD.ui.DataEntryOperator;
 
-import SCD.ui.Common.ButtonFactory;
-
-
-import javax.swing.text.NumberFormatter;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.text.NumberFormat;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.text.NumberFormatter;
+
+import SCD.ui.Common.ButtonFactory;
 
 public class AddNewVendorPage extends JFrame {
 
@@ -38,7 +49,6 @@ public class AddNewVendorPage extends JFrame {
 
         JLabel vendorNameLabel = new JLabel("Vendor Name:");
         JTextField vendorNameField = new JTextField();
-
 
         JLabel addressLabel = new JLabel("Address:");
         JTextField addressField = new JTextField();
@@ -99,7 +109,6 @@ public class AddNewVendorPage extends JFrame {
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
     }
-
 
     private String receiveVendorCodeFromBackend() {
         // Placeholder for backend call to receive vendor code

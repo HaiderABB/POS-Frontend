@@ -1,9 +1,23 @@
 package SCD.ui.DataEntryOperator;
 
-import SCD.ui.Common.ButtonFactory;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import SCD.ui.Common.ButtonFactory;
 
 public class AddProductPage extends JFrame {
 
@@ -57,7 +71,6 @@ public class AddProductPage extends JFrame {
         JLabel priceByCartonLabel = new JLabel("Price by Carton:");
         JTextField priceByCartonField = new JTextField();
 
-
         JLabel stockQuantityLabel = new JLabel("Stock Quantity:");
         JTextField stockQuantityField = new JTextField();
 
@@ -95,8 +108,10 @@ public class AddProductPage extends JFrame {
             String priceByCartonText = priceByCartonField.getText().trim();
             String stockQuantityText = stockQuantityField.getText().trim();
 
-            if (name.isEmpty() || category.isEmpty() || originalPriceText.isEmpty() || salePriceText.isEmpty() || priceByUnitText.isEmpty() || priceByCartonText.isEmpty() || stockQuantityText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill out all fields with valid values!", "Error", JOptionPane.ERROR_MESSAGE);
+            if (name.isEmpty() || category.isEmpty() || originalPriceText.isEmpty() || salePriceText.isEmpty()
+                    || priceByUnitText.isEmpty() || priceByCartonText.isEmpty() || stockQuantityText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill out all fields with valid values!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -108,17 +123,20 @@ public class AddProductPage extends JFrame {
                 int stockQuantity = Integer.parseInt(stockQuantityText);
 
                 if (salePrice <= originalPrice) {
-                    JOptionPane.showMessageDialog(this, "Sale price must be greater than original price!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Sale price must be greater than original price!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 if (priceByCarton <= priceByUnit) {
-                    JOptionPane.showMessageDialog(this, "Price by carton must be greater than price by unit!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Price by carton must be greater than price by unit!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 if (priceByUnit > salePrice) {
-                    JOptionPane.showMessageDialog(this, "Price by unit must be equal to or less than sale price!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Price by unit must be equal to or less than sale price!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -128,7 +146,8 @@ public class AddProductPage extends JFrame {
                 // Implement save logic here
                 JOptionPane.showMessageDialog(this, "Product Added Successfully!\nProduct Code: " + productCode);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for prices and stock quantity!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for prices and stock quantity!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -172,3 +191,4 @@ public class AddProductPage extends JFrame {
         });
     }
 
+}
