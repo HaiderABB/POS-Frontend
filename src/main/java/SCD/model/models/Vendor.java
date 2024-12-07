@@ -40,7 +40,6 @@ public class Vendor {
   }
 
   public Vendor(String name, String phoneNumber, String address) {
-    this.vendorCode = vendorCode;
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;

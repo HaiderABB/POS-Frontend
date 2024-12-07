@@ -1,5 +1,6 @@
 package SCD.utils;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -16,7 +17,7 @@ public class HibernateUtil {
           .configure("hibernate.cfg.xml") // This file contains Hibernate settings
           .addAnnotatedClass(Branch.class) // Add your annotated entity classes here
           .buildSessionFactory();
-    } catch (Throwable ex) {
+    } catch (HibernateException ex) {
       System.err.println("Initial SessionFactory creation failed." + ex);
       throw new ExceptionInInitializerError(ex);
     }
@@ -45,7 +46,6 @@ public class HibernateUtil {
       HibernateUtil.shutdown();
       System.out.println("SessionFactory has been shut down.");
     } catch (Exception e) {
-      e.printStackTrace();
       System.err.println("Error occurred while testing HibernateUtil.");
     }
   }

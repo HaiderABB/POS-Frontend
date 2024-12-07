@@ -106,38 +106,31 @@ public class SuperAdminService {
         return new GetResponseJSON<>("Found Branches", branches);
     }
 
-    public GetReportJSON getDayReport(String code, LocalDate day) {
-
+    public GetReportJSON getTodaysReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
-
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
             return new GetReportJSON(null, null, 0.0, "Branch not found");
         }
-
         List<Product> products = productDAO.getAllActiveProducts();
         if (products.isEmpty()) {
             System.err.println("No Products");
             return new GetReportJSON(null, null, 0.0, "No Products");
         }
-
-        List<Sale> sales = saleDAO.getSalesForDay(day, code);
+        List<Sale> sales = saleDAO.getSalesForDay(LocalDate.now(), code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
             return new GetReportJSON(null, null, 0.0, "No Sales");
         }
-
         double profit = 0.0;
-
         for (Sale sl : sales) {
             profit += sl.getProfit();
         }
-
         return new GetReportJSON(sales, products, profit, "Report Generated");
 
     }
 
-    public GetReportJSON getWeeklyReport(String code, LocalDate date) {
+    public GetReportJSON getWeeklyReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
@@ -149,7 +142,7 @@ public class SuperAdminService {
             return new GetReportJSON(null, null, 0.0, "No Products");
         }
 
-        List<Sale> sales = saleDAO.getSalesForWeek(date, code);
+        List<Sale> sales = saleDAO.getSalesForWeek(LocalDate.now(), code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
             return new GetReportJSON(null, null, 0.0, "No Sales");
@@ -163,7 +156,7 @@ public class SuperAdminService {
 
     }
 
-    public GetReportJSON getMonthlyReport(String code, LocalDate date) {
+    public GetReportJSON getMonthlyReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
@@ -175,7 +168,7 @@ public class SuperAdminService {
             return new GetReportJSON(null, null, 0, "No Products");
         }
 
-        List<Sale> sales = saleDAO.getSalesForMonth(date, code);
+        List<Sale> sales = saleDAO.getSalesForMonth(LocalDate.now(), code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
             return new GetReportJSON(null, null, 0, "No Sales");
@@ -188,7 +181,7 @@ public class SuperAdminService {
 
     }
 
-    public GetReportJSON getYearlyReport(String code, int year) {
+    public GetReportJSON getYearlyReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
@@ -199,6 +192,7 @@ public class SuperAdminService {
             System.err.println("No Products");
             return new GetReportJSON(null, null, 0, "No Products");
         }
+        int year = LocalDate.now().getYear();
         List<Sale> sales = saleDAO.getSalesForYear(year, code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
