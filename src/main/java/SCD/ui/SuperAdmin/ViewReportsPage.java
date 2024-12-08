@@ -5,13 +5,10 @@ import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ViewReportsPage extends JFrame {
-    private Sidebar sidebar;
-    private NavBar navBar;
     private JPanel datePanel;
 
     public ViewReportsPage() {
@@ -20,30 +17,33 @@ public class ViewReportsPage extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar();
+        // Sidebar (dummy, replace with actual implementation if needed)
+        JPanel sidebar = new JPanel();
+        sidebar.setPreferredSize(new Dimension(200, 700));
+        sidebar.setBackground(Color.LIGHT_GRAY);
         add(sidebar, BorderLayout.WEST);
 
+        // Content Panel
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        navBar = new NavBar();
+        NavBar navBar = new NavBar();
         contentPanel.add(navBar, BorderLayout.NORTH);
         navBar.setTitle("Reports");
 
-        JPanel reportSelectionPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+        JPanel reportSelectionPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         reportSelectionPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel reportDurationLabel = new JLabel("Select Report Duration:");
         String[] reportDurations = {"Today", "Weekly", "Monthly", "Yearly", "Custom Range"};
         JComboBox<String> reportDurationComboBox = new JComboBox<>(reportDurations);
 
-        JLabel reportTypeLabel = new JLabel("Select Report Type:");
-        String[] reportTypes = {"Sales", "Remaining Stock", "Profit"};
-        JComboBox<String> reportTypeComboBox = new JComboBox<>(reportTypes);
-
-        JLabel branchCodeLabel = new JLabel("Branch Code (Required, BH-1234):");
+        JLabel branchCodeLabel = new JLabel("Branch Code:");
         JTextField branchCodeField = new JTextField();
 
+        JLabel graphTypeLabel = new JLabel("Select Graph Type:");
+        String[] graphTypes = {"Sales", "Remaining Stock", "Profit"};
+        JComboBox<String> graphTypeComboBox = new JComboBox<>(graphTypes);
 
         JLabel startDateLabel = new JLabel("Date From:");
         JSpinner startDateSpinner = new JSpinner(new SpinnerDateModel());
@@ -62,14 +62,8 @@ public class ViewReportsPage extends JFrame {
         datePanel.add(endDateSpinner);
         datePanel.setVisible(false);
 
-        JLabel graphTypeLabel = new JLabel("Select Graph Type:");
-        String[] graphTypes = {"None", "Sales", "Remaining Stock", "Profit"};
-        JComboBox<String> graphTypeComboBox = new JComboBox<>(graphTypes);
-
         reportSelectionPanel.add(reportDurationLabel);
         reportSelectionPanel.add(reportDurationComboBox);
-        reportSelectionPanel.add(reportTypeLabel);
-        reportSelectionPanel.add(reportTypeComboBox);
         reportSelectionPanel.add(branchCodeLabel);
         reportSelectionPanel.add(branchCodeField);
         reportSelectionPanel.add(graphTypeLabel);
@@ -77,8 +71,9 @@ public class ViewReportsPage extends JFrame {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton generateReportButton = ButtonFactory.createStyledButton("Generate Report");
+        JButton generateGraphButton = ButtonFactory.createStyledButton("Generate Graph");
         buttonPanel.add(generateReportButton);
-
+        buttonPanel.add(generateGraphButton);
 
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.add(datePanel, BorderLayout.CENTER);
@@ -91,63 +86,93 @@ public class ViewReportsPage extends JFrame {
 
         setLocationRelativeTo(null);
 
-
+        // Event Listeners
         reportDurationComboBox.addActionListener(e -> {
-            String selectedDuration = (String) reportDurationComboBox.getSelectedItem();
-            boolean isCustomRange = "Custom Range".equals(selectedDuration);
+            boolean isCustomRange = "Custom Range".equals(reportDurationComboBox.getSelectedItem());
             datePanel.setVisible(isCustomRange);
             startDateSpinner.setEnabled(isCustomRange);
             endDateSpinner.setEnabled(isCustomRange);
-            contentPanel.revalidate();
-            contentPanel.repaint();
         });
 
-        generateReportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedDuration = (String) reportDurationComboBox.getSelectedItem();
-                String selectedReportType = (String) reportTypeComboBox.getSelectedItem();
-                String selectedGraphType = (String) graphTypeComboBox.getSelectedItem();
-                String branchCode = branchCodeField.getText().trim();
-
-                Date startDate = (Date) startDateSpinner.getValue();
-                Date endDate = (Date) endDateSpinner.getValue();
-
-                if (!validateBranchCode(branchCode)) {
-                    JOptionPane.showMessageDialog(ViewReportsPage.this, "Branch Code is required and must follow the format 'BH-1234'.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (!validateInputs(selectedDuration, startDate, endDate)) {
-                    return;
-                }
-
-                String message = "Generating " + selectedReportType + " report for " + selectedDuration +
-                        "\nBranch Code: " + branchCode +
-                        "\nDate From: " + startDate +
-                        "\nDate To: " + endDate +
-                        "\nGraph Type: " + selectedGraphType;
-                JOptionPane.showMessageDialog(ViewReportsPage.this, message, "Info", JOptionPane.INFORMATION_MESSAGE);
+        generateReportButton.addActionListener(e -> {
+            String branchCode = branchCodeField.getText().trim();
+            String duration = (String) reportDurationComboBox.getSelectedItem();
+            if (!validateBranchCode(branchCode)) {
+                showErrorDialog("Branch Code is required and must follow the format 'BR-XXXX'.");
+                return;
             }
+            LocalDate startDate = calculateStartDate(duration);
+            LocalDate endDate = calculateEndDate(duration);
+
+            String formattedStartDate = formatDate(startDate, duration);
+            String formattedEndDate = formatDate(endDate, duration);
+
+            new ReportGeneratorPanel(branchCode, duration, formattedStartDate, formattedEndDate).setVisible(true);
         });
+
+        generateGraphButton.addActionListener(e -> {
+            String graphType = (String) graphTypeComboBox.getSelectedItem();
+            String duration = (String) reportDurationComboBox.getSelectedItem();
+            String branchCode = branchCodeField.getText().trim();
+            if (!validateBranchCode(branchCode)) {
+                showErrorDialog("Branch Code is required and must follow the format 'BR-XXXX'.");
+                return;
+            }
+            LocalDate startDate = calculateStartDate(duration);
+            LocalDate endDate = calculateEndDate(duration);
+
+            String formattedStartDate = formatDate(startDate, duration);
+            String formattedEndDate = formatDate(endDate, duration);
+
+            new GraphGeneratorPanel(graphType, duration, branchCode, formattedStartDate, formattedEndDate).setVisible(true);
+        });
+    }
+
+    private LocalDate calculateStartDate(String duration) {
+        LocalDate now = LocalDate.now();
+        switch (duration) {
+            case "Today":
+                return now;
+            case "Weekly":
+                return now.minusDays(6); // Last 7 days including today
+            case "Monthly":
+                return now.withDayOfMonth(1);
+            case "Yearly":
+                return now.withDayOfYear(1);
+            default:
+                return now; // Custom range is handled by user input
+        }
+    }
+
+    private LocalDate calculateEndDate(String duration) {
+        LocalDate now = LocalDate.now();
+        return now; // End date is always the current date
+    }
+
+    private String formatDate(LocalDate date, String duration) {
+        DateTimeFormatter formatter;
+        switch (duration) {
+            case "Monthly":
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                break;
+            case "Yearly":
+                formatter = DateTimeFormatter.ofPattern("yyyy");
+                break;
+            default:
+                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        }
+        return date.format(formatter);
     }
 
     private boolean validateBranchCode(String branchCode) {
-        return branchCode.matches("BH-\\d{4}");
+        return branchCode.matches("BR-\\d{4}");
     }
 
-    private boolean validateInputs(String reportDuration, Date startDate, Date endDate) {
-        if ("Custom Range".equals(reportDuration) && startDate.after(endDate)) {
-            JOptionPane.showMessageDialog(this, "Date From cannot be after Date To.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
+    private void showErrorDialog(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ViewReportsPage frame = new ViewReportsPage();
-            frame.setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new ViewReportsPage().setVisible(true));
     }
 }

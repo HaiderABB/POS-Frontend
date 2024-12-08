@@ -1,5 +1,6 @@
 package SCD.model.models;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -16,31 +17,38 @@ import jakarta.persistence.Table;
 public class Sale {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // Primary key auto-incremented by the database
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "sale_id")
   private int saleId;
 
   @ManyToOne
   @JoinColumn(name = "cashier_code", referencedColumnName = "employee_code", nullable = false)
-  private Employee cashier; // Links to the Employee entity (users/employees table)
+  private Employee cashier;
 
   @ManyToOne
   @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
-  private Branch branch; // Links to the Branch entity (branch table)
+  private Branch branch;
 
   @Column(name = "total_amount", nullable = false)
   private double totalAmount;
 
+  @Column(name = "profit", nullable = false)
+  private double profit;
+
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
+
   public Sale() {
+    this.createdAt = LocalDateTime.now();
   }
 
-  public Sale(Employee cashier, Branch branch, double totalAmount) {
+  public Sale(Employee cashier, Branch branch, double totalAmount, double profit) {
     this.cashier = cashier;
     this.branch = branch;
     this.totalAmount = totalAmount;
+    this.profit = profit;
+    this.createdAt = LocalDateTime.now();
   }
-
-  // Getters and Setters
 
   public int getSaleId() {
     return saleId;
@@ -74,6 +82,22 @@ public class Sale {
     this.totalAmount = totalAmount;
   }
 
+  public double getProfit() {
+    return profit;
+  }
+
+  public void setProfit(double profit) {
+    this.profit = profit;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
   @Override
   public String toString() {
     return "Sale{" +
@@ -81,7 +105,8 @@ public class Sale {
         ", cashier=" + (cashier != null ? cashier.getEmployeeCode() : "Unknown") +
         ", branch=" + (branch != null ? branch.getBranchCode() : "Unknown") +
         ", totalAmount=" + totalAmount +
-        ", saleDate=" +
+        ", profit=" + profit +
+        ", createdAt=" + createdAt +
         '}';
   }
 
@@ -94,12 +119,14 @@ public class Sale {
     Sale sale = (Sale) o;
     return saleId == sale.saleId &&
         Double.compare(sale.totalAmount, totalAmount) == 0 &&
+        Double.compare(sale.profit, profit) == 0 &&
         Objects.equals(cashier, sale.cashier) &&
-        Objects.equals(branch, sale.branch);
+        Objects.equals(branch, sale.branch) &&
+        Objects.equals(createdAt, sale.createdAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(saleId, cashier, branch, totalAmount);
+    return Objects.hash(saleId, cashier, branch, totalAmount, profit, createdAt);
   }
 }

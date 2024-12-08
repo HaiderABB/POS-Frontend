@@ -1,5 +1,7 @@
 package SCD.model.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,7 +12,7 @@ import jakarta.persistence.Table;
 public class Branch {
 
   @Id
-  @Column(name = "branch_code", nullable = false, unique = true) // Primary key
+  @Column(name = "branch_code", nullable = false, unique = true)
   private String branchCode;
 
   @Column(name = "name", nullable = false)
@@ -26,24 +28,31 @@ public class Branch {
   private String phone;
 
   @Column(name = "total_employees", nullable = false)
-  private int totalEmployees = 0; // Default to 0
+  private int totalEmployees = 0;
 
   @Column(name = "is_active", nullable = false)
-  private boolean isActive = true; // Default to true
+  private boolean isActive = true;
+
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   public Branch() {
+
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
 
-  public Branch(String branchCode, String name, String city, String address, String phone) {
-    this.branchCode = branchCode;
+  public Branch(String name, String city, String address, String phone) {
     this.name = name;
     this.city = city;
     this.address = address;
     this.phone = phone;
-
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
   }
-
-  // Getters and Setters
 
   public String getBranchCode() {
     return branchCode;
@@ -101,6 +110,22 @@ public class Branch {
     isActive = active;
   }
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   @Override
   public String toString() {
     return "Branch{" +
@@ -111,6 +136,8 @@ public class Branch {
         ", phone='" + phone + '\'' +
         ", totalEmployees=" + totalEmployees +
         ", isActive=" + isActive +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
         '}';
   }
 }

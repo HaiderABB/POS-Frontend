@@ -8,7 +8,8 @@ import java.awt.*;
 public class DEOSidebar extends JPanel {
 
     public DEOSidebar() {
-        setPreferredSize(new Dimension(200, 700));
+
+        setPreferredSize(new Dimension(240, 800)); // Set the same size as the SuperAdmin sidebar
         setBackground(new Color(255, 102, 102));
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -23,12 +24,19 @@ public class DEOSidebar extends JPanel {
         add(createButton("Dashboard", this::openDashboard));
         add(createButton("View Vendors", this::openViewVendorsPage));
         add(createButton("Add Vendor", this::openAddVendorPage));
+        add(createButton("Update Vendor", this::openUpdateVendorPage));
         add(createButton("Remove Vendor", this::openRemoveVendorPage));
         add(createButton("View Products", this::openViewProductsPage));
         add(createButton("Add Product", this::openAddProductPage));
+        add(createButton("Update Product", this::openUpdateProductPage));
         add(createButton("Remove Product", this::openRemoveProductPage));
         add(createButton("Logout", this::logout));
     }
+
+    private void openUpdateProductPage() {
+        navigateToPage(new UpdateProductPage());
+    }
+
 
     private JButton createButton(String label, Runnable action) {
         JButton button = ButtonFactory.createStyledButton(label); // Reusing styled button from ButtonFactory
@@ -51,14 +59,18 @@ public class DEOSidebar extends JPanel {
     private void openViewProductsPage() {
         navigateToPage(new ViewProductsPage());
     }
+    private void openUpdateVendorPage() {
+        navigateToPage(new UpdateVendorPage());
+    }
 
     private void openAddProductPage() {
-    navigateToPage(new AddProductPage());
+
+        navigateToPage(new AddProductPage());
     }
 
     private void openRemoveVendorPage() {
         navigateToPage(new RemoveVendorPage());
-        }
+    }
 
     private void openRemoveProductPage() {
         navigateToPage(new RemoveProductPage());
@@ -78,4 +90,5 @@ public class DEOSidebar extends JPanel {
             page.setVisible(true);
         });
     }
+
 }

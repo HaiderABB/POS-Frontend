@@ -2,98 +2,211 @@ package SCD.model.service.DataEntryOperatorService;
 
 import java.util.List;
 
-import SCD.model.crud.ProductDAO;
-import SCD.model.crud.VendorDAO;
+import SCD.model.crud.local.CodesDAO;
+import SCD.model.crud.local.ProductDAO;
+import SCD.model.crud.local.SyncTableDAO;
+import SCD.model.crud.local.VendorDAO;
 import SCD.model.models.Product;
+import SCD.model.models.SyncTable;
 import SCD.model.models.Vendor;
-import SCD.model.service.AddResponseClass;
-import SCD.model.service.GetResponseClass;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.Json.GetResponseJSON;
 
 public class DataEntryOperatorService {
 
   VendorDAO vendorDAO;
   ProductDAO productDAO;
+  CodesDAO codesDAO;
+  SyncTableDAO syncTableDAO;
 
   public DataEntryOperatorService() {
     vendorDAO = VendorDAO.getInstance();
     productDAO = ProductDAO.getInstance();
+    codesDAO = CodesDAO.getInstance();
+    syncTableDAO = SyncTableDAO.getInstance();
 
   }
 
-  public AddResponseClass addVendor(Vendor vendor) {
+  public AddResponseJSON addVendor(Vendor vendor) {
     boolean res;
     res = vendorDAO.vendorExistsWithPhoneNumberAndActiveStatus(vendor.getPhoneNumber());
 
     if (res) {
-      return new AddResponseClass("Phone Number Exists", false);
+      return new AddResponseJSON("Phone Number Exists", false, null);
     }
 
-    vendorDAO.addVendor(vendor);
+    String empcode = codesDAO.getCodeByTableName("VENDORS");
 
-    return new AddResponseClass("Added Successfully", true);
+    empcode = incrementCode(empcode);
+    String temp = "VM-" + empcode;
+    vendor.setVendorCode(temp);
+
+    res = codesDAO.updateCodeByTableName("VENDORS", empcode);
+    if (!res) {
+      return new AddResponseJSON("Could not update code", false, null);
+    }
+
+    SyncTable st2 = new SyncTable("CODES", "UPDATE", "VENDORS");
+    syncTableDAO.addSyncTable(st2);
+
+    res = vendorDAO.addVendor(vendor);
+
+    if (!res) {
+      return new AddResponseJSON("Could not add Vendor", false, null);
+    }
+
+    SyncTable st = new SyncTable("VENDORS", "INSERT", temp);
+    syncTableDAO.addSyncTable(st);
+
+    return new AddResponseJSON("Added Successfully", true, temp);
 
   }
 
-  public AddResponseClass addProduct(Product product) {
-
+  public AddResponseJSON addProduct(Product product) {
+    boolean res;
     Vendor ven;
     ven = vendorDAO.getVendorByCode(product.getVendor().getVendorCode());
-    System.err.println(ven.getVendorCode());
 
     if (ven == null) {
-      return new AddResponseClass("Could not find Vendor", false);
+      return new AddResponseJSON("Could not find Vendor", false, null);
     }
 
-    productDAO.addProduct(product);
-    return new AddResponseClass("Added Successfully", true);
+    String empcode = codesDAO.getCodeByTableName("PRODUCTS");
+
+    empcode = incrementCode(empcode);
+    String temp = "PM-" + empcode;
+    product.setProductCode(temp);
+
+    res = codesDAO.updateCodeByTableName("PRODUCTS", empcode);
+    if (!res) {
+      return new AddResponseJSON("Could not update code", false, null);
+    }
+    SyncTable st2 = new SyncTable("CODES", "UPDATE", "PRODUCTS");
+    syncTableDAO.addSyncTable(st2);
+    res = productDAO.addProduct(product);
+    if (!res) {
+      return new AddResponseJSON("Error Adding product", true, null);
+    }
+    SyncTable st = new SyncTable("PRODUCTS", "INSERT", temp);
+    syncTableDAO.addSyncTable(st);
+
+    return new AddResponseJSON("Added Successfully", true, temp);
 
   }
 
-  public GetResponseClass<Vendor> getVendors() {
+  public String incrementCode(String code) {
+
+    int numericCode = Integer.parseInt(code);
+
+    numericCode++;
+
+    return String.format("%04d", numericCode);
+  }
+
+  public GetResponseJSON<Vendor> getVendors() {
     List<Vendor> vendors = vendorDAO.getAllActiveVendors();
 
     if (vendors.isEmpty()) {
-      return new GetResponseClass<>("No Vendors", vendors);
+      return new GetResponseJSON<>("No Vendors", vendors);
     }
-    return new GetResponseClass<>("Found Vendors", vendors);
+    return new GetResponseJSON<>("Found Vendors", vendors);
   }
 
-  public GetResponseClass<Product> getProducts() {
+  public GetResponseJSON<Product> getProducts() {
     List<Product> products = productDAO.getAllActiveProducts();
 
     if (products.isEmpty()) {
-      return new GetResponseClass<>("No Products", products);
+      return new GetResponseJSON<>("No Products", products);
     }
-    return new GetResponseClass<>("Found Products", products);
+    return new GetResponseJSON<>("Found Products", products);
   }
 
-  public AddResponseClass removeProduct(String code) {
+  public AddResponseJSON removeProduct(String code) {
 
     Product prod;
 
     prod = productDAO.getActiveProductByCode(code);
 
     if (prod == null) {
-      return new AddResponseClass("Could not find product", false);
+      return new AddResponseJSON("Could not find product", false, null);
     }
 
-    productDAO.deactivateProduct(code);
-    return new AddResponseClass("product removed", true);
+    boolean res = productDAO.deactivateProduct(code);
+
+    if (!res) {
+      return new AddResponseJSON("Could not deactivate product", false, null);
+    }
+
+    SyncTable st = new SyncTable("PRODUCTS", "UPDATE", code);
+    syncTableDAO.addSyncTable(st);
+
+    return new AddResponseJSON("product removed", true, null);
 
   }
 
-  public AddResponseClass removeVendor(String code) {
+  public AddResponseJSON removeVendor(String code) {
 
     Vendor ven = vendorDAO.getVendorByCode(code);
 
     if (ven == null) {
-      return new AddResponseClass("Could not find vendor", false);
+      return new AddResponseJSON("Could not find vendor", false, null);
     }
 
-    vendorDAO.deactivateVendor(code);
-    productDAO.deactivateProductsByVendor(code);
+    boolean res = vendorDAO.deactivateVendor(code);
+    if (!res) {
+      return new AddResponseJSON("Could not deactivate vendor", false, null);
+    }
+    SyncTable st = new SyncTable("VENDORS", "UPDATE", code);
+    syncTableDAO.addSyncTable(st);
 
-    return new AddResponseClass("Vendor removed", true);
+    res = productDAO.deactivateProductsByVendor(code);
+
+    List<Product> products = productDAO.getProductsByVendorCode(code);
+
+    if (!res) {
+      return new AddResponseJSON("Could not deactivate products by vendors", false, null);
+    }
+
+    for (Product p : products) {
+      syncTableDAO.addSyncTable(new SyncTable("PRODUCTS", "UPDATE", p.getProductCode()));
+    }
+
+    return new AddResponseJSON("Vendor removed", true, null);
+
+  }
+
+  public AddResponseJSON updateVendor(Vendor vendor) {
+
+    Vendor ven = vendorDAO.getVendorByCode(vendor.getVendorCode());
+    if (ven == null) {
+      return new AddResponseJSON("Vendor does not exist", false, vendor.getVendorCode());
+    }
+    boolean res = vendorDAO.updateVendor(vendor);
+
+    if (res) {
+      SyncTable st = new SyncTable("VENDORS", "UPDATE", vendor.getVendorCode());
+      syncTableDAO.addSyncTable(st);
+      return new AddResponseJSON("Vendor Updated", true, vendor.getVendorCode());
+    }
+
+    return new AddResponseJSON("Vendor not updated", false, vendor.getVendorCode());
+  }
+
+  public AddResponseJSON updateProduct(Product product) {
+
+    Product prod = productDAO.getActiveProductByCode(product.getProductCode());
+    if (prod == null) {
+      return new AddResponseJSON("Product does not exist", false, product.getProductCode());
+    }
+    boolean res = productDAO.updateProduct(product);
+    if (res) {
+      SyncTable st = new SyncTable("PRODUCTS", "UPDATE", product.getProductCode());
+      syncTableDAO.addSyncTable(st);
+      return new AddResponseJSON("Product Updated", true, product.getProductCode());
+
+    }
+
+    return new AddResponseJSON("Product not updated", false, product.getProductCode());
 
   }
 

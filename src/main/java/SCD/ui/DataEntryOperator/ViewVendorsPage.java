@@ -1,11 +1,13 @@
 package SCD.ui.DataEntryOperator;
 
+import SCD.model.models.Vendor;
 import SCD.ui.Common.ButtonFactory;
-import SCD.ui.DataEntryOperator.DEOSidebar;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewVendorsPage extends JFrame {
 
@@ -34,15 +36,11 @@ public class ViewVendorsPage extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.WHITE);
 
-        String[] columnNames = {"Vendor ID", "Vendor Name", "Contact Person", "Phone Number", "Email Address", "Address"};
+        String[] columnNames = {"Vendor Code", "Vendor Name", "Phone Number", "Address"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable vendorTable = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(vendorTable);
         mainPanel.add(tableScrollPane, BorderLayout.CENTER);
-
-        // Sample data
-        tableModel.addRow(new Object[]{"V001", "Vendor A", "John Doe", "123-456-7890", "vendorA@example.com", "123 Main St, City, State, 12345"});
-        tableModel.addRow(new Object[]{"V002", "Vendor B", "Jane Smith", "098-765-4321", "vendorB@example.com", "456 Elm St, City, State, 67890"});
 
         add(mainPanel, BorderLayout.CENTER);
 
@@ -61,11 +59,66 @@ public class ViewVendorsPage extends JFrame {
 
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
+
+        // Populate the table with vendors
+        List<Vendor> vendors = createVendorList();
+        populateTable(vendors);
+    }
+
+    private List<Vendor> createVendorList() {
+        List<Vendor> vendors = new ArrayList<>();
+
+        // Add vendors to the list with unique vendor codes using setVendorCode
+        Vendor vendor1 = new Vendor("Vendor A", "1234567890", "123 Main St, City A");
+        vendor1.setVendorCode("V001");
+        vendors.add(vendor1);
+
+        Vendor vendor2 = new Vendor("Vendor B", "2345678901", "456 Second St, City B");
+        vendor2.setVendorCode("V002");
+        vendors.add(vendor2);
+
+        Vendor vendor3 = new Vendor("Vendor C", "3456789012", "789 Third St, City C");
+        vendor3.setVendorCode("V003");
+        vendors.add(vendor3);
+
+        Vendor vendor4 = new Vendor("Vendor D", "4567890123", "101 Fourth St, City D");
+        vendor4.setVendorCode("V004");
+        vendors.add(vendor4);
+
+        Vendor vendor5 = new Vendor("Vendor E", "5678901234", "202 Fifth St, City E");
+        vendor5.setVendorCode("V005");
+        vendors.add(vendor5);
+
+        Vendor vendor6 = new Vendor("Vendor F", "6789012345", "303 Sixth St, City F");
+        vendor6.setVendorCode("V006");
+        vendors.add(vendor6);
+
+        Vendor vendor7 = new Vendor("Vendor G", "7890123456", "404 Seventh St, City G");
+        vendor7.setVendorCode("V007");
+        vendors.add(vendor7);
+
+        Vendor vendor8 = new Vendor("Vendor H", "8901234567", "505 Eighth St, City H");
+        vendor8.setVendorCode("V008");
+        vendors.add(vendor8);
+        return vendors;
+    }
+
+    public void populateTable(List<Vendor> vendors) {
+        tableModel.setRowCount(0); // Clear existing data
+        for (Vendor vendor : vendors) {
+            tableModel.addRow(new Object[]{
+                    vendor.getVendorCode(),
+                    vendor.getName(),
+                    vendor.getPhoneNumber(),
+                    vendor.getAddress()
+            });
+        }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new ViewVendorsPage().setVisible(true);
+            ViewVendorsPage frame = new ViewVendorsPage();
+            frame.setVisible(true);
         });
     }
 }
