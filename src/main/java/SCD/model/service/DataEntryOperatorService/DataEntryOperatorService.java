@@ -98,7 +98,6 @@ public class DataEntryOperatorService {
 
     int numericCode = Integer.parseInt(code);
 
-    // Increment the numeric part
     numericCode++;
 
     return String.format("%04d", numericCode);
