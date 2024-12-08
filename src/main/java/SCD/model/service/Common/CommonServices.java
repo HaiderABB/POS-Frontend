@@ -1,21 +1,25 @@
 package SCD.model.service.Common;
 
-import SCD.model.crud.BranchesDAO;
-import SCD.model.crud.CodesDAO;
-import SCD.model.crud.EmployeeDAO;
+import SCD.model.crud.local.BranchesDAO;
+import SCD.model.crud.local.CodesDAO;
+import SCD.model.crud.local.EmployeeDAO;
+import SCD.model.crud.local.SyncTableDAO;
 import SCD.model.models.Employee;
-import SCD.model.service.AddResponseJSON;
+import SCD.model.models.SyncTable;
+import SCD.model.service.Json.AddResponseJSON;
 
 public class CommonServices {
 
   EmployeeDAO employeeDAO;
   BranchesDAO branchesDAO;
   CodesDAO codesDAO;
+  SyncTableDAO syncTable;
 
   public CommonServices() {
     employeeDAO = EmployeeDAO.getInstance();
     branchesDAO = BranchesDAO.getInstance();
     codesDAO = CodesDAO.getInstance();
+    syncTable = SyncTableDAO.getInstance();
   }
 
   public Employee Login(String emp_code, String password, String role) {
@@ -26,12 +30,17 @@ public class CommonServices {
 
   public boolean setFirstLoginStatus(String emp_code) {
 
+    SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", emp_code);
+    syncTable.addSyncTable(st);
+
     return employeeDAO.setFirstLoginToFalse(emp_code);
 
   }
 
   public boolean update_password(String employeeCode, String newPassword) {
 
+    SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", employeeCode);
+    syncTable.addSyncTable(st);
     return employeeDAO.updatePassword(employeeCode, newPassword);
 
   }
@@ -52,6 +61,7 @@ public class CommonServices {
 
     employeeCode = incrementCode(employeeCode);
     String temp;
+
     if (employee.getRole().equals("MANAGER")) {
       temp = "BM-" + employeeCode;
     } else if (employee.getRole().equals("DATA_ENTRY_OPERATOR")) {
@@ -68,6 +78,11 @@ public class CommonServices {
     employeeDAO.addEmployee(employee);
 
     codesDAO.updateCodeByTableName("EMPLOYEES", employeeCode);
+
+    SyncTable st = new SyncTable("EMPLOYEES", "INSERT", temp);
+    syncTable.addSyncTable(st);
+    SyncTable st1 = new SyncTable("CODES", "UPDATE", "EMPLOYEES");
+    syncTable.addSyncTable(st1);
 
     return new AddResponseJSON("Employee added successfully", true);
 
@@ -96,6 +111,9 @@ public class CommonServices {
       return new AddResponseJSON("Employee cannot be removed", false);
     }
 
+    SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", emp_code);
+    syncTable.addSyncTable(st);
+
     return new AddResponseJSON("Employee removed successfully", true);
 
   }
@@ -114,6 +132,9 @@ public class CommonServices {
     if (!res) {
       return new AddResponseJSON("Employee cannot be updated", false);
     }
+
+    SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", employee.getEmployeeCode());
+    syncTable.addSyncTable(st);
     return new AddResponseJSON("Employee updated successfully", true);
   }
 

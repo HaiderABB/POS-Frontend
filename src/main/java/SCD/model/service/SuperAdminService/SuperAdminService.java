@@ -3,16 +3,18 @@ package SCD.model.service.SuperAdminService;
 import java.time.LocalDate;
 import java.util.List;
 
-import SCD.model.crud.BranchesDAO;
-import SCD.model.crud.CodesDAO;
-import SCD.model.crud.ProductDAO;
-import SCD.model.crud.SaleDAO;
+import SCD.model.crud.local.BranchesDAO;
+import SCD.model.crud.local.CodesDAO;
+import SCD.model.crud.local.ProductDAO;
+import SCD.model.crud.local.SaleDAO;
+import SCD.model.crud.local.SyncTableDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Product;
 import SCD.model.models.Sale;
-import SCD.model.service.AddResponseJSON;
-import SCD.model.service.GetReportJSON;
-import SCD.model.service.GetResponseJSON;
+import SCD.model.models.SyncTable;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.Json.GetReportJSON;
+import SCD.model.service.Json.GetResponseJSON;
 
 public class SuperAdminService {
 
@@ -20,12 +22,14 @@ public class SuperAdminService {
     ProductDAO productDAO;
     SaleDAO saleDAO;
     CodesDAO codesDAO;
+    SyncTableDAO syncTableDAO;
 
     public SuperAdminService() {
         branchesDAO = BranchesDAO.getInstance();
         productDAO = ProductDAO.getInstance();
         saleDAO = SaleDAO.getInstance();
         codesDAO = CodesDAO.getInstance();
+        syncTableDAO = SyncTableDAO.getInstance();
 
     }
 
@@ -55,10 +59,15 @@ public class SuperAdminService {
         codesDAO.updateCodeByTableName("BRANCHES", empcode);
 
         boolean res = branchesDAO.addBranch(branch);
+        SyncTable st = new SyncTable("BRANCHES", "INSERT", temp);
+        syncTableDAO.addSyncTable(st);
+        SyncTable st1 = new SyncTable("CODES", "UPDATE", "BRANCHES");
+        syncTableDAO.addSyncTable(st1);
 
         if (res) {
             return new AddResponseJSON("Branch Creation Successful", true);
         }
+
         return new AddResponseJSON(null, false);
 
     }
@@ -77,6 +86,9 @@ public class SuperAdminService {
 
         res = branchesDAO.deleteBranch(branch_code);
 
+        SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch_code);
+        syncTableDAO.addSyncTable(st);
+
         return new AddResponseJSON("Branch Deletion Successful", res);
 
     }
@@ -94,6 +106,9 @@ public class SuperAdminService {
             return new AddResponseJSON("Branch Update Failed", false);
         }
 
+        SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch.getBranchCode());
+        syncTableDAO.addSyncTable(st);
+
         return new AddResponseJSON("Branch Update Successful", res);
 
     }
@@ -106,38 +121,31 @@ public class SuperAdminService {
         return new GetResponseJSON<>("Found Branches", branches);
     }
 
-    public GetReportJSON getDayReport(String code, LocalDate day) {
-
+    public GetReportJSON getTodaysReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
-
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
             return new GetReportJSON(null, null, 0.0, "Branch not found");
         }
-
         List<Product> products = productDAO.getAllActiveProducts();
         if (products.isEmpty()) {
             System.err.println("No Products");
             return new GetReportJSON(null, null, 0.0, "No Products");
         }
-
-        List<Sale> sales = saleDAO.getSalesForDay(day, code);
+        List<Sale> sales = saleDAO.getSalesForDay(LocalDate.now(), code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
             return new GetReportJSON(null, null, 0.0, "No Sales");
         }
-
         double profit = 0.0;
-
         for (Sale sl : sales) {
             profit += sl.getProfit();
         }
-
         return new GetReportJSON(sales, products, profit, "Report Generated");
 
     }
 
-    public GetReportJSON getWeeklyReport(String code, LocalDate date) {
+    public GetReportJSON getWeeklyReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
@@ -149,7 +157,7 @@ public class SuperAdminService {
             return new GetReportJSON(null, null, 0.0, "No Products");
         }
 
-        List<Sale> sales = saleDAO.getSalesForWeek(date, code);
+        List<Sale> sales = saleDAO.getSalesForWeek(LocalDate.now(), code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
             return new GetReportJSON(null, null, 0.0, "No Sales");
@@ -163,7 +171,7 @@ public class SuperAdminService {
 
     }
 
-    public GetReportJSON getMonthlyReport(String code, LocalDate date) {
+    public GetReportJSON getMonthlyReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
@@ -175,7 +183,7 @@ public class SuperAdminService {
             return new GetReportJSON(null, null, 0, "No Products");
         }
 
-        List<Sale> sales = saleDAO.getSalesForMonth(date, code);
+        List<Sale> sales = saleDAO.getSalesForMonth(LocalDate.now(), code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");
             return new GetReportJSON(null, null, 0, "No Sales");
@@ -188,7 +196,7 @@ public class SuperAdminService {
 
     }
 
-    public GetReportJSON getYearlyReport(String code, int year) {
+    public GetReportJSON getYearlyReport(String code) {
         Branch branch = branchesDAO.getBranchByCode(code);
         if (branch == null || branch.isActive() == false) {
             System.err.println("Branch not found");
@@ -199,6 +207,7 @@ public class SuperAdminService {
             System.err.println("No Products");
             return new GetReportJSON(null, null, 0, "No Products");
         }
+        int year = LocalDate.now().getYear();
         List<Sale> sales = saleDAO.getSalesForYear(year, code);
         if (sales.isEmpty()) {
             System.err.println("No Sales");

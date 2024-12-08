@@ -2,24 +2,28 @@ package SCD.model.service.DataEntryOperatorService;
 
 import java.util.List;
 
-import SCD.model.crud.CodesDAO;
-import SCD.model.crud.ProductDAO;
-import SCD.model.crud.VendorDAO;
+import SCD.model.crud.local.CodesDAO;
+import SCD.model.crud.local.ProductDAO;
+import SCD.model.crud.local.SyncTableDAO;
+import SCD.model.crud.local.VendorDAO;
 import SCD.model.models.Product;
+import SCD.model.models.SyncTable;
 import SCD.model.models.Vendor;
-import SCD.model.service.AddResponseJSON;
-import SCD.model.service.GetResponseJSON;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.Json.GetResponseJSON;
 
 public class DataEntryOperatorService {
 
   VendorDAO vendorDAO;
   ProductDAO productDAO;
   CodesDAO codesDAO;
+  SyncTableDAO syncTableDAO;
 
   public DataEntryOperatorService() {
     vendorDAO = VendorDAO.getInstance();
     productDAO = ProductDAO.getInstance();
     codesDAO = CodesDAO.getInstance();
+    syncTableDAO = SyncTableDAO.getInstance();
 
   }
 
@@ -39,6 +43,10 @@ public class DataEntryOperatorService {
     codesDAO.updateCodeByTableName("VENDORS", empcode);
 
     vendorDAO.addVendor(vendor);
+    SyncTable st = new SyncTable("VENDORS", "INSERT", temp);
+    syncTableDAO.addSyncTable(st);
+    SyncTable st2 = new SyncTable("CODES", "UPDATE", "VENDORS");
+    syncTableDAO.addSyncTable(st2);
 
     return new AddResponseJSON("Added Successfully", true);
 
@@ -64,6 +72,10 @@ public class DataEntryOperatorService {
     if (!res) {
       return new AddResponseJSON("Error Adding product", true);
     }
+    SyncTable st = new SyncTable("PRODUCTS", "INSERT", temp);
+    syncTableDAO.addSyncTable(st);
+    SyncTable st2 = new SyncTable("CODES", "UPDATE", "PRODUCTS");
+    syncTableDAO.addSyncTable(st2);
 
     return new AddResponseJSON("Added Successfully", true);
 
@@ -108,6 +120,8 @@ public class DataEntryOperatorService {
     }
 
     productDAO.deactivateProduct(code);
+    SyncTable st = new SyncTable("PRODUCTS", "UPDATE", code);
+    syncTableDAO.addSyncTable(st);
     return new AddResponseJSON("product removed", true);
 
   }
@@ -121,6 +135,8 @@ public class DataEntryOperatorService {
     }
 
     vendorDAO.deactivateVendor(code);
+    SyncTable st = new SyncTable("VENDORS", "UPDATE", code);
+    syncTableDAO.addSyncTable(st);
     productDAO.deactivateProductsByVendor(code);
 
     return new AddResponseJSON("Vendor removed", true);
@@ -136,8 +152,11 @@ public class DataEntryOperatorService {
     boolean res = vendorDAO.updateVendor(vendor);
 
     if (res) {
+      SyncTable st = new SyncTable("VENDORS", "UPDATE", vendor.getVendorCode());
+      syncTableDAO.addSyncTable(st);
       return new AddResponseJSON("Vendor Updated", true);
     }
+
     return new AddResponseJSON("Vendor not updated", false);
   }
 
@@ -149,8 +168,12 @@ public class DataEntryOperatorService {
     }
     boolean res = productDAO.updateProduct(product);
     if (res) {
+      SyncTable st = new SyncTable("PRODUCTS", "UPDATE", product.getProductCode());
+      syncTableDAO.addSyncTable(st);
       return new AddResponseJSON("Product Updated", true);
+
     }
+
     return new AddResponseJSON("Product not updated", false);
 
   }

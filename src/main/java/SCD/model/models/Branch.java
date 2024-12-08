@@ -46,7 +46,6 @@ public class Branch {
   }
 
   public Branch(String name, String city, String address, String phone) {
-    this.branchCode = branchCode;
     this.name = name;
     this.city = city;
     this.address = address;
