@@ -17,7 +17,6 @@ public class SuperAdminDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-
         sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
@@ -64,12 +63,5 @@ public class SuperAdminDashboard extends JFrame {
         mainContent.add(responsibilityArea);
 
         return mainContent;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            SuperAdminDashboard dashboard = new SuperAdminDashboard();
-            dashboard.setVisible(true);
-        });
     }
 }

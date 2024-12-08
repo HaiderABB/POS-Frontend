@@ -9,9 +9,10 @@ import java.awt.*;
 
 public class ViewDataEntryOperatorsPage extends JFrame {
 
-    private BranchSidebar sidebar;
-    private NavBar navBar;
-    private DefaultTableModel tableModel;
+    private final BranchSidebar sidebar;
+    private final NavBar navBar;
+    private final DefaultTableModel tableModel;
+    private final JTable operatorTable;
 
     public ViewDataEntryOperatorsPage() {
         setTitle("View Data Entry Operators");
@@ -33,7 +34,7 @@ public class ViewDataEntryOperatorsPage extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Operator ID", "Name", "Email", "Branch Code"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        JTable operatorTable = new JTable(tableModel);
+        operatorTable = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(operatorTable);
         tablePanel.add(scrollPane, BorderLayout.CENTER);
@@ -41,19 +42,13 @@ public class ViewDataEntryOperatorsPage extends JFrame {
         contentPanel.add(tablePanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
-
-        loadSampleData();
     }
 
-    private void loadSampleData() {
-        tableModel.addRow(new Object[]{"DM-1234", "John Doe", "john.doe@example.com", "BR-1234"});
-        tableModel.addRow(new Object[]{"DM-5678", "Jane Smith", "jane.smith@example.com", "BR-5678"});
+    public JTable getOperatorTable() {
+        return operatorTable;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ViewDataEntryOperatorsPage frame = new ViewDataEntryOperatorsPage();
-            frame.setVisible(true);
-        });
+    public DefaultTableModel getTableModel() {
+        return tableModel;
     }
 }

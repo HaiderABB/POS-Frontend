@@ -1,6 +1,6 @@
 package SCD;
 
-import SCD.controllers.MainController;
+import SCD.controllers.CommonControllers.MainController;
 
 /**
  * Hello world!
