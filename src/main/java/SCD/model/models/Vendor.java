@@ -39,8 +39,7 @@ public class Vendor {
     this.updatedAt = LocalDateTime.now();
   }
 
-  public Vendor(String vendorCode, String name, String phoneNumber, String address) {
-    this.vendorCode = vendorCode;
+  public Vendor(String name, String phoneNumber, String address) {
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;

@@ -64,11 +64,4 @@ public class BranchManagerDashboard extends JFrame {
 
         return mainContent;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            BranchManagerDashboard dashboard = new BranchManagerDashboard();
-            dashboard.setVisible(true);
-        });
-    }
 }

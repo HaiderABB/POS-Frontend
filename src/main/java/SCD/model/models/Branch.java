@@ -45,8 +45,7 @@ public class Branch {
     this.updatedAt = LocalDateTime.now();
   }
 
-  public Branch(String branchCode, String name, String city, String address, String phone) {
-    this.branchCode = branchCode;
+  public Branch(String name, String city, String address, String phone) {
     this.name = name;
     this.city = city;
     this.address = address;

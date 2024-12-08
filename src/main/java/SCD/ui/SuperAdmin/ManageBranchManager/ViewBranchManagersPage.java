@@ -12,13 +12,13 @@ public class ViewBranchManagersPage extends JFrame {
     private Sidebar sidebar;
     private NavBar navBar;
     private DefaultTableModel tableModel;
+    private JTable branchManagerTable;
 
     public ViewBranchManagersPage() {
         setTitle("View Branch Managers");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
-
 
         sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
@@ -34,7 +34,7 @@ public class ViewBranchManagersPage extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Branch Manager Code", "Name", "Email", "Branch Code"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        JTable branchManagerTable = new JTable(tableModel);
+        branchManagerTable = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(branchManagerTable);
         tablePanel.add(scrollPane, BorderLayout.CENTER);
@@ -42,19 +42,13 @@ public class ViewBranchManagersPage extends JFrame {
         contentPanel.add(tablePanel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
-
-        loadSampleData();
     }
 
-    private void loadSampleData() {
-        tableModel.addRow(new Object[]{"BM-0001", "John Doe", "john.doe@example.com", "BH-1234"});
-        tableModel.addRow(new Object[]{"BM-0002", "Jane Smith", "jane.smith@example.com", "BH-5678"});
+    public DefaultTableModel getTableModel() {
+        return tableModel;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ViewBranchManagersPage frame = new ViewBranchManagersPage();
-            frame.setVisible(true);
-        });
+    public JTable getBranchManagerTable() {
+        return branchManagerTable;
     }
 }

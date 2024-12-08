@@ -6,12 +6,14 @@ import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.regex.Pattern;
 
 public class AddBranchManagerPage extends JFrame {
-
     private Sidebar sidebar;
     private NavBar navBar;
+    private JTextField nameField;
+    private JTextField emailField;
+    private JTextField branchCodeField;
+    private JButton addButton;
 
     public AddBranchManagerPage() {
         setTitle("Add Branch Manager");
@@ -32,82 +34,41 @@ public class AddBranchManagerPage extends JFrame {
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel nameLabel = new JLabel("Branch Manager Name:");
-        JTextField nameField = new JTextField();
-        JLabel emailLabel = new JLabel("Email:");
-        JTextField emailField = new JTextField();
-        JLabel branchCodeLabel = new JLabel("Branch Code (BR-XXXX):");
-        JTextField branchCodeField = new JTextField();
+        nameField = new JTextField();
+        emailField = new JTextField();
+        branchCodeField = new JTextField();
+        addButton = ButtonFactory.createStyledButton("Add Branch Manager");
 
-        formPanel.add(nameLabel);
+        formPanel.add(new JLabel("Branch Manager Name:"));
         formPanel.add(nameField);
-        formPanel.add(emailLabel);
+        formPanel.add(new JLabel("Email:"));
         formPanel.add(emailField);
-        formPanel.add(branchCodeLabel);
+        formPanel.add(new JLabel("Branch Code (BR-XXXX):"));
         formPanel.add(branchCodeField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton addButton = ButtonFactory.createStyledButton("Add Branch Manager");
         buttonPanel.add(addButton);
 
         contentPanel.add(formPanel, BorderLayout.CENTER);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(contentPanel, BorderLayout.CENTER);
-
         setLocationRelativeTo(null);
-
-        addButton.addActionListener(e -> {
-            String name = nameField.getText().trim();
-            String email = emailField.getText().trim();
-            String branchCode = branchCodeField.getText().trim();
-
-            if (!validateInputs(name, email, branchCode)) {
-                return;
-            }
-
-            saveBranchManager(name, email, branchCode);
-            clearFields(nameField, emailField, branchCodeField);
-        });
     }
 
-    private boolean validateInputs(String name, String email, String branchCode) {
-        if (name.isEmpty() || email.isEmpty() || branchCode.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill out all fields!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (!Pattern.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}", email)) {
-            JOptionPane.showMessageDialog(this, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (!Pattern.matches("BR-\\d{4}", branchCode)) {
-            JOptionPane.showMessageDialog(this, "Branch Code must follow the format 'BR-XXXX'!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
+    public JTextField getNameField() {
+        return nameField;
     }
 
-    private void saveBranchManager(String name, String email, String branchCode) {
-        String message = "Branch Manager successfully added:\n"
-                + "Name: " + name + "\n"
-                + "Email: " + email + "\n"
-                + "Branch Code: " + branchCode;
-        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+    public JTextField getEmailField() {
+        return emailField;
     }
 
-    private void clearFields(JTextField nameField, JTextField emailField, JTextField branchCodeField) {
-        nameField.setText("");
-        emailField.setText("");
-        branchCodeField.setText("");
+    public JTextField getBranchCodeField() {
+        return branchCodeField;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AddBranchManagerPage frame = new AddBranchManagerPage();
-            frame.setVisible(true);
-        });
+    public JButton getAddButton() {
+        return addButton;
     }
 }
