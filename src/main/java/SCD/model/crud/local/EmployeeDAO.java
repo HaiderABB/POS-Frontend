@@ -1,4 +1,4 @@
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import java.util.List;
 
@@ -178,6 +178,14 @@ public class EmployeeDAO {
       return count != null && count > 0;
     } catch (Exception e) {
       return false;
+    }
+  }
+
+  public Employee getEmployeeByEmployeeCode(String employeeCode) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      return session.get(Employee.class, employeeCode);
+    } catch (Exception e) {
+      return null;
     }
   }
 

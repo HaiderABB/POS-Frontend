@@ -1,4 +1,4 @@
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import java.util.List;
 
@@ -105,11 +105,9 @@ public class VendorDAO {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Retrieve the existing vendor from the database
       Vendor existingVendor = getVendorByCode(updatedVendor.getVendorCode());
 
       if (existingVendor != null) {
-        // Update the properties of the existing vendor using the setters
         existingVendor.setName(updatedVendor.getName());
         existingVendor.setPhoneNumber(updatedVendor.getPhoneNumber());
         existingVendor.setAddress(updatedVendor.getAddress());
@@ -117,11 +115,9 @@ public class VendorDAO {
 
         session.merge(existingVendor);
 
-        // Commit the transaction
         transaction.commit();
         return true;
       } else {
-        // If the vendor is not found, return false
         return false;
       }
     } catch (Exception e) {

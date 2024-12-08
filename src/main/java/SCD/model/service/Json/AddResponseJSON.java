@@ -1,4 +1,4 @@
-package SCD.model.service;
+package SCD.model.service.Json;
 
 public class AddResponseJSON {
 

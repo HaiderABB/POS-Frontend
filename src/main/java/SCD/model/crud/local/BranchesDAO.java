@@ -1,4 +1,4 @@
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package SCD.model.crud;
+package SCD.model.crud.local;
 
 import java.util.List;
 
@@ -204,11 +204,9 @@ public class ProductDAO {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Retrieve the existing product from the database
       Product existingProduct = session.get(Product.class, updatedProduct.getProductCode());
 
       if (existingProduct != null) {
-        // Update the properties of the existing product using the setters
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
         existingProduct.setCategory(updatedProduct.getCategory());
@@ -220,17 +218,15 @@ public class ProductDAO {
 
         session.merge(existingProduct);
 
-        // Commit the transaction
         transaction.commit();
         result = true;
         System.out.println("Product " + updatedProduct.getProductCode() + " updated successfully!");
       } else {
-        // If the product is not found, return false
         System.out.println("Product not found with code: " + updatedProduct.getProductCode());
       }
     } catch (Exception e) {
       if (transaction != null && transaction.getStatus().canRollback()) {
-        transaction.rollback(); // Rollback only if the transaction is active
+        transaction.rollback();
       }
     }
 
