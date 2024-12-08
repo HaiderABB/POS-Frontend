@@ -3,6 +3,7 @@ package SCD.controllers.SuperAdminControllers;
 import SCD.ui.SuperAdmin.*;
 import SCD.ui.SuperAdmin.ManageBranchManager.*;
 import SCD.ui.SuperAdmin.ManageBranches.*;
+import SCD.ui.SuperAdmin.ViewReportsPage;
 
 import javax.swing.*;
 import java.awt.*;
