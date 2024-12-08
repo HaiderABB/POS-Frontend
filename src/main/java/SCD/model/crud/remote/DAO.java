@@ -147,11 +147,9 @@ public class DAO {
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Retrieve the existing branch from the database
       Branch existingBranch = session.get(Branch.class, updatedBranch.getBranchCode());
 
       if (existingBranch != null) {
-        // Update the properties of the existing branch using the setters
         existingBranch.setName(updatedBranch.getName());
         existingBranch.setPhone(updatedBranch.getPhone());
         existingBranch.setAddress(updatedBranch.getAddress());
@@ -163,7 +161,6 @@ public class DAO {
         transaction.commit();
         return true;
       } else {
-        // If the branch is not found, return false
         return false;
       }
     } catch (Exception e) {
@@ -179,20 +176,16 @@ public class DAO {
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Fetch the Sale object using the provided id
       Sale sale = session.get(Sale.class, id);
       if (sale == null) {
         System.err.println("Sale with id " + id + " not found");
-        return false; // Return false if the Sale object doesn't exist
+        return false;
       }
 
-      // Set the fetched Sale object in the SaleItem
       saleItem.setSale(sale);
 
-      // Persist the SaleItem
       session.persist(saleItem);
 
-      // Commit the transaction
       transaction.commit();
 
       System.out.println("SaleItem added successfully.");
@@ -232,21 +225,18 @@ public class DAO {
 
     if (sale == null) {
       System.err.println("Sale object is null");
-      return null; // Return null if the sale object is null
+      return null;
     }
 
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Persist the Sale entity
       session.persist(sale);
 
-      // Commit the transaction
       transaction.commit();
 
-      // Print the sale_id
       System.out.println("Sale added successfully with sale_id: " + sale.getSaleId());
-      return sale; // Return the persisted Sale object
+      return sale;
     } catch (Exception e) {
       if (transaction != null) {
         transaction.rollback();
@@ -255,7 +245,7 @@ public class DAO {
       System.err.println("Error adding Sale: " + e.getMessage());
     }
 
-    return null; // Return null if an error occurs
+    return null;
   }
 
   public boolean addVendor(Vendor vendor) {

@@ -25,7 +25,7 @@ public class Vendor {
   private String address;
 
   @Column(name = "is_active", nullable = false)
-  private boolean isActive = true; // New field with default value
+  private boolean isActive = true;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
@@ -34,7 +34,7 @@ public class Vendor {
   private LocalDateTime updatedAt;
 
   public Vendor() {
-    // Initialize timestamps to current date and time
+
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
   }
@@ -43,12 +43,10 @@ public class Vendor {
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.address = address;
-    this.isActive = true; // Default value for parameterized constructor
+    this.isActive = true;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
   }
-
-  // Getters and Setters
 
   public String getVendorCode() {
     return vendorCode;

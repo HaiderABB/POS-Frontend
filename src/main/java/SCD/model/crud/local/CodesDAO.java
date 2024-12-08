@@ -31,7 +31,6 @@ public class CodesDAO {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Save the code entity to the database
       session.persist(code);
 
       transaction.commit();

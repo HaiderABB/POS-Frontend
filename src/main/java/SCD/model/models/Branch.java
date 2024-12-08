@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class Branch {
 
   @Id
-  @Column(name = "branch_code", nullable = false, unique = true) // Primary key
+  @Column(name = "branch_code", nullable = false, unique = true)
   private String branchCode;
 
   @Column(name = "name", nullable = false)
@@ -28,10 +28,10 @@ public class Branch {
   private String phone;
 
   @Column(name = "total_employees", nullable = false)
-  private int totalEmployees = 0; // Default to 0
+  private int totalEmployees = 0;
 
   @Column(name = "is_active", nullable = false)
-  private boolean isActive = true; // Default to true
+  private boolean isActive = true;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
@@ -40,7 +40,7 @@ public class Branch {
   private LocalDateTime updatedAt;
 
   public Branch() {
-    // Initialize timestamps to current date and time
+
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
   }
@@ -53,8 +53,6 @@ public class Branch {
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
   }
-
-  // Getters and Setters
 
   public String getBranchCode() {
     return branchCode;
