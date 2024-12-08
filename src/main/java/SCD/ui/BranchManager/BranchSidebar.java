@@ -2,9 +2,11 @@ package SCD.ui.BranchManager;
 
 import SCD.ui.BranchManager.ManageCashier.AddCashierPage;
 import SCD.ui.BranchManager.ManageCashier.DeleteCashierPage;
+import SCD.ui.BranchManager.ManageCashier.UpdateCashierPage;
 import SCD.ui.BranchManager.ManageCashier.ViewCashiersPage;
 import SCD.ui.BranchManager.ManageDataEntryOperator.AddDataEntryOperatorPage;
 import SCD.ui.BranchManager.ManageDataEntryOperator.DeleteDataEntryOperatorPage;
+import SCD.ui.BranchManager.ManageDataEntryOperator.UpdateDataEntryPage;
 import SCD.ui.BranchManager.ManageDataEntryOperator.ViewDataEntryOperatorsPage;
 import SCD.ui.Common.ButtonFactory;
 
@@ -26,10 +28,13 @@ public class BranchSidebar extends JPanel {
         add(createButton("Dashboard", this::openDashboard));
 
         add(createButton("Add Cashier", this::openAddCashier));
+        add(createButton("Update Cashier", this::openUpdateCashier));
         add(createButton("Delete Cashier", this::openDeleteCashier));
         add(createButton("View Cashiers", this::openViewCashiers));
 
         add(createButton("Add Data Entry Operator", this::openAddDataEntryOperator));
+        add(createButton("Update Data Entry Operator", this::openUpdateDataEntryOperator));
+
         add(createButton("Delete Data Entry Operator", this::openDeleteDataEntryOperator));
         add(createButton("View Data Entry Operators", this::openViewDataEntryOperators));
 
@@ -51,6 +56,9 @@ public class BranchSidebar extends JPanel {
     private void openAddCashier() {
         navigateToPage(new AddCashierPage());
     }
+    private void openUpdateCashier() {
+        navigateToPage(new UpdateCashierPage());
+    }
 
     private void openDeleteCashier() {
         navigateToPage(new DeleteCashierPage());
@@ -63,6 +71,9 @@ public class BranchSidebar extends JPanel {
 
     private void openAddDataEntryOperator() {
         navigateToPage(new AddDataEntryOperatorPage());
+    }
+    private void openUpdateDataEntryOperator() {
+        navigateToPage(new UpdateDataEntryPage());
     }
 
     private void openDeleteDataEntryOperator() {

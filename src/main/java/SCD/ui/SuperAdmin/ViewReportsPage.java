@@ -41,7 +41,7 @@ public class ViewReportsPage extends JFrame {
         String[] reportTypes = {"Remaining Stock", "Sales", "Profit"};
         JComboBox<String> reportTypeComboBox = new JComboBox<>(reportTypes);
 
-        JLabel branchCodeLabel = new JLabel("Branch Code (Required, BH-1234):");
+        JLabel branchCodeLabel = new JLabel("Branch Code (Required, BR-1234):");
         JTextField branchCodeField = new JTextField();
         branchCodeField.setEnabled(false); // Disable by default
 
@@ -116,7 +116,7 @@ public class ViewReportsPage extends JFrame {
             Date endDate = (Date) endDateSpinner.getValue();
 
             if ("Sales".equals(selectedReportType) && !validateBranchCode(branchCode)) {
-                JOptionPane.showMessageDialog(ViewReportsPage.this, "Branch Code is required and must follow the format 'BH-1234'.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(ViewReportsPage.this, "Branch Code is required and must follow the format 'BR-1234'.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -134,7 +134,7 @@ public class ViewReportsPage extends JFrame {
     }
 
     private boolean validateBranchCode(String branchCode) {
-        return branchCode.matches("BH-\\d{4}");
+        return branchCode.matches("BR-\\d{4}");
     }
 
     private boolean validateInputs(String reportDuration, Date startDate, Date endDate) {

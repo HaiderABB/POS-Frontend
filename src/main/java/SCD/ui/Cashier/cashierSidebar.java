@@ -31,7 +31,7 @@ public class cashierSidebar extends JPanel {
     }
 
     private void openDashboard() {
-        navigateToPage(new CashierDashboard());
+//        navigateToPage(new CashierDashboard());
     }
 
     private void openProcessPayment() {

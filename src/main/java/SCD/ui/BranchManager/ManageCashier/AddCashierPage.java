@@ -36,7 +36,7 @@ public class AddCashierPage extends JFrame {
         JTextField nameField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");
         JTextField emailField = new JTextField();
-        JLabel branchCodeLabel = new JLabel("Branch Code (BH-XXXX):");
+        JLabel branchCodeLabel = new JLabel("Branch Code (BR-XXXX):");
         JTextField branchCodeField = new JTextField();
 
         formPanel.add(nameLabel);
@@ -82,8 +82,8 @@ public class AddCashierPage extends JFrame {
             return false;
         }
 
-        if (!Pattern.matches("BH-\\d{4}", branchCode)) {
-            JOptionPane.showMessageDialog(this, "Branch Code must follow the format 'BH-XXXX'!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (!Pattern.matches("BR-\\d{4}", branchCode)) {
+            JOptionPane.showMessageDialog(this, "Branch Code must follow the format 'BR-XXXX'!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
