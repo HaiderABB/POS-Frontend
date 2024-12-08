@@ -48,7 +48,7 @@ public class SuperAdminService {
         boolean br = branchesDAO.doesBranchExistWithPhone(branch.getPhone());
 
         if (br) {
-            return new AddResponseJSON("Branch Exists with phone number", false);
+            return new AddResponseJSON("Branch Exists with phone number", false, null);
         }
 
         String empcode = codesDAO.getCodeByTableName("BRANCHES");
@@ -65,34 +65,34 @@ public class SuperAdminService {
             syncTableDAO.addSyncTable(st);
             SyncTable st1 = new SyncTable("CODES", "UPDATE", "BRANCHES");
             syncTableDAO.addSyncTable(st1);
-            return new AddResponseJSON("Branch Creation Successful", true);
+            return new AddResponseJSON("Branch Creation Successful", true, temp);
         }
 
-        return new AddResponseJSON(null, false);
+        return new AddResponseJSON("Error Creating a branch", false, null);
 
     }
 
     public AddResponseJSON deleteBranch(String branch_code) {
         Branch br = branchesDAO.getBranchByCode(branch_code);
         if (br == null) {
-            return new AddResponseJSON("Branch does not exist", false);
+            return new AddResponseJSON("Branch does not exist", false, null);
         }
         boolean res;
 
         res = branchesDAO.getBranchActiveStatus(branch_code);
         if (res == false) {
-            return new AddResponseJSON("Branch already deleted", true);
+            return new AddResponseJSON("Branch already deleted", true, null);
         }
 
         res = branchesDAO.deleteBranch(branch_code);
         if (!res) {
-            return new AddResponseJSON("Branch Deletion Failed", false);
+            return new AddResponseJSON("Branch Deletion Failed", false, null);
         }
 
         SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch_code);
         syncTableDAO.addSyncTable(st);
 
-        return new AddResponseJSON("Branch Deletion Successful", res);
+        return new AddResponseJSON("Branch Deletion Successful", res, null);
 
     }
 
@@ -100,20 +100,20 @@ public class SuperAdminService {
         System.out.println(branch.getBranchCode());
         Branch br = branchesDAO.getBranchByCode(branch.getBranchCode());
         if (br == null) {
-            return new AddResponseJSON("Branch does not exist", false);
+            return new AddResponseJSON("Branch does not exist", false, null);
         }
 
         boolean res;
         res = branchesDAO.updateBranch(branch);
 
         if (!res) {
-            return new AddResponseJSON("Branch Update Failed", false);
+            return new AddResponseJSON("Branch Update Failed", false, null);
         }
 
         SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch.getBranchCode());
         syncTableDAO.addSyncTable(st);
 
-        return new AddResponseJSON("Branch Update Successful", res);
+        return new AddResponseJSON("Branch Update Successful", res, null);
 
     }
 
@@ -246,6 +246,10 @@ public class SuperAdminService {
             profit += sl.getProfit();
         }
         return new GetReportJSON(sales, products, profit, "Report Generated");
+    }
+
+    public Branch getBranchByCode(String code) {
+        return branchesDAO.getBranchByCode(code);
     }
 
 }

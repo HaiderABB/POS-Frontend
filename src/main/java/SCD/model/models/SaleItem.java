@@ -101,7 +101,6 @@ public class SaleItem {
 
   public void setSalePrice(double salePrice) {
     this.salePrice = salePrice;
-    calculateTotalPrice(); // Update total price if sale price changes
   }
 
   public double getTotalPrice() {

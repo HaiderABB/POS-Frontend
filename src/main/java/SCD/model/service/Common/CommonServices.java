@@ -61,11 +61,11 @@ public class CommonServices {
     boolean res = employeeDAO.isEmailExists(employee.getEmail());
 
     if (res) {
-      return new AddResponseJSON("Employee already exists", false);
+      return new AddResponseJSON("Employee already exists", false, null);
     }
 
     if (branchesDAO.getBranchByCode(employee.getBranch().getBranchCode()) == null) {
-      return new AddResponseJSON("Branch does not exist", false);
+      return new AddResponseJSON("Branch does not exist", false, null);
     }
 
     String employeeCode = codesDAO.getCodeByTableName("EMPLOYEES");
@@ -90,16 +90,20 @@ public class CommonServices {
     res = employeeDAO.addEmployee(employee);
 
     if (!res) {
-      return new AddResponseJSON("Error Adding Employee", false);
+      return new AddResponseJSON("Error Adding Employee", false, null);
     }
 
-    codesDAO.updateCodeByTableName("EMPLOYEES", employeeCode);
+    boolean check = codesDAO.updateCodeByTableName("EMPLOYEES", employeeCode);
     SyncTable st = new SyncTable("EMPLOYEES", "INSERT", temp);
     syncTable.addSyncTable(st);
-    SyncTable st1 = new SyncTable("CODES", "UPDATE", "EMPLOYEES");
-    syncTable.addSyncTable(st1);
+    if (check) {
+      SyncTable st1 = new SyncTable("CODES", "UPDATE", "EMPLOYEES");
+      syncTable.addSyncTable(st1);
+    } else {
+      return new AddResponseJSON("Error Adding Employee", false, null);
+    }
 
-    return new AddResponseJSON("Employee added successfully", true);
+    return new AddResponseJSON("Employee added successfully", true, temp);
 
   }
 
@@ -117,19 +121,19 @@ public class CommonServices {
     boolean res = employeeDAO.employeeExistsByEmployeeCode(emp_code);
 
     if (!res) {
-      return new AddResponseJSON("Employee does not exist", false);
+      return new AddResponseJSON("Employee does not exist", false, null);
     }
 
     res = employeeDAO.deactivateEmployee(emp_code);
 
     if (!res) {
-      return new AddResponseJSON("Employee cannot be removed", false);
+      return new AddResponseJSON("Employee cannot be removed", false, null);
     }
 
     SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", emp_code);
     syncTable.addSyncTable(st);
 
-    return new AddResponseJSON("Employee removed successfully", true);
+    return new AddResponseJSON("Employee removed successfully", true, emp_code);
 
   }
 
@@ -141,16 +145,16 @@ public class CommonServices {
 
     boolean res = employeeDAO.employeeExistsByEmployeeCode(employee.getEmployeeCode());
     if (!res) {
-      return new AddResponseJSON("Employee does not exist", false);
+      return new AddResponseJSON("Employee does not exist", false, employee.getEmployeeCode());
     }
     res = employeeDAO.updateEmployee(employee);
     if (!res) {
-      return new AddResponseJSON("Employee cannot be updated", false);
+      return new AddResponseJSON("Employee cannot be updated", false, employee.getEmployeeCode());
     }
 
     SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", employee.getEmployeeCode());
     syncTable.addSyncTable(st);
-    return new AddResponseJSON("Employee updated successfully", true);
+    return new AddResponseJSON("Employee updated successfully", true, employee.getEmployeeCode());
   }
 
 }
