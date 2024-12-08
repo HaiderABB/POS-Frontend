@@ -34,7 +34,6 @@ public class SaleItemDAO {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Iterate through each SaleItem in the list and persist them
       for (SaleItem saleItem : saleItems) {
         session.persist(saleItem);
       }

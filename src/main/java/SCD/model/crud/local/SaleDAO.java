@@ -40,7 +40,6 @@ public class SaleDAO {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Fetch the cashier and branch entities
       Employee cashier = session.get(Employee.class, cashierCode);
       if (cashier == null) {
         System.err.println("Cashier with code " + cashierCode + " not found.");
@@ -53,16 +52,12 @@ public class SaleDAO {
         return null;
       }
 
-      // Create the Sale object
       sale = new Sale(cashier, branch, totalAmount, profit);
 
-      // Persist the Sale entity
       session.persist(sale);
 
-      // Commit the transaction
       transaction.commit();
 
-      // Print the sale_id
       System.out.println("Sale added successfully with sale_id: " + sale.getSaleId());
 
     } catch (Exception e) {
@@ -73,7 +68,7 @@ public class SaleDAO {
       sale = null;
     }
 
-    return sale; // Return the Sale object after successful insertion
+    return sale;
   }
 
   public List<Sale> getSalesByBranch(String branchCode) {
@@ -98,7 +93,6 @@ public class SaleDAO {
     }
   }
 
-  // Method to get all sales for a specific day and branch
   public List<Sale> getSalesForDay(LocalDate date, String branchCode) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       String hql = "FROM Sale s WHERE s.createdAt >= :startOfDay AND s.createdAt < :endOfDay AND s.branch.branchCode = :branchCode";
@@ -116,7 +110,6 @@ public class SaleDAO {
     }
   }
 
-  // Method to get all sales for a specific week and branch
   public List<Sale> getSalesForWeek(LocalDate date, String branchCode) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
@@ -137,7 +130,6 @@ public class SaleDAO {
     }
   }
 
-  // Method to get all sales for a specific month and branch
   public List<Sale> getSalesForMonth(LocalDate date, String branchCode) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       LocalDate firstDayOfMonth = date.withDayOfMonth(1);
@@ -158,7 +150,6 @@ public class SaleDAO {
     }
   }
 
-  // Method to get all sales for a specific year and branch
   public List<Sale> getSalesForYear(int year, String branchCode) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       LocalDate startOfYear = LocalDate.of(year, 1, 1);
@@ -179,7 +170,6 @@ public class SaleDAO {
     }
   }
 
-  // Method to get all sales for a specific date range and branch
   public List<Sale> getSalesForDateRange(LocalDate startDate, LocalDate endDate, String branchCode) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       String hql = "FROM Sale s WHERE s.createdAt >= :startDate AND s.createdAt <= :endDate AND s.branch.branchCode = :branchCode";
