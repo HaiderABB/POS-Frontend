@@ -1,15 +1,18 @@
+// AddNewVendorPage.java
 package SCD.ui.DataEntryOperator;
 
 import SCD.ui.Common.ButtonFactory;
-
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.text.NumberFormat;
 
-
 public class AddNewVendorPage extends JFrame {
+
+    private JTextField vendorNameField;
+    private JTextField addressField;
+    private JFormattedTextField phoneNumberField;
 
     public AddNewVendorPage() {
         setTitle("Add New Vendor");
@@ -31,18 +34,15 @@ public class AddNewVendorPage extends JFrame {
         add(headerPanel, BorderLayout.NORTH);
 
         // Main content area
-
         JPanel mainPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(Color.WHITE);
 
         JLabel vendorNameLabel = new JLabel("Vendor Name:");
-        JTextField vendorNameField = new JTextField();
-
+        vendorNameField = new JTextField();
 
         JLabel addressLabel = new JLabel("Address:");
-        JTextField addressField = new JTextField();
+        addressField = new JTextField();
 
         JLabel phoneNumberLabel = new JLabel("Phone Number:");
         NumberFormat format = NumberFormat.getInstance();
@@ -51,7 +51,7 @@ public class AddNewVendorPage extends JFrame {
         formatter.setValueClass(Long.class);
         formatter.setAllowsInvalid(false);
         formatter.setMinimum(0L);
-        JFormattedTextField phoneNumberField = new JFormattedTextField(formatter);
+        phoneNumberField = new JFormattedTextField(formatter);
 
         mainPanel.add(vendorNameLabel);
         mainPanel.add(vendorNameField);
@@ -69,7 +69,6 @@ public class AddNewVendorPage extends JFrame {
 
         JButton saveButton = ButtonFactory.createStyledButton("Save");
         saveButton.addActionListener(e -> {
-
             String vendorName = vendorNameField.getText().trim();
             String address = addressField.getText().trim();
             String phoneNumber = phoneNumberField.getText().trim();
@@ -100,7 +99,6 @@ public class AddNewVendorPage extends JFrame {
         setLocationRelativeTo(null); // Center the window on the screen
         setVisible(true);
     }
-
 
     private String receiveVendorCodeFromBackend() {
         // Placeholder for backend call to receive vendor code

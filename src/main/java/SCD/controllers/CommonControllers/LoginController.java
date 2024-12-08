@@ -3,7 +3,7 @@ package SCD.controllers.CommonControllers;
 
 import SCD.controllers.BranchManagerControllers.BranchManagerDashboardController;
 import SCD.controllers.SuperAdminControllers.SuperAdminDashboardController;
-//import SCD.ui.Cashier.CashierDashboard;
+import SCD.ui.Cashier.CashierDashboard;
 import SCD.ui.Common.LoginPage;
 import SCD.ui.DataEntryOperator.DataEntryOperatorDashboard;
 
