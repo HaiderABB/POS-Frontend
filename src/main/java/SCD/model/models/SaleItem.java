@@ -36,7 +36,7 @@ public class SaleItem {
   private double totalPrice;
 
   @Column(name = "actual_price", nullable = false)
-  private double actualPrice; // New field for the actual price
+  private double actualPrice;
 
   public SaleItem() {
   }
@@ -46,10 +46,8 @@ public class SaleItem {
     this.quantity = quantity;
     this.salePrice = salePrice;
     this.actualPrice = actualPrice;
-    this.totalPrice = quantity * salePrice; // Automatically calculate total price
+    this.totalPrice = quantity * salePrice;
   }
-
-  // Getters and Setters
 
   public int getSaleItemId() {
     return saleItemId;
@@ -85,13 +83,13 @@ public class SaleItem {
 
   public void increment(int quantity) {
     this.quantity += quantity;
-    calculateTotalPrice(); // Update total price when quantity changes
+    calculateTotalPrice();
   }
 
   public void decrement(int quantity) {
     if (this.quantity >= quantity) {
       this.quantity -= quantity;
-      calculateTotalPrice(); // Update total price when quantity changes
+      calculateTotalPrice();
     }
   }
 
@@ -101,7 +99,6 @@ public class SaleItem {
 
   public void setSalePrice(double salePrice) {
     this.salePrice = salePrice;
-    calculateTotalPrice(); // Update total price if sale price changes
   }
 
   public double getTotalPrice() {
@@ -121,7 +118,7 @@ public class SaleItem {
   }
 
   private void calculateTotalPrice() {
-    this.totalPrice = this.quantity * this.salePrice; // Calculate total price based on sale price
+    this.totalPrice = this.quantity * this.salePrice;
   }
 
   @Override
@@ -132,7 +129,7 @@ public class SaleItem {
         ", sale=" + (sale != null ? sale.getSaleId() : "Unknown") +
         ", quantity=" + quantity +
         ", salePrice=" + salePrice +
-        ", actualPrice=" + actualPrice + // Include actual price in toString output
+        ", actualPrice=" + actualPrice +
         ", totalPrice=" + totalPrice +
         '}';
   }

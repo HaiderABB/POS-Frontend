@@ -17,29 +17,29 @@ import jakarta.persistence.Table;
 public class Sale {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // Primary key auto-incremented by the database
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "sale_id")
   private int saleId;
 
   @ManyToOne
   @JoinColumn(name = "cashier_code", referencedColumnName = "employee_code", nullable = false)
-  private Employee cashier; // Links to the Employee entity (users/employees table)
+  private Employee cashier;
 
   @ManyToOne
   @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
-  private Branch branch; // Links to the Branch entity (branch table)
+  private Branch branch;
 
   @Column(name = "total_amount", nullable = false)
   private double totalAmount;
 
   @Column(name = "profit", nullable = false)
-  private double profit; // New field for profit
+  private double profit;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
 
   public Sale() {
-    this.createdAt = LocalDateTime.now(); // Initialize with the current timestamp
+    this.createdAt = LocalDateTime.now();
   }
 
   public Sale(Employee cashier, Branch branch, double totalAmount, double profit) {
@@ -49,8 +49,6 @@ public class Sale {
     this.profit = profit;
     this.createdAt = LocalDateTime.now();
   }
-
-  // Getters and Setters
 
   public int getSaleId() {
     return saleId;

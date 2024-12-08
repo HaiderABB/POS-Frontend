@@ -18,7 +18,6 @@ public class Product {
   @Column(name = "product_code", nullable = false, unique = true)
   private String productCode;
 
-  // Define the foreign key relationship with Vendor
   @ManyToOne
   @JoinColumn(name = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "FK_product_vendor"))
   private Vendor vendorCode;
@@ -62,6 +61,22 @@ public class Product {
       double originalPrice, double salePrice, double priceByUnit,
       double priceByCarton, int stockQuantity) {
     this.productCode = productCode;
+    this.vendorCode = vendorCode;
+    this.name = name;
+    this.category = category;
+    this.originalPrice = originalPrice;
+    this.salePrice = salePrice;
+    this.priceByUnit = priceByUnit;
+    this.priceByCarton = priceByCarton;
+    this.stockQuantity = stockQuantity;
+    this.isActive = true;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  public Product(Vendor vendorCode, String name, String category,
+      double originalPrice, double salePrice, double priceByUnit,
+      double priceByCarton, int stockQuantity) {
     this.vendorCode = vendorCode;
     this.name = name;
     this.category = category;

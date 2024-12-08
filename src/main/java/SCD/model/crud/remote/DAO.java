@@ -147,11 +147,9 @@ public class DAO {
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Retrieve the existing branch from the database
       Branch existingBranch = session.get(Branch.class, updatedBranch.getBranchCode());
 
       if (existingBranch != null) {
-        // Update the properties of the existing branch using the setters
         existingBranch.setName(updatedBranch.getName());
         existingBranch.setPhone(updatedBranch.getPhone());
         existingBranch.setAddress(updatedBranch.getAddress());
@@ -163,7 +161,6 @@ public class DAO {
         transaction.commit();
         return true;
       } else {
-        // If the branch is not found, return false
         return false;
       }
     } catch (Exception e) {
@@ -174,16 +171,27 @@ public class DAO {
     }
   }
 
-  public boolean addSaleItem(SaleItem saleItem) {
+  public boolean addSaleItem(SaleItem saleItem, int id) {
     Transaction transaction = null;
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
+      Sale sale = session.get(Sale.class, id);
+      if (sale == null) {
+        System.err.println("Sale with id " + id + " not found");
+        return false;
+      }
+
+      saleItem.setSale(sale);
+
       session.persist(saleItem);
 
       transaction.commit();
+
+      System.out.println("SaleItem added successfully.");
       return true;
     } catch (Exception e) {
+      System.err.println("Error adding SaleItem: " + e.getMessage());
       if (transaction != null) {
         transaction.rollback();
       }
@@ -191,8 +199,34 @@ public class DAO {
     }
   }
 
+  public Sale getSaleById(int saleId) {
+    try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
+      return session.get(Sale.class, saleId);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public Product getProductByCode(String productCode) {
+    Product product = null;
+    try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
+      String hql = "FROM Product p WHERE p.productCode = :productCode AND p.isActive = true";
+      product = session.createQuery(hql, Product.class)
+          .setParameter("productCode", productCode)
+          .uniqueResultOptional()
+          .orElse(null);
+    } catch (Exception e) {
+    }
+    return product;
+  }
+
   public Sale addSale(Sale sale) {
     Transaction transaction = null;
+
+    if (sale == null) {
+      System.err.println("Sale object is null");
+      return null;
+    }
 
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
@@ -201,15 +235,17 @@ public class DAO {
 
       transaction.commit();
 
+      System.out.println("Sale added successfully with sale_id: " + sale.getSaleId());
+      return sale;
     } catch (Exception e) {
       if (transaction != null) {
         transaction.rollback();
       }
-      System.err.println("Error adding sale: " + e.getMessage());
-      sale = null;
+
+      System.err.println("Error adding Sale: " + e.getMessage());
     }
 
-    return sale;
+    return null;
   }
 
   public boolean addVendor(Vendor vendor) {
