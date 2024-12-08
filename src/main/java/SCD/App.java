@@ -1,18 +1,12 @@
 package SCD;
 
+import SCD.controllers.CommonControllers.SplashScreenController;
 
-import SCD.controllers.CommonControllers.MainController;
-
-
-/**
- * Hello world!
- *
- */
 public class App {
     public static void main(String[] args) {
-        DataSync dataSync = new DataSync();
-        SyncService syncService = new SyncService(dataSync);
-        syncService.startSyncing();
-        new MainController();
+        // DataSync dataSync = new DataSync();
+        // SyncService syncService = new SyncService(dataSync);
+        // syncService.startSyncing();
+        new SplashScreenController();
     }
 }

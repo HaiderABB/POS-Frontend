@@ -116,4 +116,26 @@ public class SyncTableDAO {
     }
   }
 
+  public boolean removeSyncTableById(Long id) {
+    Transaction transaction = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      transaction = session.beginTransaction();
+
+      SyncTable syncTable = session.get(SyncTable.class, id);
+
+      if (syncTable != null) {
+        session.remove(syncTable);
+        transaction.commit();
+        return true;
+      } else {
+        System.out.println("No entry found with id: " + id);
+      }
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+    }
+    return false;
+  }
+
 }

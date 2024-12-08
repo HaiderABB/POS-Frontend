@@ -50,7 +50,7 @@ public class SaleItemDAO {
     return result;
   }
 
-  public SaleItem getSaleItemById(Long saleItemId) {
+  public SaleItem getSaleItemById(int saleItemId) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session.get(SaleItem.class, saleItemId);
     } catch (Exception e) {
