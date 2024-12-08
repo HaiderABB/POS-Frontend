@@ -1,7 +1,5 @@
 package SCD.ui.Common;
 
-
-
 import SCD.controllers.CommonControllers.LoginController;
 
 import javax.swing.*;
@@ -9,15 +7,12 @@ import javax.swing.text.*;
 import java.awt.*;
 
 public class LoginPage extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
 
-    private final LoginController controller;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JButton loginButton;
 
     public LoginPage(String prefix) {
-        controller = new LoginController(this); // Initialize the controller
-
         setTitle("Login");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,9 +59,6 @@ public class LoginPage extends JFrame {
 
         add(loginPanel);
         setLocationRelativeTo(null);
-
-        // Delegate validation and navigation to the controller
-        loginButton.addActionListener(e -> controller.validateAndNavigate());
     }
 
     private void addNonEditablePrefix(JTextField textField, String prefix) {
@@ -103,5 +95,9 @@ public class LoginPage extends JFrame {
 
     public String getPassword() {
         return new String(passwordField.getPassword());
+    }
+
+    public JButton getLoginButton() {
+        return loginButton;
     }
 }

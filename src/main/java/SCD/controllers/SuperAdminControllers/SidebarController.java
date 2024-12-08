@@ -77,4 +77,6 @@ public class SidebarController {
             page.setVisible(true);
         });
     }
+
+
 }
