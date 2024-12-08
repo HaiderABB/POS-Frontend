@@ -8,13 +8,18 @@ import SCD.ui.DataEntryOperator.DataEntryOperatorDashboard;
 import SCD.utils.enums.Roles;
 
 import javax.swing.*;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import SCD.model.models.Employee;
+import SCD.model.service.Common.CommonServices;
 
 public class LoginController {
 
     private final LoginPage loginPage;
     private static final Map<String, String> credentials = new HashMap<>();
+    CommonServices commonServices;
 
     static {
         credentials.put("SM-0001", "password1");
@@ -25,6 +30,7 @@ public class LoginController {
 
     public LoginController(String prefix) {
         this.loginPage = new LoginPage(prefix);
+        commonServices = new CommonServices();
 
         loginPage.getLoginButton().addActionListener(e -> validateAndNavigate());
 
@@ -32,45 +38,47 @@ public class LoginController {
     }
 
     public void validateAndNavigate() {
-        String username = loginPage.getUsername();
+        String emp_code = loginPage.getUsername();
         String password = loginPage.getPassword();
+        String role = getRoleFromPrefix(emp_code);
 
-        if (credentials.containsKey(username) && credentials.get(username).equals(password)) {
-            Roles role = getRoleFromPrefix(username);
+        Employee employee = commonServices.Login(emp_code, password, role);
+
+        if (employee != null) {
             JOptionPane.showMessageDialog(loginPage, "Login successful for " + role, "Success",
                     JOptionPane.INFORMATION_MESSAGE);
-            navigateToDashboardController(role);
+            navigateToDashboardController(role, employee);
         } else {
             JOptionPane.showMessageDialog(loginPage, "Invalid credentials!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private Roles getRoleFromPrefix(String username) {
-        if (username.startsWith("SM-"))
-            return Roles.SUPER_ADMIN;
-        if (username.startsWith("BM-"))
-            return Roles.MANAGER;
-        if (username.startsWith("CM-"))
-            return Roles.CASHIER;
-        if (username.startsWith("DM-"))
-            return Roles.DATA_ENTRY_OPERATOR;
+    private String getRoleFromPrefix(String emp_code) {
+        if (emp_code.startsWith("SM-"))
+            return "SUPER_ADMIN";
+        if (emp_code.startsWith("BM-"))
+            return "MANAGER";
+        if (emp_code.startsWith("CM-"))
+            return "CASHIER";
+        if (emp_code.startsWith("DM-"))
+            return "DATA_ENTRY_OPERATOR";
         return null;
     }
 
-    private void navigateToDashboardController(Roles role) {
+    private void navigateToDashboardController(String role, Employee employee) {
         JFrame dashboard = null;
 
         switch (role) {
-            case SUPER_ADMIN:
-                new SuperAdminDashboardController(null).showDashboard();
+            case "SUPER_ADMIN":
+                new SuperAdminDashboardController(null, employee).showDashboard();
                 break;
-            case MANAGER:
+            case "MANAGER":
                 new BranchManagerDashboardController(null).showDashboard();
                 break;
-            case CASHIER:
+            case "CASHIER":
                 dashboard = new CashierDashboard();
                 break;
-            case DATA_ENTRY_OPERATOR:
+            case "DATA_ENTRY_OPERATOR":
                 dashboard = new DataEntryOperatorDashboard();
                 break;
             default:
