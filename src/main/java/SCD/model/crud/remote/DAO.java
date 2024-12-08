@@ -86,9 +86,9 @@ public class DAO {
           .uniqueResult();
 
       if (codeRecord != null) {
-        codeRecord.setCode(newCode); // Update the code
-        session.merge(codeRecord); // Save changes
-        transaction.commit(); // Commit transaction
+        codeRecord.setCode(newCode);
+        session.merge(codeRecord);
+        transaction.commit();
         return true;
       } else {
         System.out.println("No record found for tableName: " + tableName);
