@@ -6,13 +6,18 @@ import javax.swing.*;
 
 public class SuperAdminDashboardController {
 
-    private final SuperAdminDashboard view;
+    private  SuperAdminDashboard view;
 
     public SuperAdminDashboardController(SuperAdminDashboard view) {
         this.view = view;
 
     }
-
+    public SuperAdminDashboardController() {
+        SwingUtilities.invokeLater(() -> {
+            SuperAdminDashboard view = new SuperAdminDashboard();
+            view.setVisible(true);
+        });
+    }
     public void showDashboard() {
         SuperAdminDashboard dashboard = new SuperAdminDashboard();
         dashboard.setVisible(true);
@@ -24,5 +29,9 @@ public class SuperAdminDashboardController {
             new SuperAdminDashboardController(view);
             view.setVisible(true);
         });
+    }
+
+    public void showPage() {
+        new SuperAdminDashboard();
     }
 }

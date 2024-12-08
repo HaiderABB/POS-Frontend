@@ -6,9 +6,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SystemSettingsController {
-    private final SystemSettingsPage view;
+    private  SystemSettingsPage view;
     private final String existingPassword = "existingPassword123";
 
+    public SystemSettingsController() {
+        SwingUtilities.invokeLater(() -> {
+            SystemSettingsPage page = new SystemSettingsPage();
+
+            page.setVisible(true);
+        });
+    }
     public SystemSettingsController(SystemSettingsPage view) {
         this.view = view;
         initController();
@@ -85,5 +92,9 @@ public class SystemSettingsController {
             new SystemSettingsController(page);
             page.setVisible(true);
         });
+    }
+
+    public void showPage() {
+        new SystemSettingsPage().setVisible(true);
     }
 }

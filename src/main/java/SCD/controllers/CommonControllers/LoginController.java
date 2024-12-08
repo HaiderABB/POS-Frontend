@@ -62,7 +62,7 @@ public class LoginController {
 
         switch (role) {
             case SUPER_ADMIN:
-                new SuperAdminDashboardController(null).showDashboard();
+                new SuperAdminDashboardController();
                 break;
             case MANAGER:
                 new BranchManagerDashboardController(null).showDashboard();

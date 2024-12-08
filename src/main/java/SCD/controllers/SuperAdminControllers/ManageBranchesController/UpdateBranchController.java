@@ -9,6 +9,14 @@ public class UpdateBranchController {
 
     private UpdateBranchPage updateBranchPage;
 
+    public UpdateBranchController() {
+        SwingUtilities.invokeLater(() -> {
+            UpdateBranchPage page = new UpdateBranchPage();
+
+            page.setVisible(true);
+        });
+    }
+
     public UpdateBranchController(UpdateBranchPage updateBranchPage) {
         this.updateBranchPage = updateBranchPage;
 
