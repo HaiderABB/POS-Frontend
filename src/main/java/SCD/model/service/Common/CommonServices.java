@@ -10,10 +10,10 @@ import SCD.model.service.Json.AddResponseJSON;
 
 public class CommonServices {
 
-  EmployeeDAO employeeDAO;
-  BranchesDAO branchesDAO;
-  CodesDAO codesDAO;
-  SyncTableDAO syncTable;
+  public EmployeeDAO employeeDAO;
+  public BranchesDAO branchesDAO;
+  public CodesDAO codesDAO;
+  public SyncTableDAO syncTable;
 
   public CommonServices() {
     employeeDAO = EmployeeDAO.getInstance();
@@ -111,7 +111,6 @@ public class CommonServices {
 
     int numericCode = Integer.parseInt(code);
 
-    // Increment the numeric part
     numericCode++;
 
     return String.format("%04d", numericCode);

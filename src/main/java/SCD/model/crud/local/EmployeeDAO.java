@@ -197,22 +197,21 @@ public class EmployeeDAO {
       Employee existingEmployee = session.get(Employee.class, employee.getEmployeeCode());
 
       if (existingEmployee != null) {
-        // Update employee details
-        existingEmployee.setName(employee.getName()); // Update name
 
-        existingEmployee.setPhoneNumber(employee.getPhoneNumber()); // Update phone number
+        existingEmployee.setName(employee.getName());
 
-        existingEmployee.setSalary(employee.getSalary()); // Update salary
+        existingEmployee.setPhoneNumber(employee.getPhoneNumber());
 
-        existingEmployee.setUpdatedAt(employee.getUpdatedAt()); // Update updatedAt
+        existingEmployee.setSalary(employee.getSalary());
+
+        existingEmployee.setUpdatedAt(employee.getUpdatedAt());
 
         session.merge(existingEmployee);
 
-        // Commit the transaction
         transaction.commit();
         return true;
       } else {
-        // Employee with this employeeCode does not exist
+
         return false;
       }
     } catch (Exception e) {

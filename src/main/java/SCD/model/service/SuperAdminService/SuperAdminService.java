@@ -37,7 +37,6 @@ public class SuperAdminService {
 
         int numericCode = Integer.parseInt(code);
 
-        // Increment the numeric part
         numericCode++;
 
         return String.format("%04d", numericCode);

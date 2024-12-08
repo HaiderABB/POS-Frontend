@@ -191,14 +191,12 @@ public class CashierService {
     product9.setProductCode("PM-0009");
     product10.setProductCode("PM-0010");
 
-    // Create SaleItem objects
     SaleItem saleItem1 = new SaleItem(product1, 2, product1.getSalePrice(), product1.getOriginalPrice());
     SaleItem saleItem2 = new SaleItem(product2, 3, product2.getSalePrice(), product2.getOriginalPrice());
     SaleItem saleItem3 = new SaleItem(product3, 1, product3.getSalePrice(), product3.getOriginalPrice());
     SaleItem saleItem4 = new SaleItem(product4, 5, product4.getSalePrice(), product4.getOriginalPrice());
     SaleItem saleItem5 = new SaleItem(product5, 4, product5.getSalePrice(), product5.getOriginalPrice());
 
-    // Add to a list
     List<SaleItem> saleItems = new ArrayList<>();
     saleItems.add(saleItem1);
     saleItems.add(saleItem2);

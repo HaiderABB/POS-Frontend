@@ -73,10 +73,8 @@ public class VendorDAO {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
-      // Fetch the vendor
       Vendor vendor = session.get(Vendor.class, vendorCode);
 
-      // Deactivate the vendor
       vendor.setActive(false);
       session.merge(vendor);
       transaction.commit();
@@ -84,7 +82,7 @@ public class VendorDAO {
 
     } catch (Exception e) {
       if (transaction != null && transaction.getStatus().canRollback()) {
-        transaction.rollback(); // Rollback only if the transaction is active
+        transaction.rollback();
       }
     }
 

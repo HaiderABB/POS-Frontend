@@ -18,7 +18,6 @@ public class Product {
   @Column(name = "product_code", nullable = false, unique = true)
   private String productCode;
 
-  // Define the foreign key relationship with Vendor
   @ManyToOne
   @JoinColumn(name = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "FK_product_vendor"))
   private Vendor vendorCode;
