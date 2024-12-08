@@ -174,16 +174,31 @@ public class DAO {
     }
   }
 
-  public boolean addSaleItem(SaleItem saleItem) {
+  public boolean addSaleItem(SaleItem saleItem, int id) {
     Transaction transaction = null;
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
+      // Fetch the Sale object using the provided id
+      Sale sale = session.get(Sale.class, id);
+      if (sale == null) {
+        System.err.println("Sale with id " + id + " not found");
+        return false; // Return false if the Sale object doesn't exist
+      }
+
+      // Set the fetched Sale object in the SaleItem
+      saleItem.setSale(sale);
+
+      // Persist the SaleItem
       session.persist(saleItem);
 
+      // Commit the transaction
       transaction.commit();
+
+      System.out.println("SaleItem added successfully.");
       return true;
     } catch (Exception e) {
+      System.err.println("Error adding SaleItem: " + e.getMessage());
       if (transaction != null) {
         transaction.rollback();
       }
@@ -191,25 +206,56 @@ public class DAO {
     }
   }
 
+  public Sale getSaleById(int saleId) {
+    try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
+      return session.get(Sale.class, saleId);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public Product getProductByCode(String productCode) {
+    Product product = null;
+    try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
+      String hql = "FROM Product p WHERE p.productCode = :productCode AND p.isActive = true";
+      product = session.createQuery(hql, Product.class)
+          .setParameter("productCode", productCode)
+          .uniqueResultOptional()
+          .orElse(null);
+    } catch (Exception e) {
+    }
+    return product;
+  }
+
   public Sale addSale(Sale sale) {
     Transaction transaction = null;
+
+    if (sale == null) {
+      System.err.println("Sale object is null");
+      return null; // Return null if the sale object is null
+    }
 
     try (Session session = HibernateUtil.getRemoteSessionFactory().openSession()) {
       transaction = session.beginTransaction();
 
+      // Persist the Sale entity
       session.persist(sale);
 
+      // Commit the transaction
       transaction.commit();
 
+      // Print the sale_id
+      System.out.println("Sale added successfully with sale_id: " + sale.getSaleId());
+      return sale; // Return the persisted Sale object
     } catch (Exception e) {
       if (transaction != null) {
         transaction.rollback();
       }
-      System.err.println("Error adding sale: " + e.getMessage());
-      sale = null;
+
+      System.err.println("Error adding Sale: " + e.getMessage());
     }
 
-    return sale;
+    return null; // Return null if an error occurs
   }
 
   public boolean addVendor(Vendor vendor) {

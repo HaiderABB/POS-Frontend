@@ -77,7 +77,7 @@ public class DataEntryOperatorService {
     String temp = "PM-" + empcode;
     product.setProductCode(temp);
 
-    res = codesDAO.updateCodeByTableName("PRODUCTS", temp);
+    res = codesDAO.updateCodeByTableName("PRODUCTS", empcode);
     if (!res) {
       return new AddResponseJSON("Could not update code", false);
     }

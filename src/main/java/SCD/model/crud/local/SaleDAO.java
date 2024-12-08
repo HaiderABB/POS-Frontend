@@ -90,7 +90,7 @@ public class SaleDAO {
     return sales;
   }
 
-  public Sale getSaleById(Long saleId) {
+  public Sale getSaleById(int saleId) {
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       return session.get(Sale.class, saleId);
     } catch (Exception e) {

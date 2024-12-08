@@ -97,6 +97,7 @@ public class SuperAdminService {
     }
 
     public AddResponseJSON updateBranch(Branch branch) {
+        System.out.println(branch.getBranchCode());
         Branch br = branchesDAO.getBranchByCode(branch.getBranchCode());
         if (br == null) {
             return new AddResponseJSON("Branch does not exist", false);

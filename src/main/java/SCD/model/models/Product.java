@@ -75,6 +75,22 @@ public class Product {
     this.updatedAt = LocalDateTime.now();
   }
 
+  public Product(Vendor vendorCode, String name, String category,
+      double originalPrice, double salePrice, double priceByUnit,
+      double priceByCarton, int stockQuantity) {
+    this.vendorCode = vendorCode;
+    this.name = name;
+    this.category = category;
+    this.originalPrice = originalPrice;
+    this.salePrice = salePrice;
+    this.priceByUnit = priceByUnit;
+    this.priceByCarton = priceByCarton;
+    this.stockQuantity = stockQuantity;
+    this.isActive = true;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+  }
+
   public String getProductCode() {
     return productCode;
   }

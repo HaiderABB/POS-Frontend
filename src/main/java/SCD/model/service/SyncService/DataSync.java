@@ -12,7 +12,6 @@ import SCD.model.crud.local.SyncTableDAO;
 import SCD.model.crud.local.VendorDAO;
 import SCD.model.crud.remote.DAO;
 import SCD.model.models.Branch;
-import SCD.model.models.Codes;
 import SCD.model.models.Employee;
 import SCD.model.models.Product;
 import SCD.model.models.Sale;
@@ -54,64 +53,128 @@ public class DataSync {
     }
     for (SyncTable syncTable : syncTables) {
 
+      boolean res = false;
       if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("EMPLOYEES")) {
         Employee emp = employeeDAO.getEmployeeByEmployeeCode(syncTable.getKeyColumn());
-        remoteDAO.addEmployee(emp);
+        res = remoteDAO.addEmployee(emp);
 
       } else if (syncTable.getOperationType().equals("UPDATE") && syncTable.getTableName().equals("EMPLOYEES")) {
         Employee emp = employeeDAO.getEmployeeByEmployeeCode(syncTable.getKeyColumn());
-        remoteDAO.updateEmployeeIfExists(emp);
+        res = remoteDAO.updateEmployeeIfExists(emp);
       } else if (syncTable.getOperationType().equals("UPDATE") && syncTable.getTableName().equals("CODES")) {
         String code = codesDAO.getCodeByTableName(syncTable.getKeyColumn());
-        remoteDAO.updateCodeByTableName(syncTable.getKeyColumn(), code);
+        res = remoteDAO.updateCodeByTableName(syncTable.getKeyColumn(), code);
       } else if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("BRANCHES")) {
         Branch br = branchDAO.getBranchByCode(syncTable.getKeyColumn());
-        remoteDAO.addBranch(br);
+        res = remoteDAO.addBranch(br);
       } else if (syncTable.getOperationType().equals("UPDATE") && syncTable.getTableName().equals("BRANCHES")) {
         Branch br = branchDAO.getBranchByCode(syncTable.getKeyColumn());
-        remoteDAO.updateBranch(br);
-      } else if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("SALE_ITEMS")) {
-        SaleItem saleItem = saleItemDAO.getSaleItemById(Long.valueOf(syncTable.getKeyColumn()));
-        remoteDAO.addSaleItem(saleItem);
-      } else if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("SALES")) {
-        Sale sale = saleDAO.getSaleById(Long.valueOf(syncTable.getKeyColumn()));
-        remoteDAO.addSale(sale);
+        res = remoteDAO.updateBranch(br);
       } else if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("VENDORS")) {
         Vendor vendor = vendorDAO.getVendorByCode(syncTable.getKeyColumn());
-        remoteDAO.addVendor(vendor);
+        res = remoteDAO.addVendor(vendor);
       } else if (syncTable.getOperationType().equals("UPDATE") && syncTable.getTableName().equals("VENDORS")) {
         Vendor vendor = vendorDAO.getVendorByCode(syncTable.getKeyColumn());
-        remoteDAO.updateVendor(vendor);
+        res = remoteDAO.updateVendor(vendor);
       } else if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("PRODUCTS")) {
         Product product = productDAO.getProductByCode(syncTable.getKeyColumn());
-        remoteDAO.addProduct(product);
+        res = remoteDAO.addProduct(product);
       } else if (syncTable.getOperationType().equals("UPDATE") && syncTable.getTableName().equals("PRODUCTS")) {
         Product product = productDAO.getProductByCode(syncTable.getKeyColumn());
-        remoteDAO.updateProduct(product);
+        res = remoteDAO.updateProduct(product);
+      }
+      if (res) {
+        syncTableDAO.removeSyncTableById(syncTable.getId());
       }
 
     }
 
-    syncTableDAO.removeAllSyncTableEntries();
+    List<SyncTable> syncTables2 = syncTableDAO.getAllSyncTableEntries();
+
+    for (SyncTable syncTable : syncTables2) {
+
+      if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("SALES")) {
+
+        Sale sale = saleDAO.getSaleById(Integer.parseInt(syncTable.getKeyColumn()));
+
+        int prevID = sale.getSaleId();
+
+        sale.setSaleId(0);
+
+        Sale newSale;
+
+        newSale = remoteDAO.addSale(sale);
+        if (newSale != null) {
+          syncTableDAO.removeSyncTableById(syncTable.getId());
+        }
+
+        if (newSale != null) {
+          for (SyncTable syncTable2 : syncTables2) {
+            if (syncTable2.getTableName().equals("SALE_ITEMS")
+                && syncTable2.getOperationType().equals("INSERT")) {
+
+              SaleItem saleItem = saleItemDAO.getSaleItemById(Integer.parseInt(syncTable2.getKeyColumn()));
+              if (saleItem.getSale().getSaleId() == prevID) {
+
+                saleItem.setSaleItemId(0);
+                boolean res = remoteDAO.addSaleItem(saleItem, newSale.getSaleId());
+                if (res) {
+                  syncTableDAO.removeSyncTableById(syncTable2.getId());
+                }
+              }
+
+            }
+          }
+        }
+
+      }
+
+    }
 
   }
 
   public static void main(String[] args) {
 
-    CodesDAO codesDAO = CodesDAO.getInstance();
     SyncTableDAO syncTableDAO = SyncTableDAO.getInstance();
+    SaleDAO saleDAO = SaleDAO.getInstance();
     DAO remoteDAO = DAO.getInstance();
+    SaleItemDAO saleItemDAO = SaleItemDAO.getInstance();
 
-    for (SyncTable syncTable : syncTableDAO.getAllSyncTableEntries()) {
+    List<SyncTable> syncTables2 = syncTableDAO.getAllSyncTableEntries();
 
-      if (syncTable.getOperationType().equals("UPDATE") && syncTable.getTableName().equals("CODES")) {
+    for (SyncTable syncTable : syncTables2) {
 
-        String code = codesDAO.getCodeByTableName(syncTable.getKeyColumn());
-        System.out.println(code);
-        Codes code1 = remoteDAO.test(syncTable.getKeyColumn(), code);
-        System.out.println(code1);
+      if (syncTable.getOperationType().equals("INSERT") && syncTable.getTableName().equals("SALES")) {
+
+        Sale sale = saleDAO.getSaleById(Integer.parseInt(syncTable.getKeyColumn()));
+
+        int prevID = sale.getSaleId();
+
+        sale.setSaleId(0);
+
+        Sale newSale;
+
+        newSale = remoteDAO.addSale(sale);
+
+        if (newSale.getSaleId() != 0) {
+          for (SyncTable syncTable2 : syncTables2) {
+            if (syncTable2.getTableName().equals("SALE_ITEMS")
+                && syncTable2.getOperationType().equals("INSERT")) {
+
+              SaleItem saleItem = saleItemDAO.getSaleItemById(Integer.parseInt(syncTable2.getKeyColumn()));
+              if (saleItem.getSale().getSaleId() == prevID) {
+
+                saleItem.setSaleItemId(0);
+                remoteDAO.addSaleItem(saleItem, newSale.getSaleId());
+              }
+
+            }
+          }
+        }
+
       }
-    }
-  }
 
+    }
+
+  }
 }

@@ -34,6 +34,8 @@ public class CashierService {
     double totalSaleAmount = 0.00;
 
     for (SaleItem sl : saleItems) {
+      System.out.println(sl.getProduct().getSalePrice());
+      System.out.println(sl.getProduct().getName());
       totalSaleAmount += sl.getTotalPrice();
     }
 
