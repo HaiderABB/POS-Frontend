@@ -5,7 +5,16 @@ import SCD.ui.SuperAdmin.ManageBranchManager.DeleteBranchManagerPage;
 import javax.swing.*;
 
 public class DeleteBranchManagerController {
-    private final DeleteBranchManagerPage view;
+    private DeleteBranchManagerPage view;
+
+    public DeleteBranchManagerController() {
+        SwingUtilities.invokeLater(() -> {
+            DeleteBranchManagerPage page = new DeleteBranchManagerPage();
+
+            page.setVisible(true);
+        });
+    }
+
 
     public DeleteBranchManagerController(DeleteBranchManagerPage view) {
         this.view = view;
@@ -50,5 +59,9 @@ public class DeleteBranchManagerController {
             new DeleteBranchManagerController(page);
             page.setVisible(true);
         });
+    }
+
+    public void showPage() {
+        new DeleteBranchManagerPage();
     }
 }

@@ -6,7 +6,15 @@ import javax.swing.*;
 
 public class ViewBranchManagersController {
 
-    private final ViewBranchManagersPage view;
+    private ViewBranchManagersPage view;
+    public ViewBranchManagersController() {
+        SwingUtilities.invokeLater(() -> {
+            ViewBranchManagersPage page = new ViewBranchManagersPage();
+
+            page.setVisible(true);
+        });
+
+    }
 
     public ViewBranchManagersController(ViewBranchManagersPage view) {
         this.view = view;
@@ -26,5 +34,9 @@ public class ViewBranchManagersController {
             new ViewBranchManagersController(page);
             page.setVisible(true);
         });
+    }
+
+    public void showPage() {
+        new ViewBranchManagersPage().setVisible(true);
     }
 }

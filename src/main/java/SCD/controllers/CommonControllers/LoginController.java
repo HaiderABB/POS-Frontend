@@ -69,6 +69,7 @@ public class LoginController {
         JFrame dashboard = null;
 
         switch (role) {
+
             case "SUPER_ADMIN":
                 new SuperAdminDashboardController(null, employee).showDashboard();
                 break;

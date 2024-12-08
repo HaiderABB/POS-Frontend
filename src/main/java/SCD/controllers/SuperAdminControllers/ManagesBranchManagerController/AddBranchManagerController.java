@@ -6,7 +6,14 @@ import javax.swing.*;
 import java.util.regex.Pattern;
 
 public class AddBranchManagerController {
-    private final AddBranchManagerPage view;
+    private AddBranchManagerPage view;
+    public AddBranchManagerController() {
+        SwingUtilities.invokeLater(() -> {
+            AddBranchManagerPage page = new AddBranchManagerPage();
+            page.setVisible(true);
+        });
+
+    }
 
     public AddBranchManagerController(AddBranchManagerPage view) {
         this.view = view;
@@ -67,5 +74,9 @@ public class AddBranchManagerController {
             new AddBranchManagerController(page);
             page.setVisible(true);
         });
+    }
+
+    public void showPage() {
+        new AddBranchManagerPage().setVisible(true);
     }
 }

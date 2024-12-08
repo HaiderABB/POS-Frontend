@@ -1,9 +1,14 @@
 package SCD.controllers.SuperAdminControllers;
 
-import SCD.ui.SuperAdmin.*;
-import SCD.ui.SuperAdmin.ManageBranchManager.*;
-import SCD.ui.SuperAdmin.ManageBranches.*;
-import SCD.ui.SuperAdmin.ViewReportsPage;
+import SCD.controllers.CommonControllers.MainMenuController;
+import SCD.controllers.SuperAdminControllers.ManageBranchesController.AddBranchController;
+import SCD.controllers.SuperAdminControllers.ManageBranchesController.DeleteBranchController;
+import SCD.controllers.SuperAdminControllers.ManageBranchesController.UpdateBranchController;
+import SCD.controllers.SuperAdminControllers.ManageBranchesController.ViewBranchesController;
+import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.AddBranchManagerController;
+import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.DeleteBranchManagerController;
+import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.UpdateBranchManagerController;
+import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.ViewBranchManagersController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,66 +22,61 @@ public class SidebarController {
     }
 
     public void openDashboard() {
-        navigateToPage(new SuperAdminDashboard());
+        navigateTo(SuperAdminDashboardController::new);
     }
 
     public void openAddBranchPage() {
-        navigateToPage(new AddBranchPage());
+        navigateTo(AddBranchController::new);
     }
 
     public void openUpdateBranchPage() {
-        navigateToPage(new UpdateBranchPage());
+        navigateTo(UpdateBranchController::new);
     }
 
     public void openDeleteBranchPage() {
-        navigateToPage(new DeleteBranchPage());
+        navigateTo(DeleteBranchController::new);
     }
 
     public void openViewBranchesPage() {
-        navigateToPage(new ViewBranchesPage());
+        navigateTo(ViewBranchesController::new);
     }
 
     public void openAddBranchManagerPage() {
-        navigateToPage(new AddBranchManagerPage());
+        navigateTo(AddBranchManagerController::new);
     }
 
     public void openUpdateBranchManagerPage() {
-        navigateToPage(new UpdateBranchManagerPage());
+        navigateTo(UpdateBranchManagerController::new);
     }
 
     public void openDeleteBranchManagerPage() {
-        navigateToPage(new DeleteBranchManagerPage());
+        navigateTo(DeleteBranchManagerController::new);
     }
 
     public void openViewBranchManagersPage() {
-        navigateToPage(new ViewBranchManagersPage());
-    }
-
-    public void openViewReportsPage() {
-        navigateToPage(new ViewReportsPage());
+        navigateTo(ViewBranchManagersController::new);
     }
 
     public void openSystemSettingsPage() {
-        navigateToPage(new SystemSettingsPage());
+        navigateTo(SystemSettingsController::new);
     }
 
     public void performLogout() {
-        JOptionPane.showMessageDialog(sidebarPanel, "Logging out...");
-        System.exit(0);
+        navigateTo(MainMenuController::new);
+
     }
 
-    private void navigateToPage(JFrame page) {
+    private void navigateTo(Runnable navigationTask) {
         SwingUtilities.invokeLater(() -> {
-            Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
 
+            Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
             if (currentWindow instanceof JFrame) {
                 ((JFrame) currentWindow).dispose();
             }
-
-            page.setLocationRelativeTo(null); // Center the new frame
-            page.setVisible(true);
+            navigationTask.run();
         });
     }
 
-
+    public void openViewReportsPage() {
+    }
 }

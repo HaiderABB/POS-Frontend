@@ -10,6 +10,13 @@ public class AddBranchController {
 
     private AddBranchPage addBranchPage;
 
+    public AddBranchController() {
+        SwingUtilities.invokeLater(() -> {
+            AddBranchPage add = new AddBranchPage();
+            add.setVisible(true);
+        });
+    }
+
     public AddBranchController(AddBranchPage addBranchPage) {
         this.addBranchPage = addBranchPage;
 

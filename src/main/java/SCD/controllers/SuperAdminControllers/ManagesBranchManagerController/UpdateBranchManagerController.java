@@ -6,8 +6,15 @@ import javax.swing.*;
 import java.util.regex.Pattern;
 
 public class UpdateBranchManagerController {
-    private final UpdateBranchManagerPage view;
+    private UpdateBranchManagerPage view;
+    public UpdateBranchManagerController() {
+        SwingUtilities.invokeLater(() -> {
+            UpdateBranchManagerPage page = new UpdateBranchManagerPage();
 
+            page.setVisible(true);
+        });
+
+    }
     public UpdateBranchManagerController(UpdateBranchManagerPage view) {
         this.view = view;
         initController();
@@ -121,5 +128,9 @@ public class UpdateBranchManagerController {
             new UpdateBranchManagerController(page);
             page.setVisible(true);
         });
+    }
+
+    public void showPage() {
+        new UpdateBranchManagerPage();
     }
 }

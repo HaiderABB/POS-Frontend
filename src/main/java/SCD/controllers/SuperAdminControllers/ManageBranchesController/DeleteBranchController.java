@@ -8,6 +8,13 @@ import java.util.regex.Pattern;
 public class DeleteBranchController {
 
     private DeleteBranchPage deleteBranchPage;
+    public DeleteBranchController() {
+        SwingUtilities.invokeLater(() -> {
+            DeleteBranchPage page = new DeleteBranchPage();
+            new DeleteBranchController(page);
+            page.setVisible(true);
+        });
+    }
 
     public DeleteBranchController(DeleteBranchPage deleteBranchPage) {
         this.deleteBranchPage = deleteBranchPage;
