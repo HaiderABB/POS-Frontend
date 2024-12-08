@@ -1,21 +1,29 @@
 package SCD.controllers.SuperAdminControllers.ManagesBranchManagerController;
 
-import SCD.ui.SuperAdmin.ManageBranchManager.UpdateBranchManagerPage;
-
-import javax.swing.*;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import SCD.model.models.Employee;
+import SCD.ui.SuperAdmin.ManageBranchManager.UpdateBranchManagerPage;
 
 public class UpdateBranchManagerController {
     private UpdateBranchManagerPage view;
-    public UpdateBranchManagerController() {
+    Employee employee;
+
+    public UpdateBranchManagerController(Employee employee) {
+        this.employee = employee;
         SwingUtilities.invokeLater(() -> {
-            UpdateBranchManagerPage page = new UpdateBranchManagerPage();
+            UpdateBranchManagerPage page = new UpdateBranchManagerPage(employee);
 
             page.setVisible(true);
         });
 
     }
-    public UpdateBranchManagerController(UpdateBranchManagerPage view) {
+
+    public UpdateBranchManagerController(UpdateBranchManagerPage view, Employee employee) {
+        this.employee = employee;
         this.view = view;
         initController();
     }
@@ -37,7 +45,8 @@ public class UpdateBranchManagerController {
         boolean isValid = validateField(selectedField, newValue);
 
         if (isValid) {
-            JOptionPane.showMessageDialog(view, "Valid " + selectedField + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Valid " + selectedField + "!", "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(view, "Invalid " + selectedField + "!", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -49,12 +58,14 @@ public class UpdateBranchManagerController {
         String newValue = view.getNewValueField().getText().trim();
 
         if (managerCode.isEmpty() || !validateManagerCode(managerCode)) {
-            JOptionPane.showMessageDialog(view, "Invalid Manager Code! Manager Code must follow the format 'BM-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Invalid Manager Code! Manager Code must follow the format 'BM-XXXX'.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (newValue.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Please enter a new value for the selected field!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Please enter a new value for the selected field!", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -70,7 +81,8 @@ public class UpdateBranchManagerController {
     public boolean validateManagerCode(String managerCode) {
         boolean isValid = managerCode.matches("BM-\\d{4}");
         if (!isValid) {
-            JOptionPane.showMessageDialog(view, "Manager Code must follow the format 'BM-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Manager Code must follow the format 'BM-XXXX'.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return isValid;
     }
@@ -92,7 +104,9 @@ public class UpdateBranchManagerController {
     private boolean validateName(String name) {
         boolean isValid = name != null && !name.isEmpty() && Pattern.matches("[A-Za-z\\s]+", name);
         if (!isValid) {
-            JOptionPane.showMessageDialog(view, "Invalid Name! Name must not be empty and only contain letters and spaces.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view,
+                    "Invalid Name! Name must not be empty and only contain letters and spaces.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return isValid;
     }
@@ -100,7 +114,8 @@ public class UpdateBranchManagerController {
     private boolean validateEmail(String email) {
         boolean isValid = email != null && Pattern.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", email);
         if (!isValid) {
-            JOptionPane.showMessageDialog(view, "Invalid Email! Please enter a valid email address.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Invalid Email! Please enter a valid email address.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return isValid;
     }
@@ -108,7 +123,8 @@ public class UpdateBranchManagerController {
     private boolean validateBranchCode(String branchCode) {
         boolean isValid = branchCode != null && branchCode.matches("BR-\\d{4}");
         if (!isValid) {
-            JOptionPane.showMessageDialog(view, "Invalid Branch Code! Branch Code must follow the format 'BR-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Invalid Branch Code! Branch Code must follow the format 'BR-XXXX'.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
         return isValid;
     }
@@ -124,13 +140,13 @@ public class UpdateBranchManagerController {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            UpdateBranchManagerPage page = new UpdateBranchManagerPage();
-            new UpdateBranchManagerController(page);
+            UpdateBranchManagerPage page = new UpdateBranchManagerPage(null);
+            new UpdateBranchManagerController(page, null);
             page.setVisible(true);
         });
     }
 
     public void showPage() {
-        new UpdateBranchManagerPage();
+        new UpdateBranchManagerPage(employee);
     }
 }

@@ -1,26 +1,33 @@
 package SCD.ui.SuperAdmin.ManageBranches;
 
+import java.awt.BorderLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import SCD.model.models.Employee;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 
 public class ViewBranchesPage extends JFrame {
     private Sidebar sidebar;
     private NavBar navBar;
     private DefaultTableModel tableModel;
     private JTable branchTable;
+    Employee employee;
 
-    public ViewBranchesPage() {
+    public ViewBranchesPage(Employee employee) {
+        this.employee = employee;
         setTitle("View Branches");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-
-        sidebar = new Sidebar();
+        sidebar = new Sidebar(employee);
         add(sidebar, BorderLayout.WEST);
 
         // Content Panel
@@ -35,7 +42,7 @@ public class ViewBranchesPage extends JFrame {
 
         // Table Panel
         JPanel tablePanel = new JPanel(new BorderLayout());
-        String[] columnNames = {"Branch ID", "Branch Name", "City", "Phone", "Address", "Active"};
+        String[] columnNames = { "Branch ID", "Branch Name", "City", "Phone", "Address", "Active" };
         tableModel = new DefaultTableModel(columnNames, 0);
         branchTable = new JTable(tableModel);
 

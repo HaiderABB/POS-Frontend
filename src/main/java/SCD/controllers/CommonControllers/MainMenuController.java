@@ -3,11 +3,14 @@ package SCD.controllers.CommonControllers;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import SCD.model.models.Employee;
 import SCD.ui.Common.MainMenu;
 
 public class MainMenuController {
+    Employee employee;
 
-    public MainMenuController() {
+    public MainMenuController(Employee employee) {
+
         SwingUtilities.invokeLater(() -> {
             MainMenu mainMenu = new MainMenu();
             mainMenu.setVisible(true);

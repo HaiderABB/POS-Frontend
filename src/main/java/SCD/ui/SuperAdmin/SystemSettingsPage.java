@@ -1,23 +1,34 @@
 package SCD.ui.SuperAdmin;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class SystemSettingsPage extends JFrame {
     private Sidebar sidebar;
     private NavBar navBar;
     private JButton changePasswordButton;
+    Employee employee;
 
-    public SystemSettingsPage() {
+    public SystemSettingsPage(Employee employee) {
+        this.employee = employee;
         setTitle("System Settings");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar();
+        sidebar = new Sidebar(employee);
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -55,8 +66,7 @@ public class SystemSettingsPage extends JFrame {
                 passwordPanel,
                 "Change Password",
                 JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
+                JOptionPane.PLAIN_MESSAGE);
     }
 
     public void showSuccessMessage(String message) {

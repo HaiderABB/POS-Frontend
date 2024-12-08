@@ -1,21 +1,28 @@
 package SCD.controllers.SuperAdminControllers.ManagesBranchManagerController;
 
-import SCD.ui.SuperAdmin.ManageBranchManager.AddBranchManagerPage;
-
-import javax.swing.*;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import SCD.model.models.Employee;
+import SCD.ui.SuperAdmin.ManageBranchManager.AddBranchManagerPage;
 
 public class AddBranchManagerController {
     private AddBranchManagerPage view;
-    public AddBranchManagerController() {
+    Employee employee;
+
+    public AddBranchManagerController(Employee employee) {
+        this.employee = employee;
         SwingUtilities.invokeLater(() -> {
-            AddBranchManagerPage page = new AddBranchManagerPage();
+            AddBranchManagerPage page = new AddBranchManagerPage(employee);
             page.setVisible(true);
         });
 
     }
 
-    public AddBranchManagerController(AddBranchManagerPage view) {
+    public AddBranchManagerController(AddBranchManagerPage view, Employee employee) {
+        this.employee = employee;
         this.view = view;
         this.view.getAddButton().addActionListener(e -> handleAddBranchManager());
     }
@@ -45,7 +52,8 @@ public class AddBranchManagerController {
         }
 
         if (!Pattern.matches("BR-\\d{4}", branchCode)) {
-            JOptionPane.showMessageDialog(view, "Branch Code must follow the format 'BR-XXXX'!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Branch Code must follow the format 'BR-XXXX'!", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -70,13 +78,13 @@ public class AddBranchManagerController {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            AddBranchManagerPage page = new AddBranchManagerPage();
-            new AddBranchManagerController(page);
+            AddBranchManagerPage page = new AddBranchManagerPage(null);
+            new AddBranchManagerController(page, null);
             page.setVisible(true);
         });
     }
 
     public void showPage() {
-        new AddBranchManagerPage().setVisible(true);
+        new AddBranchManagerPage(employee).setVisible(true);
     }
 }
