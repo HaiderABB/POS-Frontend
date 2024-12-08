@@ -1,11 +1,17 @@
 package SCD.Service.Common;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import SCD.model.crud.local.BranchesDAO;
@@ -109,6 +115,7 @@ public class CommonServicesTest {
 
     assertFalse(result.isSuccess());
     assertEquals("Branch does not exist", result.getMessage());
+
   }
 
   @Test
