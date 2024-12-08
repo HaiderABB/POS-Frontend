@@ -15,11 +15,7 @@ public class MainMenuController {
     }
 
     public static void handleRoleButtonClick(JFrame mainMenu, String prefix, String role) {
-        // LoginPage loginPage = new LoginPage(prefix);
-        // loginPage.setVisible(true);
-
-        // new LoginScreenController("role")
-
+        new LoginController(prefix);
         mainMenu.dispose();
     }
 

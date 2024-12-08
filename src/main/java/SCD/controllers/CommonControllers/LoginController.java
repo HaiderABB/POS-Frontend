@@ -1,26 +1,19 @@
 package SCD.controllers.CommonControllers;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.management.relation.Role;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import SCD.controllers.BranchManagerControllers.BranchManagerDashboardController;
 import SCD.controllers.SuperAdminControllers.SuperAdminDashboardController;
-import SCD.model.service.Common.CommonServices;
 import SCD.ui.Cashier.CashierDashboard;
 import SCD.ui.Common.LoginPage;
 import SCD.ui.DataEntryOperator.DataEntryOperatorDashboard;
-
 import SCD.utils.enums.Roles;
+
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginController {
 
     private final LoginPage loginPage;
-    CommonServices commonServices;
-
     private static final Map<String, String> credentials = new HashMap<>();
 
     static {
@@ -30,9 +23,12 @@ public class LoginController {
         credentials.put("DM-0004", "password4");
     }
 
-    public LoginController(LoginPage loginPage) {
-        this.loginPage = loginPage;
-        commonServices = new CommonServices();
+    public LoginController(String prefix) {
+        this.loginPage = new LoginPage(prefix);
+
+        loginPage.getLoginButton().addActionListener(e -> validateAndNavigate());
+
+        SwingUtilities.invokeLater(() -> loginPage.setVisible(true));
     }
 
     public void validateAndNavigate() {
@@ -61,25 +57,26 @@ public class LoginController {
         return null;
     }
 
-    private void navigateToDashboardController(String role) {
+    private void navigateToDashboardController(Roles role) {
         JFrame dashboard = null;
+
         switch (role) {
-            case "Super Admin":
+            case SUPER_ADMIN:
                 new SuperAdminDashboardController(null).showDashboard();
                 break;
-            case "Branch Manager":
+            case MANAGER:
                 new BranchManagerDashboardController(null).showDashboard();
                 break;
-            case "Cashier":
+            case CASHIER:
                 dashboard = new CashierDashboard();
                 break;
-            case "Data Entry Operator":
+            case DATA_ENTRY_OPERATOR:
                 dashboard = new DataEntryOperatorDashboard();
                 break;
             default:
                 JOptionPane.showMessageDialog(loginPage, "Unknown role: " + role, "Error", JOptionPane.ERROR_MESSAGE);
                 return;
         }
-        loginPage.dispose(); // Close the login page
+        loginPage.dispose();
     }
 }
