@@ -30,6 +30,11 @@ public class CommonServices {
 
   public boolean setFirstLoginStatus(String emp_code) {
 
+    boolean res = employeeDAO.setFirstLoginToFalse(emp_code);
+
+    if (!res) {
+      return false;
+    }
     SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", emp_code);
     syncTable.addSyncTable(st);
 
@@ -38,6 +43,12 @@ public class CommonServices {
   }
 
   public boolean update_password(String employeeCode, String newPassword) {
+
+    boolean res = employeeDAO.updatePassword(employeeCode, newPassword);
+
+    if (!res) {
+      return false;
+    }
 
     SyncTable st = new SyncTable("EMPLOYEES", "UPDATE", employeeCode);
     syncTable.addSyncTable(st);
@@ -75,10 +86,14 @@ public class CommonServices {
     employee.setEmployeeCode(temp);
 
     employee.setEmail(LowerCaseEmail(employee.getEmail()));
-    employeeDAO.addEmployee(employee);
+
+    res = employeeDAO.addEmployee(employee);
+
+    if (!res) {
+      return new AddResponseJSON("Error Adding Employee", false);
+    }
 
     codesDAO.updateCodeByTableName("EMPLOYEES", employeeCode);
-
     SyncTable st = new SyncTable("EMPLOYEES", "INSERT", temp);
     syncTable.addSyncTable(st);
     SyncTable st1 = new SyncTable("CODES", "UPDATE", "EMPLOYEES");

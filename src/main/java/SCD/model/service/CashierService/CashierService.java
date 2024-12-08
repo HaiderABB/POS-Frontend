@@ -121,7 +121,6 @@ public class CashierService {
 
     for (SaleItem sl : saleItems) {
       sl.setSale(sale);
-
     }
 
     boolean result = saleItemDAO.addSaleItems(saleItems);

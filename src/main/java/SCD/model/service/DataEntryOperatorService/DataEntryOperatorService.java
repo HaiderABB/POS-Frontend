@@ -40,20 +40,30 @@ public class DataEntryOperatorService {
     empcode = incrementCode(empcode);
     String temp = "VM-" + empcode;
     vendor.setVendorCode(temp);
-    codesDAO.updateCodeByTableName("VENDORS", empcode);
 
-    vendorDAO.addVendor(vendor);
-    SyncTable st = new SyncTable("VENDORS", "INSERT", temp);
-    syncTableDAO.addSyncTable(st);
+    res = codesDAO.updateCodeByTableName("VENDORS", empcode);
+    if (!res) {
+      return new AddResponseJSON("Could not update code", false);
+    }
+
     SyncTable st2 = new SyncTable("CODES", "UPDATE", "VENDORS");
     syncTableDAO.addSyncTable(st2);
+
+    res = vendorDAO.addVendor(vendor);
+
+    if (!res) {
+      return new AddResponseJSON("Could not add Vendor", false);
+    }
+
+    SyncTable st = new SyncTable("VENDORS", "INSERT", temp);
+    syncTableDAO.addSyncTable(st);
 
     return new AddResponseJSON("Added Successfully", true);
 
   }
 
   public AddResponseJSON addProduct(Product product) {
-
+    boolean res;
     Vendor ven;
     ven = vendorDAO.getVendorByCode(product.getVendor().getVendorCode());
 
@@ -66,16 +76,19 @@ public class DataEntryOperatorService {
     empcode = incrementCode(empcode);
     String temp = "PM-" + empcode;
     product.setProductCode(temp);
-    codesDAO.updateCodeByTableName("PRODUCTS", empcode);
 
-    boolean res = productDAO.addProduct(product);
+    res = codesDAO.updateCodeByTableName("PRODUCTS", temp);
+    if (!res) {
+      return new AddResponseJSON("Could not update code", false);
+    }
+    SyncTable st2 = new SyncTable("CODES", "UPDATE", "PRODUCTS");
+    syncTableDAO.addSyncTable(st2);
+    res = productDAO.addProduct(product);
     if (!res) {
       return new AddResponseJSON("Error Adding product", true);
     }
     SyncTable st = new SyncTable("PRODUCTS", "INSERT", temp);
     syncTableDAO.addSyncTable(st);
-    SyncTable st2 = new SyncTable("CODES", "UPDATE", "PRODUCTS");
-    syncTableDAO.addSyncTable(st2);
 
     return new AddResponseJSON("Added Successfully", true);
 
@@ -119,9 +132,15 @@ public class DataEntryOperatorService {
       return new AddResponseJSON("Could not find product", false);
     }
 
-    productDAO.deactivateProduct(code);
+    boolean res = productDAO.deactivateProduct(code);
+
+    if (!res) {
+      return new AddResponseJSON("Could not deactivate product", false);
+    }
+
     SyncTable st = new SyncTable("PRODUCTS", "UPDATE", code);
     syncTableDAO.addSyncTable(st);
+
     return new AddResponseJSON("product removed", true);
 
   }
@@ -134,10 +153,24 @@ public class DataEntryOperatorService {
       return new AddResponseJSON("Could not find vendor", false);
     }
 
-    vendorDAO.deactivateVendor(code);
+    boolean res = vendorDAO.deactivateVendor(code);
+    if (!res) {
+      return new AddResponseJSON("Could not deactivate vendor", false);
+    }
     SyncTable st = new SyncTable("VENDORS", "UPDATE", code);
     syncTableDAO.addSyncTable(st);
-    productDAO.deactivateProductsByVendor(code);
+
+    res = productDAO.deactivateProductsByVendor(code);
+
+    List<Product> products = productDAO.getProductsByVendorCode(code);
+
+    if (!res) {
+      return new AddResponseJSON("Could not deactivate products by vendors", false);
+    }
+
+    for (Product p : products) {
+      syncTableDAO.addSyncTable(new SyncTable("PRODUCTS", "UPDATE", p.getProductCode()));
+    }
 
     return new AddResponseJSON("Vendor removed", true);
 

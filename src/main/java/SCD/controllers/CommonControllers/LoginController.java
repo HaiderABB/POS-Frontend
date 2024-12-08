@@ -1,15 +1,16 @@
 package SCD.controllers.CommonControllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import SCD.controllers.BranchManagerControllers.BranchManagerDashboardController;
 import SCD.controllers.SuperAdminControllers.SuperAdminDashboardController;
 import SCD.ui.Cashier.CashierDashboard;
 import SCD.ui.Common.LoginPage;
 import SCD.ui.DataEntryOperator.DataEntryOperatorDashboard;
-
-import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginController {
 
@@ -34,7 +35,8 @@ public class LoginController {
 
         if (credentials.containsKey(username) && credentials.get(username).equals(password)) {
             String role = getRoleFromPrefix(username);
-            JOptionPane.showMessageDialog(loginPage, "Login successful for " + role, "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(loginPage, "Login successful for " + role, "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
             navigateToDashboardController(role);
         } else {
             JOptionPane.showMessageDialog(loginPage, "Invalid credentials!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -42,10 +44,14 @@ public class LoginController {
     }
 
     private String getRoleFromPrefix(String username) {
-        if (username.startsWith("SM-")) return "Super Admin";
-        if (username.startsWith("BM-")) return "Branch Manager";
-        if (username.startsWith("CM-")) return "Cashier";
-        if (username.startsWith("DM-")) return "Data Entry Operator";
+        if (username.startsWith("SM-"))
+            return "Super Admin";
+        if (username.startsWith("BM-"))
+            return "Branch Manager";
+        if (username.startsWith("CM-"))
+            return "Cashier";
+        if (username.startsWith("DM-"))
+            return "Data Entry Operator";
         return "Unknown Role";
     }
 

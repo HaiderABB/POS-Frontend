@@ -59,12 +59,12 @@ public class SuperAdminService {
         codesDAO.updateCodeByTableName("BRANCHES", empcode);
 
         boolean res = branchesDAO.addBranch(branch);
-        SyncTable st = new SyncTable("BRANCHES", "INSERT", temp);
-        syncTableDAO.addSyncTable(st);
-        SyncTable st1 = new SyncTable("CODES", "UPDATE", "BRANCHES");
-        syncTableDAO.addSyncTable(st1);
 
         if (res) {
+            SyncTable st = new SyncTable("BRANCHES", "INSERT", temp);
+            syncTableDAO.addSyncTable(st);
+            SyncTable st1 = new SyncTable("CODES", "UPDATE", "BRANCHES");
+            syncTableDAO.addSyncTable(st1);
             return new AddResponseJSON("Branch Creation Successful", true);
         }
 
@@ -85,6 +85,9 @@ public class SuperAdminService {
         }
 
         res = branchesDAO.deleteBranch(branch_code);
+        if (!res) {
+            return new AddResponseJSON("Branch Deletion Failed", false);
+        }
 
         SyncTable st = new SyncTable("BRANCHES", "UPDATE", branch_code);
         syncTableDAO.addSyncTable(st);

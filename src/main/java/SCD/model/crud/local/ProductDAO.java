@@ -62,8 +62,9 @@ public class ProductDAO {
     return product;
   }
 
-  public void deactivateProductsByVendor(String vendorCode) {
+  public boolean deactivateProductsByVendor(String vendorCode) {
     Transaction transaction = null;
+    boolean result = false;
 
     try (Session session = HibernateUtil.getSessionFactory().openSession()) {
       transaction = session.beginTransaction();
@@ -80,13 +81,14 @@ public class ProductDAO {
       int affectedRows = session.createMutationQuery(criteriaUpdate).executeUpdate();
 
       transaction.commit();
-      System.out.println("Products associated with vendorCode: " + vendorCode + " have been deactivated.");
-      System.out.println("Number of products deactivated: " + affectedRows);
+      return affectedRows > 0;
     } catch (Exception e) {
       if (transaction != null && transaction.getStatus().canRollback()) {
         transaction.rollback();
+        return false;
       }
     }
+    return false;
   }
 
   public List<Product> getAllActiveProducts() {
@@ -231,6 +233,18 @@ public class ProductDAO {
     }
 
     return result;
+  }
+
+  public List<Product> getProductsByVendorCode(String vendorCode) {
+    List<Product> products = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+      String hql = "FROM Product p WHERE p.vendorCode = :vendorCode";
+      products = session.createQuery(hql, Product.class)
+          .setParameter("vendorCode", vendorCode)
+          .list();
+    } catch (Exception e) {
+    }
+    return products;
   }
 
 }
