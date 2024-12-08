@@ -6,12 +6,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import SCD.model.models.Employee;
+import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranches.UpdateBranchPage;
 
 public class UpdateBranchController {
 
     private UpdateBranchPage updateBranchPage;
     Employee employee;
+    SuperAdminService superAdminService = new SuperAdminService();
 
     public UpdateBranchController(Employee employee) {
         this.employee = employee;

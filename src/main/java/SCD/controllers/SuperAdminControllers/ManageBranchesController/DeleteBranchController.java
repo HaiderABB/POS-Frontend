@@ -5,13 +5,17 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import SCD.model.models.Branch;
 import SCD.model.models.Employee;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranches.DeleteBranchPage;
 
 public class DeleteBranchController {
 
     private DeleteBranchPage deleteBranchPage;
     Employee employee;
+    SuperAdminService superAdminService = new SuperAdminService();
 
     public DeleteBranchController(Employee employee) {
         this.employee = employee;
@@ -30,7 +34,21 @@ public class DeleteBranchController {
             String branchCode = deleteBranchPage.getBranchCode();
 
             if (validateBranchCode(branchCode)) {
-                deleteBranch(branchCode);
+                Branch br = superAdminService.getBranchByCode(branchCode);
+                if (br == null) {
+                    JOptionPane.showMessageDialog(deleteBranchPage, "Branch not found!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                AddResponseJSON json = superAdminService.deleteBranch(branchCode);
+                if (json.isSuccess()) {
+                    JOptionPane.showMessageDialog(deleteBranchPage, "Branch deleted successfully!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(deleteBranchPage, "Failed to delete branch!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
                 deleteBranchPage.clearBranchCodeField();
             }
         });

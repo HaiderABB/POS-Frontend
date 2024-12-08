@@ -5,16 +5,22 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import SCD.model.models.Branch;
 import SCD.model.models.Employee;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranches.AddBranchPage;
 
 public class AddBranchController {
 
     private AddBranchPage addBranchPage;
     Employee employee;
+    SuperAdminService superAdminService;
 
     public AddBranchController(Employee employee) {
+
         this.employee = employee;
+        superAdminService = new SuperAdminService();
         SwingUtilities.invokeLater(() -> {
             AddBranchPage add = new AddBranchPage(employee);
             add.setVisible(true);
@@ -24,6 +30,7 @@ public class AddBranchController {
     public AddBranchController(AddBranchPage addBranchPage, Employee employee) {
         this.addBranchPage = addBranchPage;
         this.employee = employee;
+        superAdminService = new SuperAdminService();
 
         addBranchPage.getAddButton().addActionListener(e -> {
             String name = addBranchPage.getNameField();
@@ -32,7 +39,15 @@ public class AddBranchController {
             String address = addBranchPage.getAddressField();
 
             if (validateInputs(name, city, phone, address)) {
-                saveBranch(name, city, phone, address);
+
+                Branch branch = new Branch(name, city, address, phone);
+                AddResponseJSON json = superAdminService.createBranch(branch);
+                if (json.isSuccess()) {
+                    saveBranch(name, city, phone, address);
+                } else {
+                    JOptionPane.showMessageDialog(addBranchPage, "Failed to add branch!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
                 addBranchPage.clearFields();
             }
         });
