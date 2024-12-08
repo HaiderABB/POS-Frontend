@@ -6,6 +6,7 @@ import SCD.ui.Common.NavBar;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class ViewReportsPage extends JFrame {
@@ -97,12 +98,24 @@ public class ViewReportsPage extends JFrame {
         generateReportButton.addActionListener(e -> {
             String branchCode = branchCodeField.getText().trim();
             String duration = (String) reportDurationComboBox.getSelectedItem();
+
             if (!validateBranchCode(branchCode)) {
                 showErrorDialog("Branch Code is required and must follow the format 'BR-XXXX'.");
                 return;
             }
-            LocalDate startDate = calculateStartDate(duration);
-            LocalDate endDate = calculateEndDate(duration);
+
+            LocalDate startDate = "Custom Range".equals(duration)
+                    ? getCustomStartDate(startDateSpinner)
+                    : calculateStartDate(duration);
+
+            LocalDate endDate = "Custom Range".equals(duration)
+                    ? getCustomEndDate(endDateSpinner)
+                    : calculateEndDate(duration);
+
+            if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
+                showErrorDialog("Invalid date range. Ensure the start date is before or equal to the end date.");
+                return;
+            }
 
             String formattedStartDate = formatDate(startDate, duration);
             String formattedEndDate = formatDate(endDate, duration);
@@ -114,12 +127,24 @@ public class ViewReportsPage extends JFrame {
             String graphType = (String) graphTypeComboBox.getSelectedItem();
             String duration = (String) reportDurationComboBox.getSelectedItem();
             String branchCode = branchCodeField.getText().trim();
+
             if (!validateBranchCode(branchCode)) {
                 showErrorDialog("Branch Code is required and must follow the format 'BR-XXXX'.");
                 return;
             }
-            LocalDate startDate = calculateStartDate(duration);
-            LocalDate endDate = calculateEndDate(duration);
+
+            LocalDate startDate = "Custom Range".equals(duration)
+                    ? getCustomStartDate(startDateSpinner)
+                    : calculateStartDate(duration);
+
+            LocalDate endDate = "Custom Range".equals(duration)
+                    ? getCustomEndDate(endDateSpinner)
+                    : calculateEndDate(duration);
+
+            if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
+                showErrorDialog("Invalid date range. Ensure the start date is before or equal to the end date.");
+                return;
+            }
 
             String formattedStartDate = formatDate(startDate, duration);
             String formattedEndDate = formatDate(endDate, duration);
@@ -140,26 +165,40 @@ public class ViewReportsPage extends JFrame {
             case "Yearly":
                 return now.withDayOfYear(1);
             default:
-                return now; // Custom range is handled by user input
+                return null;
         }
     }
 
     private LocalDate calculateEndDate(String duration) {
-        LocalDate now = LocalDate.now();
-        return now; // End date is always the current date
+        return LocalDate.now(); // Today is the end date for all predefined durations
+    }
+
+    private LocalDate getCustomStartDate(JSpinner spinner) {
+        try {
+            return ((java.util.Date) spinner.getValue()).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private LocalDate getCustomEndDate(JSpinner spinner) {
+        try {
+            return ((java.util.Date) spinner.getValue()).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private String formatDate(LocalDate date, String duration) {
-        DateTimeFormatter formatter;
-        switch (duration) {
-            case "Monthly":
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-                break;
-            case "Yearly":
-                formatter = DateTimeFormatter.ofPattern("yyyy");
-                break;
-            default:
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if ("Monthly".equals(duration)) {
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        } else if ("Yearly".equals(duration)) {
+            formatter = DateTimeFormatter.ofPattern("yyyy");
         }
         return date.format(formatter);
     }

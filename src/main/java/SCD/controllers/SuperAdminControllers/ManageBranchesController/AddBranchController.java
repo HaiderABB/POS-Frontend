@@ -44,7 +44,7 @@ public class AddBranchController {
             return false;
         }
 
-        if (!Pattern.matches("03\\d{2}-\\d{7}", phone)) {
+        if (!Pattern.matches("03\\d{9}", phone)) {
             JOptionPane.showMessageDialog(addBranchPage, "Phone must follow the format '0321-1234567'.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
