@@ -6,7 +6,13 @@ import javax.swing.*;
 
 public class BranchManagerDashboardController {
 
-    private final BranchManagerDashboard view;
+    private  BranchManagerDashboard view;
+    public BranchManagerDashboardController() {
+        SwingUtilities.invokeLater(() -> {
+            BranchManagerDashboard dashboard = new BranchManagerDashboard();
+           dashboard.setVisible(true);
+        });
+    }
 
     public BranchManagerDashboardController(BranchManagerDashboard view) {
         this.view = view;

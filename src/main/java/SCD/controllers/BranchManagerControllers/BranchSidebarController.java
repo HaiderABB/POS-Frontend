@@ -1,6 +1,14 @@
 package SCD.controllers.BranchManagerControllers;
 
+import SCD.controllers.BranchManagerControllers.CashierController.AddCashierController;
+import SCD.controllers.BranchManagerControllers.CashierController.UpdateCashierController;
+import SCD.controllers.BranchManagerControllers.CashierController.ViewCashiersController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.AddDataEntryOperatorController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.DeleteDataEntryOperatorController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.UpdateDataEntryController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.ViewDataEntryOperatorsController;
 import SCD.ui.BranchManager.BranchManagerDashboard;
+import SCD.ui.BranchManager.BranchSidebar;
 import SCD.ui.BranchManager.ManageCashier.AddCashierPage;
 import SCD.ui.BranchManager.ManageCashier.DeleteCashierPage;
 import SCD.ui.BranchManager.ManageCashier.UpdateCashierPage;
@@ -16,50 +24,54 @@ import java.awt.*;
 
 public class BranchSidebarController {
 
-    private final JPanel sidebarPanel;
+    private JPanel sidebarPanel;
+
+    public BranchSidebarController() {
+        BranchSidebar branchSidebar = new BranchSidebar();
+    }
 
     public BranchSidebarController(JPanel sidebarPanel) {
         this.sidebarPanel = sidebarPanel;
     }
 
     public void openDashboard() {
-        navigateToPage(new BranchManagerDashboard());
+        navigateTo(BranchManagerDashboardController::new);
     }
 
     public void openAddCashier() {
-        navigateToPage(new AddCashierPage());
+        navigateTo( AddCashierController::new);
     }
 
     public void openUpdateCashier() {
-        navigateToPage(new UpdateCashierPage());
+        navigateTo( UpdateCashierController::new);
     }
 
     public void openDeleteCashier() {
-        navigateToPage(new DeleteCashierPage());
+        navigateTo( UpdateCashierController::new);
     }
 
     public void openViewCashiers() {
-        navigateToPage(new ViewCashiersPage());
+        navigateTo(ViewCashiersController::new);
     }
 
     public void openAddDataEntryOperator() {
-        navigateToPage(new AddDataEntryOperatorPage());
+        navigateTo( AddDataEntryOperatorController::new);
     }
 
     public void openUpdateDataEntryOperator() {
-        navigateToPage(new UpdateDataEntryPage());
+        navigateTo( UpdateDataEntryController::new);
     }
 
     public void openDeleteDataEntryOperator() {
-        navigateToPage(new DeleteDataEntryOperatorPage());
+        navigateTo( DeleteDataEntryOperatorController::new);
     }
 
     public void openViewDataEntryOperators() {
-        navigateToPage(new ViewDataEntryOperatorsPage());
+        navigateTo(ViewDataEntryOperatorsController::new);
     }
 
     public void openSettings() {
-        navigateToPage(new SettingsPage());
+        navigateTo(SettingsPageController::new);
     }
 
     public void performLogout() {
@@ -67,16 +79,14 @@ public class BranchSidebarController {
         System.exit(0);
     }
 
-    private void navigateToPage(JFrame page) {
+    private void navigateTo(Runnable navigationTask) {
         SwingUtilities.invokeLater(() -> {
-            Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
 
+            Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
             if (currentWindow instanceof JFrame) {
                 ((JFrame) currentWindow).dispose();
             }
-
-            page.setLocationRelativeTo(null);
-            page.setVisible(true);
+            navigationTask.run();
         });
     }
 

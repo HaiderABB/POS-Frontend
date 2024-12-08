@@ -107,9 +107,10 @@ public class UpdateBranchController {
     }
 
     private boolean validatePhone(String phone) {
-        if (!Pattern.matches("03\\d{2}-\\d{7}", phone)) {
-            JOptionPane.showMessageDialog(updateBranchPage,
-                    "Invalid Phone! Phone must follow the format '0321-1234567'.", "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (!Pattern.matches("03\\d{9}", phone)) {
+            JOptionPane.showMessageDialog(updateBranchPage, "Invalid Phone! Phone must follow the format '0321-1234567'.", "Error", JOptionPane.ERROR_MESSAGE);
+
             return false;
         }
         return true;

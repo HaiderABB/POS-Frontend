@@ -6,7 +6,14 @@ import javax.swing.*;
 import java.util.regex.Pattern;
 
 public class AddDataEntryOperatorController {
-    private final AddDataEntryOperatorPage view;
+    private  AddDataEntryOperatorPage view;
+
+    public AddDataEntryOperatorController() {
+        SwingUtilities.invokeLater(() -> {
+            AddDataEntryOperatorPage page = new AddDataEntryOperatorPage();
+            page.setVisible(true);
+        });
+    }
 
     public AddDataEntryOperatorController(AddDataEntryOperatorPage view) {
         this.view = view;

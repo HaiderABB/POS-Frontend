@@ -6,7 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SettingsPageController {
-    private final SettingsPage view;
+    private  SettingsPage view;
+
+    public SettingsPageController() {
+        SwingUtilities.invokeLater(() -> {
+            SettingsPage page = new SettingsPage();
+            page.setVisible(true);
+        });
+    }
 
     public SettingsPageController(SettingsPage view) {
         this.view = view;

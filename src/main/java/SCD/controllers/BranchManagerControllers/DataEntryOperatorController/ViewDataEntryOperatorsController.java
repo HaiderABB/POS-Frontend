@@ -2,15 +2,23 @@ package SCD.controllers.BranchManagerControllers.DataEntryOperatorController;
 
 import SCD.ui.BranchManager.ManageDataEntryOperator.ViewDataEntryOperatorsPage;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class ViewDataEntryOperatorsController {
 
-    private final ViewDataEntryOperatorsPage view;
+    private  ViewDataEntryOperatorsPage view;
+
+    public ViewDataEntryOperatorsController() {
+        SwingUtilities.invokeLater(() -> {
+            ViewDataEntryOperatorsPage page = new ViewDataEntryOperatorsPage();
+            page.setVisible(true);
+        });
+    }
 
     public ViewDataEntryOperatorsController(ViewDataEntryOperatorsPage view) {
         this.view = view;
-        loadData();
+
     }
 
     private void loadData() {

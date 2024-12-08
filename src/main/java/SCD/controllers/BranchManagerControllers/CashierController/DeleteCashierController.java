@@ -5,7 +5,14 @@ import SCD.ui.BranchManager.ManageCashier.DeleteCashierPage;
 import javax.swing.*;
 
 public class DeleteCashierController {
-    private final DeleteCashierPage view;
+    private  DeleteCashierPage view;
+
+    public DeleteCashierController() {
+        SwingUtilities.invokeLater(() -> {
+            DeleteCashierPage page = new DeleteCashierPage();
+            page.setVisible(true);
+        });
+    }
 
     public DeleteCashierController(DeleteCashierPage view) {
         this.view = view;

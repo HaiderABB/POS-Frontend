@@ -91,7 +91,7 @@ class UpdateBranchControllerTest {
     @Test
     void validateField_ValidPhone_ReturnsTrue() {
         String field = "Phone";
-        String value = "0321-1234567";
+        String value = "03211234567";
 
         boolean result = updateBranchController.validateField(field, value);
 

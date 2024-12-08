@@ -26,7 +26,7 @@ class AddBranchControllerTest {
     void validateInputs_AllFieldsValid_ReturnsTrue() {
         String name = "Branch Name";
         String city = "New York";
-        String phone = "0321-1234567";
+        String phone = "03211234567";
         String address = "123 Main Street";
 
         boolean result = addBranchController.validateInputs(name, city, phone, address);
@@ -50,7 +50,7 @@ class AddBranchControllerTest {
     void validateInputs_InvalidCity_ReturnsFalse() {
         String name = "Branch Name";
         String city = "New York1";
-        String phone = "0321-1234567";
+        String phone = "03211234567";
         String address = "123 Main Street";
 
         boolean result = addBranchController.validateInputs(name, city, phone, address);

@@ -1,11 +1,21 @@
 package SCD.controllers.BranchManagerControllers.CashierController;
 
+import SCD.ui.BranchManager.ManageCashier.AddCashierPage;
 import SCD.ui.BranchManager.ManageCashier.ViewCashiersPage;
+
+import javax.swing.*;
 
 public class ViewCashiersController {
 
-    private final ViewCashiersPage view;
+    private  ViewCashiersPage view;
 
+    public ViewCashiersController() {
+        SwingUtilities.invokeLater(() -> {
+            ViewCashiersPage page = new ViewCashiersPage();
+            page.setVisible(true);
+        });
+
+    }
     public ViewCashiersController(ViewCashiersPage view) {
         this.view = view;
 

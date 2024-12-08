@@ -5,7 +5,14 @@ import SCD.ui.BranchManager.ManageDataEntryOperator.DeleteDataEntryOperatorPage;
 import javax.swing.*;
 
 public class DeleteDataEntryOperatorController {
-    private final DeleteDataEntryOperatorPage view;
+    private  DeleteDataEntryOperatorPage view;
+
+    public DeleteDataEntryOperatorController() {
+        SwingUtilities.invokeLater(() -> {
+            DeleteDataEntryOperatorPage page = new DeleteDataEntryOperatorPage();
+            page.setVisible(true);
+        });
+    }
 
     public DeleteDataEntryOperatorController(DeleteDataEntryOperatorPage view) {
         this.view = view;
