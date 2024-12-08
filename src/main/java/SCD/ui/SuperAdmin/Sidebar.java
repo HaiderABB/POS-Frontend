@@ -1,17 +1,28 @@
 package SCD.ui.SuperAdmin;
 
-import SCD.controllers.SuperAdminControllers.SidebarController;
-import SCD.ui.Common.ButtonFactory;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import SCD.controllers.SuperAdminControllers.SidebarController;
+import SCD.model.models.Employee;
+import SCD.ui.Common.ButtonFactory;
 
 public class Sidebar extends JPanel {
 
     private final SidebarController controller;
+    Employee employee;
 
-    public Sidebar() {
-        controller = new SidebarController(this);
+    public Sidebar(Employee employee) {
+        this.employee = employee;
+        controller = new SidebarController(this, employee);
 
         setPreferredSize(new Dimension(240, 800));
         setBackground(new Color(255, 102, 102));

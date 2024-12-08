@@ -1,22 +1,26 @@
 package SCD.controllers.SuperAdminControllers.ManagesBranchManagerController;
 
-import SCD.ui.SuperAdmin.ManageBranchManager.DeleteBranchManagerPage;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
-import javax.swing.*;
+import SCD.model.models.Employee;
+import SCD.ui.SuperAdmin.ManageBranchManager.DeleteBranchManagerPage;
 
 public class DeleteBranchManagerController {
     private DeleteBranchManagerPage view;
+    Employee employee;
 
-    public DeleteBranchManagerController() {
+    public DeleteBranchManagerController(Employee employee) {
+        this.employee = employee;
         SwingUtilities.invokeLater(() -> {
-            DeleteBranchManagerPage page = new DeleteBranchManagerPage();
+            DeleteBranchManagerPage page = new DeleteBranchManagerPage(employee);
 
             page.setVisible(true);
         });
     }
 
-
-    public DeleteBranchManagerController(DeleteBranchManagerPage view) {
+    public DeleteBranchManagerController(DeleteBranchManagerPage view, Employee employee) {
+        this.employee = employee;
         this.view = view;
         this.view.getDeleteButton().addActionListener(e -> handleDeleteBranchManager());
     }
@@ -34,12 +38,14 @@ public class DeleteBranchManagerController {
 
     public boolean validateManagerCode(String managerCode) {
         if (managerCode.isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Please enter a Branch Manager Code!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Please enter a Branch Manager Code!", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (!managerCode.matches("BM-\\d{4}")) {
-            JOptionPane.showMessageDialog(view, "Branch Manager Code must follow the format 'BM-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Branch Manager Code must follow the format 'BM-XXXX'.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -55,13 +61,13 @@ public class DeleteBranchManagerController {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            DeleteBranchManagerPage page = new DeleteBranchManagerPage();
-            new DeleteBranchManagerController(page);
+            DeleteBranchManagerPage page = new DeleteBranchManagerPage(null);
+            new DeleteBranchManagerController(page, null);
             page.setVisible(true);
         });
     }
 
     public void showPage() {
-        new DeleteBranchManagerPage();
+        new DeleteBranchManagerPage(employee);
     }
 }

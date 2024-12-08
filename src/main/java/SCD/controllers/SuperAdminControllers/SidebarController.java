@@ -9,71 +9,76 @@ import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.AddB
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.DeleteBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.UpdateBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.ViewBranchManagersController;
+import SCD.model.models.Employee;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class SidebarController {
 
     private final JPanel sidebarPanel;
+    Employee employee;
 
-    public SidebarController(JPanel sidebarPanel) {
+    public SidebarController(JPanel sidebarPanel, Employee employee) {
         this.sidebarPanel = sidebarPanel;
+        this.employee = employee;
     }
 
     public void openDashboard() {
-        navigateTo(SuperAdminDashboardController::new);
+        navigateTo(SuperAdminDashboardController::new, employee);
     }
 
     public void openAddBranchPage() {
-        navigateTo(AddBranchController::new);
+        navigateTo(AddBranchController::new, employee);
     }
 
     public void openUpdateBranchPage() {
-        navigateTo(UpdateBranchController::new);
+        navigateTo(UpdateBranchController::new, employee);
     }
 
     public void openDeleteBranchPage() {
-        navigateTo(DeleteBranchController::new);
+        navigateTo(DeleteBranchController::new, employee);
     }
 
     public void openViewBranchesPage() {
-        navigateTo(ViewBranchesController::new);
+        navigateTo(ViewBranchesController::new, employee);
     }
 
     public void openAddBranchManagerPage() {
-        navigateTo(AddBranchManagerController::new);
+        navigateTo(AddBranchManagerController::new, employee);
     }
 
     public void openUpdateBranchManagerPage() {
-        navigateTo(UpdateBranchManagerController::new);
+        navigateTo(UpdateBranchManagerController::new, employee);
     }
 
     public void openDeleteBranchManagerPage() {
-        navigateTo(DeleteBranchManagerController::new);
+        navigateTo(DeleteBranchManagerController::new, employee);
     }
 
     public void openViewBranchManagersPage() {
-        navigateTo(ViewBranchManagersController::new);
+        navigateTo(ViewBranchManagersController::new, employee);
     }
 
     public void openSystemSettingsPage() {
-        navigateTo(SystemSettingsController::new);
+        navigateTo(SystemSettingsController::new, employee);
     }
 
     public void performLogout() {
-        navigateTo(MainMenuController::new);
+        navigateTo(MainMenuController::new, null);
 
     }
 
-    private void navigateTo(Runnable navigationTask) {
+    private void navigateTo(Consumer<Employee> navigationTask, Employee employee) {
         SwingUtilities.invokeLater(() -> {
-
+            // Get the current window
             Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
             if (currentWindow instanceof JFrame) {
-                ((JFrame) currentWindow).dispose();
+                ((JFrame) currentWindow).dispose(); // Dispose of the current window
             }
-            navigationTask.run();
+            // Pass the object to the navigation task
+            navigationTask.accept(employee);
         });
     }
 

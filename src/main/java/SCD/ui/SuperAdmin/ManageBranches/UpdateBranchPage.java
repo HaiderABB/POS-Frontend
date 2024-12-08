@@ -1,11 +1,21 @@
 package SCD.ui.SuperAdmin.ManageBranches;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class UpdateBranchPage extends JFrame {
 
@@ -14,15 +24,17 @@ public class UpdateBranchPage extends JFrame {
     private JTextField newValueField;
     private JButton validateButton;
     private JButton updateButton;
+    Employee employee;
 
-    public UpdateBranchPage() {
+    public UpdateBranchPage(Employee employee) {
+        this.employee = employee;
         setTitle("Update Branch");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Sidebar
-        Sidebar sidebar = new Sidebar();
+        Sidebar sidebar = new Sidebar(employee);
         add(sidebar, BorderLayout.WEST);
 
         // Content Panel
@@ -45,7 +57,7 @@ public class UpdateBranchPage extends JFrame {
         formPanel.add(branchCodeField);
 
         JLabel fieldLabel = new JLabel("Select Field to Update:");
-        String[] fields = {"Name", "City", "Phone", "Address"};
+        String[] fields = { "Name", "City", "Phone", "Address" };
         fieldComboBox = new JComboBox<>(fields);
         formPanel.add(fieldLabel);
         formPanel.add(fieldComboBox);

@@ -1,11 +1,20 @@
 package SCD.ui.SuperAdmin.ManageBranchManager;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class AddBranchManagerPage extends JFrame {
     private Sidebar sidebar;
@@ -14,14 +23,16 @@ public class AddBranchManagerPage extends JFrame {
     private JTextField emailField;
     private JTextField branchCodeField;
     private JButton addButton;
+    Employee employee;
 
-    public AddBranchManagerPage() {
+    public AddBranchManagerPage(Employee employee) {
+        this.employee = employee;
         setTitle("Add Branch Manager");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar();
+        sidebar = new Sidebar(employee);
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());

@@ -1,25 +1,37 @@
 package SCD.ui.SuperAdmin.ManageBranchManager;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class DeleteBranchManagerPage extends JFrame {
     private Sidebar sidebar;
     private NavBar navBar;
     private JTextField managerCodeField;
     private JButton deleteButton;
+    Employee employee;
 
-    public DeleteBranchManagerPage() {
+    public DeleteBranchManagerPage(Employee employee) {
+        this.employee = employee;
         setTitle("Delete Branch Manager");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar();
+        sidebar = new Sidebar(employee);
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
