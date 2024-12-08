@@ -18,6 +18,7 @@ import SCD.model.crud.local.BranchesDAO;
 import SCD.model.crud.local.CodesDAO;
 import SCD.model.crud.local.EmployeeDAO;
 import SCD.model.crud.local.SyncTableDAO;
+import SCD.model.models.Branch;
 import SCD.model.models.Employee;
 import SCD.model.models.SyncTable;
 import SCD.model.service.Common.CommonServices;
@@ -104,18 +105,25 @@ public class CommonServicesTest {
 
   @Test
   public void testAddEmployee_BranchDoesNotExist() {
+    // Mock Employee with invalid branch
     Employee mockEmployee = new Employee();
     mockEmployee.setEmail("test@example.com");
-    mockEmployee.setBranch(null);
 
+    // Create a mock branch with a nonexistent branch code
+    Branch mockBranch = new Branch();
+    mockBranch.setBranchCode("INVALID_CODE");
+    mockEmployee.setBranch(mockBranch);
+
+    // Mock DAO behaviors
     when(employeeDAO.isEmailExists(mockEmployee.getEmail())).thenReturn(false);
-    when(branchesDAO.getBranchByCode(anyString())).thenReturn(null);
+    when(branchesDAO.getBranchByCode("INVALID_CODE")).thenReturn(null);
 
+    // Call the method to test
     AddResponseJSON result = commonServices.AddEmployee(mockEmployee);
 
+    // Assertions
     assertFalse(result.isSuccess());
     assertEquals("Branch does not exist", result.getMessage());
-
   }
 
   @Test
