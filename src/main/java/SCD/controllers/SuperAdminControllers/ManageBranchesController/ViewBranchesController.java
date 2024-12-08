@@ -25,10 +25,10 @@ public class ViewBranchesController {
 
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+
             ViewBranchesPage page = new ViewBranchesPage();
             new ViewBranchesController(page);
             page.setVisible(true);
-        });
+
     }
 }

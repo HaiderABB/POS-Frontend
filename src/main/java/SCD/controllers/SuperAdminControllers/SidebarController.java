@@ -9,13 +9,18 @@ import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.AddB
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.DeleteBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.UpdateBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.ViewBranchManagersController;
+import SCD.ui.SuperAdmin.Sidebar;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SidebarController {
 
-    private final JPanel sidebarPanel;
+    private JPanel sidebarPanel;
+
+    public SidebarController() {
+        Sidebar sideBar= new Sidebar();
+    }
 
     public SidebarController(JPanel sidebarPanel) {
         this.sidebarPanel = sidebarPanel;

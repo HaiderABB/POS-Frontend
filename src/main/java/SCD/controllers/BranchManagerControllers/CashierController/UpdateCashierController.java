@@ -6,7 +6,14 @@ import javax.swing.*;
 import java.util.regex.Pattern;
 
 public class UpdateCashierController {
-    private final UpdateCashierPage view;
+    private  UpdateCashierPage view;
+
+    public UpdateCashierController() {
+        SwingUtilities.invokeLater(() -> {
+            UpdateCashierPage page = new UpdateCashierPage();
+            page.setVisible(true);
+        });
+    }
 
     public UpdateCashierController(UpdateCashierPage view) {
         this.view = view;
