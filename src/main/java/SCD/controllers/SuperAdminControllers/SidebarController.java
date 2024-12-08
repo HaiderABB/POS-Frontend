@@ -1,5 +1,12 @@
 package SCD.controllers.SuperAdminControllers;
 
+import java.awt.Window;
+import java.util.function.Consumer;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import SCD.controllers.CommonControllers.MainMenuController;
 import SCD.controllers.SuperAdminControllers.ManageBranchesController.AddBranchController;
 import SCD.controllers.SuperAdminControllers.ManageBranchesController.DeleteBranchController;
@@ -9,28 +16,18 @@ import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.AddB
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.DeleteBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.UpdateBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.ViewBranchManagersController;
-
+import SCD.model.models.Employee;
 import SCD.ui.SuperAdmin.Sidebar;
 
-import SCD.model.models.Employee;
-
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.function.Consumer;
-
 public class SidebarController {
-
 
     private JPanel sidebarPanel;
 
     public SidebarController() {
-        Sidebar sideBar= new Sidebar();
+        Sidebar sideBar = new Sidebar(employee);
     }
 
-    private final JPanel sidebarPanel;
     Employee employee;
-
 
     public SidebarController(JPanel sidebarPanel, Employee employee) {
         this.sidebarPanel = sidebarPanel;

@@ -35,11 +35,11 @@ public class ViewBranchManagersController {
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> {
-            ViewBranchManagersPage page = new ViewBranchManagersPage(null);
-            new ViewBranchManagersController(page, null);
+        // SwingUtilities.invokeLater(() -> {
+        // ViewBranchManagersPage page = new ViewBranchManagersPage(null);
+        // new ViewBranchManagersController(page, null);
 
-            page.setVisible(true);
+        // page.setVisible(true);}
 
     }
 
