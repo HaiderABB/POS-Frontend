@@ -12,6 +12,7 @@ public class ViewCashiersPage extends JFrame {
     private BranchSidebar sidebar;
     private NavBar navBar;
     private DefaultTableModel tableModel;
+    private JTable cashierTable;
 
     public ViewCashiersPage() {
         setTitle("View Cashiers");
@@ -33,7 +34,7 @@ public class ViewCashiersPage extends JFrame {
         JPanel tablePanel = new JPanel(new BorderLayout());
         String[] columnNames = {"Cashier ID", "Name", "Email", "Branch Code"};
         tableModel = new DefaultTableModel(columnNames, 0);
-        JTable cashierTable = new JTable(tableModel);
+        cashierTable = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(cashierTable);
         tablePanel.add(scrollPane, BorderLayout.CENTER);
@@ -45,15 +46,18 @@ public class ViewCashiersPage extends JFrame {
         loadSampleData();
     }
 
-    private void loadSampleData() {
-        tableModel.addRow(new Object[]{"CM-1234", "John Doe", "john.doe@example.com", "BH-1234"});
-        tableModel.addRow(new Object[]{"CM-5678", "Jane Smith", "jane.smith@example.com", "BH-5678"});
+    public void loadSampleData() {
+        tableModel.addRow(new Object[]{"CM-1234", "John Doe", "john.doe@example.com", "BR-1234"});
+        tableModel.addRow(new Object[]{"CM-5678", "Jane Smith", "jane.smith@example.com", "BR-5678"});
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ViewCashiersPage frame = new ViewCashiersPage();
-            frame.setVisible(true);
-        });
+    public DefaultTableModel getTableModel() {
+        return tableModel;
     }
+
+    public JTable getCashierTable() {
+        return cashierTable;
+    }
+
+
 }

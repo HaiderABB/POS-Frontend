@@ -4,7 +4,7 @@ package SCD.utils;
 public class BranchManagerValidator {
 
     public static boolean validateBranchManagerInputs(String empCode, String username, String email, String phone, String branchCode) {
-        if (!empCode.matches("MH-\\d{4}")) {
+        if (!empCode.matches("BM-\\d{4}")) {
             return false;
         }
         if (username.isEmpty() || username.length() > 11) {

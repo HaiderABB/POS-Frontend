@@ -1,4 +1,4 @@
-package SCD.controllers;
+package SCD.controllers.CommonControllers;
 
 import SCD.ui.Common.SplashScreen;
 

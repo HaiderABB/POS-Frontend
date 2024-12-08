@@ -6,12 +6,14 @@ import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.regex.Pattern;
 
 public class AddCashierPage extends JFrame {
-
     private BranchSidebar sidebar;
     private NavBar navBar;
+    private JTextField nameField;
+    private JTextField emailField;
+    private JTextField branchCodeField;
+    private JButton addButton;
 
     public AddCashierPage() {
         setTitle("Add Cashier");
@@ -33,11 +35,11 @@ public class AddCashierPage extends JFrame {
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel nameLabel = new JLabel("Cashier Name:");
-        JTextField nameField = new JTextField();
+        nameField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");
-        JTextField emailField = new JTextField();
-        JLabel branchCodeLabel = new JLabel("Branch Code (BH-XXXX):");
-        JTextField branchCodeField = new JTextField();
+        emailField = new JTextField();
+        JLabel branchCodeLabel = new JLabel("Branch Code (BR-XXXX):");
+        branchCodeField = new JTextField();
 
         formPanel.add(nameLabel);
         formPanel.add(nameField);
@@ -47,67 +49,29 @@ public class AddCashierPage extends JFrame {
         formPanel.add(branchCodeField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton addButton = ButtonFactory.createStyledButton("Add Cashier");
+        addButton = ButtonFactory.createStyledButton("Add Cashier");
         buttonPanel.add(addButton);
 
         contentPanel.add(formPanel, BorderLayout.CENTER);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(contentPanel, BorderLayout.CENTER);
-
         setLocationRelativeTo(null);
-
-        addButton.addActionListener(e -> {
-            String name = nameField.getText().trim();
-            String email = emailField.getText().trim();
-            String branchCode = branchCodeField.getText().trim();
-
-            if (!validateInputs(name, email, branchCode)) {
-                return;
-            }
-
-            saveCashier(name, email, branchCode);
-            clearFields(nameField, emailField, branchCodeField);
-        });
     }
 
-    private boolean validateInputs(String name, String email, String branchCode) {
-        if (name.isEmpty() || email.isEmpty() || branchCode.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill out all fields!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (!Pattern.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}", email)) {
-            JOptionPane.showMessageDialog(this, "Invalid email format!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (!Pattern.matches("BH-\\d{4}", branchCode)) {
-            JOptionPane.showMessageDialog(this, "Branch Code must follow the format 'BH-XXXX'!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
+    public JTextField getNameField() {
+        return nameField;
     }
 
-    private void saveCashier(String name, String email, String branchCode) {
-        String message = "Cashier successfully added:\n"
-                + "Name: " + name + "\n"
-                + "Email: " + email + "\n"
-                + "Branch Code: " + branchCode;
-        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+    public JTextField getEmailField() {
+        return emailField;
     }
 
-    private void clearFields(JTextField nameField, JTextField emailField, JTextField branchCodeField) {
-        nameField.setText("");
-        emailField.setText("");
-        branchCodeField.setText("");
+    public JTextField getBranchCodeField() {
+        return branchCodeField;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AddCashierPage frame = new AddCashierPage();
-            frame.setVisible(true);
-        });
+    public JButton getAddButton() {
+        return addButton;
     }
 }

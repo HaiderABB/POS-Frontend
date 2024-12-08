@@ -1,8 +1,8 @@
 package SCD;
 
-import SCD.controllers.MainController;
-import SCD.model.service.SyncService.DataSync;
-import SCD.model.service.SyncService.SyncService;
+
+import SCD.controllers.CommonControllers.MainController;
+
 
 /**
  * Hello world!

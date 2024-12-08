@@ -8,9 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DeleteCashierPage extends JFrame {
-
     private BranchSidebar sidebar;
     private NavBar navBar;
+    private JTextField cashierCodeField;
+    private JButton deleteButton;
 
     public DeleteCashierPage() {
         setTitle("Delete Cashier");
@@ -35,7 +36,7 @@ public class DeleteCashierPage extends JFrame {
 
         JPanel cashierCodePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel cashierCodeLabel = new JLabel("Cashier ID (CM-XXXX): ");
-        JTextField cashierCodeField = new JTextField();
+        cashierCodeField = new JTextField();
         cashierCodeField.setPreferredSize(new Dimension(200, 25));
         cashierCodePanel.add(cashierCodeLabel);
         cashierCodePanel.add(cashierCodeField);
@@ -43,48 +44,20 @@ public class DeleteCashierPage extends JFrame {
         formPanel.add(cashierCodePanel);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton deleteButton = ButtonFactory.createStyledButton("Delete Cashier");
+        deleteButton = ButtonFactory.createStyledButton("Delete Cashier");
         buttonPanel.add(deleteButton);
 
         contentPanel.add(formPanel, BorderLayout.CENTER);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setLocationRelativeTo(null);
-
-        deleteButton.addActionListener(e -> {
-            String cashierCode = cashierCodeField.getText().trim();
-
-            if (!validateCashierCode(cashierCode)) {
-                return;
-            }
-
-            deleteCashier(cashierCode);
-            cashierCodeField.setText("");
-        });
     }
 
-    private boolean validateCashierCode(String cashierCode) {
-        if (cashierCode.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a Cashier ID!", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (!cashierCode.matches("CM-\\d{4}")) {
-            JOptionPane.showMessageDialog(this, "Cashier ID must follow the format 'CH-XXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
+    public JTextField getCashierCodeField() {
+        return cashierCodeField;
     }
 
-    private void deleteCashier(String cashierCode) {
-        JOptionPane.showMessageDialog(this, "Cashier with ID " + cashierCode + " deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            DeleteCashierPage frame = new DeleteCashierPage();
-            frame.setVisible(true);
-        });
+    public JButton getDeleteButton() {
+        return deleteButton;
     }
 }
