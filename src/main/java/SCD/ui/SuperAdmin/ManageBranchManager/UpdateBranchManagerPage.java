@@ -1,38 +1,27 @@
 package SCD.ui.SuperAdmin.ManageBranchManager;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
+import SCD.ui.Common.Props;
 
-public class UpdateBranchManagerPage extends JFrame {
+public class UpdateBranchManagerPage extends JFrame implements Props {
     private JTextField managerCodeField;
     private JComboBox<String> fieldComboBox;
     private JTextField newValueField;
     private JButton validateButton;
     private JButton updateButton;
-    Employee employee;
 
-    public UpdateBranchManagerPage(Employee employee) {
-        this.employee = employee;
+    public UpdateBranchManagerPage() {
         setTitle("Update Branch Manager");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        Sidebar sidebar = new Sidebar(employee);
+        Sidebar sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -51,7 +40,7 @@ public class UpdateBranchManagerPage extends JFrame {
         formPanel.add(managerCodeField);
 
         JLabel fieldLabel = new JLabel("Select Field to Update:");
-        String[] fields = { "Name", "Email", "Branch Code" };
+        String[] fields = { "Name", "Email", "Branch Code", "Phone Number" }; // scd- proj initAdded "Phone Number"
         fieldComboBox = new JComboBox<>(fields);
         formPanel.add(fieldLabel);
         formPanel.add(fieldComboBox);

@@ -2,6 +2,7 @@ package SCD.model.models;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -18,7 +19,7 @@ public class Employee {
   private String employeeCode;
 
   @Column(name = "password", nullable = false)
-  private String password = "first1234";
+  private String password;
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -26,7 +27,7 @@ public class Employee {
   @Column(name = "role", nullable = false)
   private String role;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
   private Branch branch;
 
@@ -54,17 +55,18 @@ public class Employee {
   public Employee() {
   }
 
-  public Employee(String name, String role, Branch branch, String phoneNumber, double salary,
+  public Employee(String name, String role, Branch branch, String phoneNumber,
       String email) {
     this.name = name;
     this.role = role;
     this.branch = branch;
     this.phoneNumber = phoneNumber;
-    this.salary = salary;
     this.email = email;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
   }
+
+
 
   public String getEmployeeCode() {
     return employeeCode;
@@ -178,4 +180,5 @@ public class Employee {
         ", updatedAt=" + updatedAt +
         '}';
   }
+
 }

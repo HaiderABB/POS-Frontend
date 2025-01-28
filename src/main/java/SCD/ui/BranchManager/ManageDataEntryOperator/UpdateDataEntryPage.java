@@ -5,9 +5,10 @@ import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
+import SCD.ui.Common.Props;
 import java.awt.*;
 
-public class UpdateDataEntryPage extends JFrame {
+public class UpdateDataEntryPage extends JFrame implements Props {
 
     private BranchSidebar sidebar;
     private NavBar navBar;
@@ -43,7 +44,7 @@ public class UpdateDataEntryPage extends JFrame {
         formPanel.add(dataEntryCodeField);
 
         JLabel fieldLabel = new JLabel("Select Field to Update:");
-        String[] fields = {"Name", "Email", "Branch Code"};
+        String[] fields = { "Name", "Email", "Branch Code", "Phone Number" }; // scd- proj initAdded "Phone Number"
         fieldComboBox = new JComboBox<>(fields);
         formPanel.add(fieldLabel);
         formPanel.add(fieldComboBox);
@@ -89,6 +90,4 @@ public class UpdateDataEntryPage extends JFrame {
         dataEntryCodeField.setText("");
         newValueField.setText("");
     }
-
-
 }

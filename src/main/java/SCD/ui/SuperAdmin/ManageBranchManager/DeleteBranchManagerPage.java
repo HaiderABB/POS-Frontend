@@ -11,27 +11,25 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import SCD.ui.Common.Props;
 
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
 
-public class DeleteBranchManagerPage extends JFrame {
+public class DeleteBranchManagerPage extends JFrame implements Props {
     private Sidebar sidebar;
     private NavBar navBar;
     private JTextField managerCodeField;
     private JButton deleteButton;
-    Employee employee;
 
-    public DeleteBranchManagerPage(Employee employee) {
-        this.employee = employee;
+    public DeleteBranchManagerPage() {
         setTitle("Delete Branch Manager");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar(employee);
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());

@@ -1,47 +1,41 @@
 package SCD.controllers.SuperAdminControllers.ManagesBranchManagerController;
 
-import javax.swing.SwingUtilities;
-
 import SCD.model.models.Employee;
+import SCD.model.service.Json.GetResponseJSON;
+import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranchManager.ViewBranchManagersPage;
 
 public class ViewBranchManagersController {
 
     private ViewBranchManagersPage view;
-    Employee employee;
+    private SuperAdminService superAdminService;
 
-    public ViewBranchManagersController(Employee employee) {
-        this.employee = employee;
-        SwingUtilities.invokeLater(() -> {
-            ViewBranchManagersPage page = new ViewBranchManagersPage(employee);
+    public ViewBranchManagersController() {
+        superAdminService = new SuperAdminService();
+        GetResponseJSON<Employee> json = superAdminService.getBranchManagers();
 
-            page.setVisible(true);
-        });
-
+        view = new ViewBranchManagersPage();
+        populateTable(json);
+        view.setVisible(true);
     }
 
-    public ViewBranchManagersController(ViewBranchManagersPage view, Employee employee) {
-        this.employee = employee;
-        this.view = view;
-        loadSampleData();
-    }
-
-    private void loadSampleData() {
-        SwingUtilities.invokeLater(() -> {
-            view.getTableModel().addRow(new Object[] { "BM-0001", "John Doe", "john.doe@example.com", "BH-1234" });
-            view.getTableModel().addRow(new Object[] { "BM-0002", "Jane Smith", "jane.smith@example.com", "BH-5678" });
-        });
+    private void populateTable(GetResponseJSON<Employee> json) {
+        view.clearTable(); // scd- proj initClear the table before populating
+        if (json != null && json.getData() != null) {
+            for (Employee manager : json.getData()) {
+                view.addRow(new Object[] {
+                        manager.getEmployeeCode(),
+                        manager.getName(),
+                        manager.getEmail(),
+                        manager.getBranch().getBranchCode()
+                });
+            }
+        } else {
+            view.addRow(new Object[] { "-", "-", "-", "-" });
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ViewBranchManagersPage page = new ViewBranchManagersPage(null);
-            new ViewBranchManagersController(page, null);
-            page.setVisible(true);
-        });
-    }
-
-    public void showPage() {
-        new ViewBranchManagersPage(employee).setVisible(true);
+        // scd- proj initnew ViewBranchManagersController();
     }
 }

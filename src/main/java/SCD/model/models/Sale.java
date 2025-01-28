@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +27,7 @@ public class Sale {
   private Employee cashier;
 
   @ManyToOne
-  @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false)
+  @JoinColumn(name = "branch_code", referencedColumnName = "branch_code", nullable = false, foreignKey = @ForeignKey(name = "FK_sale_branch"))
   private Branch branch;
 
   @Column(name = "total_amount", nullable = false)
@@ -129,4 +130,7 @@ public class Sale {
   public int hashCode() {
     return Objects.hash(saleId, cashier, branch, totalAmount, profit, createdAt);
   }
+
+
+
 }

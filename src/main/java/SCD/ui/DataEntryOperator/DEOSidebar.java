@@ -4,91 +4,103 @@ import SCD.ui.Common.ButtonFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import SCD.ui.Common.Props;
 
-public class DEOSidebar extends JPanel {
+public class DEOSidebar extends JPanel implements Props {
+
+    private JButton dashboardButton;
+    private JButton viewVendorsButton;
+    private JButton addVendorButton;
+    private JButton updateVendorButton;
+    private JButton removeVendorButton;
+    private JButton viewProductsButton;
+    private JButton addProductButton;
+    private JButton updateProductButton;
+    private JButton removeProductButton;
+    private JButton logoutButton;
+    private JButton viewProductsByVendorButton;
 
     public DEOSidebar() {
-
-        setPreferredSize(new Dimension(240, 800)); // Set the same size as the SuperAdmin sidebar
-        setBackground(new Color(255, 102, 102));
-
+        setPreferredSize(new Dimension(200, 700));
+        setBackground(Props.bg);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // Placeholder for logo or application name
-        JLabel logo = new JLabel(new ImageIcon("path/to/logo.png")); // Update with the correct logo path
+        JLabel logo = new JLabel(new ImageIcon("path/to/logo.png")); // scd- proj initUpdate with correct logo path
         logo.setAlignmentX(Component.CENTER_ALIGNMENT);
         logo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(logo);
 
-        // Add buttons with corresponding navigation actions
-        add(createButton("Dashboard", this::openDashboard));
-        add(createButton("View Vendors", this::openViewVendorsPage));
-        add(createButton("Add Vendor", this::openAddVendorPage));
-        add(createButton("Update Vendor", this::openUpdateVendorPage));
-        add(createButton("Remove Vendor", this::openRemoveVendorPage));
-        add(createButton("View Products", this::openViewProductsPage));
-        add(createButton("Add Product", this::openAddProductPage));
-        add(createButton("Update Product", this::openUpdateProductPage));
-        add(createButton("Remove Product", this::openRemoveProductPage));
-        add(createButton("Logout", this::logout));
+        dashboardButton = createButton("Dashboard");
+        viewVendorsButton = createButton("View Vendors");
+        addVendorButton = createButton("Add Vendor");
+        updateVendorButton = createButton("Update Vendor");
+        removeVendorButton = createButton("Remove Vendor");
+        viewProductsButton = createButton("View Products");
+        addProductButton = createButton("Add Product");
+        updateProductButton = createButton("Update Product");
+        removeProductButton = createButton("Remove Product");
+        viewProductsByVendorButton = createButton("View Vendor Products");
+        logoutButton = createButton("Log Out");
+
+        add(dashboardButton);
+        add(addVendorButton);
+        add(updateVendorButton);
+        add(removeVendorButton);
+        add(viewVendorsButton);
+        add(viewProductsButton);
+        add(addProductButton);
+        add(updateProductButton);
+        add(removeProductButton);
+        add(viewProductsButton);
+        add(viewProductsByVendorButton);
+        add(logoutButton);
     }
 
-    private void openUpdateProductPage() {
-        navigateToPage(new UpdateProductPage());
+    private JButton createButton(String label) {
+        return ButtonFactory.createStyledButton(label);
     }
 
-
-    private JButton createButton(String label, Runnable action) {
-        JButton button = ButtonFactory.createStyledButton(label); // Reusing styled button from ButtonFactory
-        button.addActionListener(e -> action.run());
-        return button;
+    public JButton getDashboardButton() {
+        return dashboardButton;
     }
 
-    private void openDashboard() {
-        navigateToPage(new DataEntryOperatorDashboard());
+    public JButton getViewVendorsButton() {
+        return viewVendorsButton;
     }
 
-    private void openViewVendorsPage() {
-        navigateToPage(new ViewVendorsPage());
+    public JButton getAddVendorButton() {
+        return addVendorButton;
     }
 
-    private void openAddVendorPage() {
-        navigateToPage(new AddNewVendorPage());
+    public JButton getUpdateVendorButton() {
+        return updateVendorButton;
     }
 
-    private void openViewProductsPage() {
-        navigateToPage(new ViewProductsPage());
-    }
-    private void openUpdateVendorPage() {
-        navigateToPage(new UpdateVendorPage());
+    public JButton getRemoveVendorButton() {
+        return removeVendorButton;
     }
 
-    private void openAddProductPage() {
-
-        navigateToPage(new AddProductPage());
+    public JButton getViewProductsButton() {
+        return viewProductsButton;
     }
 
-    private void openRemoveVendorPage() {
-        navigateToPage(new RemoveVendorPage());
+    public JButton getAddProductButton() {
+        return addProductButton;
     }
 
-    private void openRemoveProductPage() {
-        navigateToPage(new RemoveProductPage());
+    public JButton getUpdateProductButton() {
+        return updateProductButton;
     }
 
-    private void logout() {
-        JOptionPane.showMessageDialog(this, "Logging out...");
-        System.exit(0);
+    public JButton getRemoveProductButton() {
+        return removeProductButton;
     }
 
-    private void navigateToPage(JFrame page) {
-        SwingUtilities.invokeLater(() -> {
-            Window topLevelWindow = SwingUtilities.getWindowAncestor(this);
-            if (topLevelWindow instanceof JFrame) {
-                ((JFrame) topLevelWindow).dispose();
-            }
-            page.setVisible(true);
-        });
+    public JButton getLogoutButton() {
+        return logoutButton;
     }
 
+    public JButton getViewProductsByVendorButton() {
+        return viewProductsByVendorButton;
+    }
 }

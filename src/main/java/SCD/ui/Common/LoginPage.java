@@ -1,12 +1,21 @@
 package SCD.ui.Common;
 
-import SCD.controllers.CommonControllers.LoginController;
+import java.awt.Font;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 
-public class LoginPage extends JFrame {
+public class LoginPage extends JFrame implements Props {
 
     private final JTextField usernameField;
     private final JPasswordField passwordField;
@@ -20,10 +29,11 @@ public class LoginPage extends JFrame {
 
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(null);
-        loginPanel.setBackground(Color.WHITE);
+        loginPanel.setBackground(Props.fg);
         loginPanel.setBounds(0, 0, 800, 600);
 
-        JLabel logo = new JLabel(new ImageIcon("C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\logo5.png"));
+        JLabel logo = new JLabel(new ImageIcon("logo5.png"));
+
         logo.setBounds(350, 50, 100, 100);
         loginPanel.add(logo);
 
@@ -35,7 +45,7 @@ public class LoginPage extends JFrame {
         JLabel signInText = new JLabel("Sign in to continue", JLabel.CENTER);
         signInText.setBounds(250, 220, 300, 20);
         signInText.setFont(new Font("Arial", Font.PLAIN, 16));
-        signInText.setForeground(Color.GRAY);
+        signInText.setForeground(Props.txtColor);
         loginPanel.add(signInText);
 
         usernameField = new JTextField(prefix);
@@ -52,8 +62,8 @@ public class LoginPage extends JFrame {
 
         loginButton = new JButton("Login");
         loginButton.setBounds(250, 400, 300, 50);
-        loginButton.setBackground(new Color(255, 102, 102));
-        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Props.bg);
+        loginButton.setForeground(Props.fg);
         loginButton.setFont(new Font("Arial", Font.BOLD, 18));
         loginPanel.add(loginButton);
 
@@ -65,7 +75,8 @@ public class LoginPage extends JFrame {
         PlainDocument doc = (PlainDocument) textField.getDocument();
         doc.setDocumentFilter(new DocumentFilter() {
             @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                    throws BadLocationException {
                 if (offset >= prefix.length()) {
                     super.insertString(fb, offset, string, attr);
                 }
@@ -79,18 +90,19 @@ public class LoginPage extends JFrame {
             }
 
             @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
                 if (offset >= prefix.length()) {
                     super.replace(fb, offset, length, text, attrs);
                 }
             }
         });
 
-        textField.setText(prefix); // Set the prefix
+        textField.setText(prefix); // scd- proj initSet the prefix
     }
 
     public String getUsername() {
-        return usernameField.getText(); // Returns the full text including the prefix
+        return usernameField.getText(); // scd- proj initReturns the full text including the prefix
     }
 
     public String getPassword() {

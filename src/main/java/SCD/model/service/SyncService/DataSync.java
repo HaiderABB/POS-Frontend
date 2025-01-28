@@ -2,15 +2,15 @@ package SCD.model.service.SyncService;
 
 import java.util.List;
 
-import SCD.model.crud.local.BranchesDAO;
-import SCD.model.crud.local.CodesDAO;
-import SCD.model.crud.local.EmployeeDAO;
-import SCD.model.crud.local.ProductDAO;
-import SCD.model.crud.local.SaleDAO;
-import SCD.model.crud.local.SaleItemDAO;
-import SCD.model.crud.local.SyncTableDAO;
-import SCD.model.crud.local.VendorDAO;
-import SCD.model.crud.remote.DAO;
+import SCD.model.db.local.BranchesDAO;
+import SCD.model.db.local.CodesDAO;
+import SCD.model.db.local.EmployeeDAO;
+import SCD.model.db.local.ProductDAO;
+import SCD.model.db.local.SaleDAO;
+import SCD.model.db.local.SaleItemDAO;
+import SCD.model.db.local.SyncTableDAO;
+import SCD.model.db.local.VendorDAO;
+import SCD.model.db.remote.DAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Employee;
 import SCD.model.models.Product;

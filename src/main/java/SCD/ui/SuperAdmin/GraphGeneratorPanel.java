@@ -1,147 +1,530 @@
 package SCD.ui.SuperAdmin;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import SCD.ui.Common.Props;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import javax.swing.*;
-import java.awt.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import SCD.model.models.Sale;
+import SCD.model.service.Json.GetReportJSON;
 
-public class GraphGeneratorPanel extends JFrame {
+public class GraphGeneratorPanel extends JFrame implements Props {
 
-    public GraphGeneratorPanel(String graphType, String duration, String branchCode, String startDate, String endDate) {
+    String graphType;
+    GetReportJSON json;
+
+    public GraphGeneratorPanel(String graphType, String duration, String branchCode, String startDate, String endDate,
+            GetReportJSON json) {
+        this.graphType = graphType;
+        this.json = json;
         setTitle(graphType + " Report");
-        setSize(800, 600);
+        setSize(1350, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JLabel graphInfo = new JLabel("<html><center>" + graphType + " Report<br>"
-                + "Branch Code: " + branchCode + "<br>"
-                + "Duration: " + duration + "<br>"
-                + "Start Date: " + startDate + "<br>"
-                + "End Date: " + endDate + "</center></html>", SwingConstants.CENTER);
-        graphInfo.setFont(new Font("Arial", Font.BOLD, 16));
-        graphInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel headerPanel = new JPanel(new GridLayout(4, 1));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Generate dataset based on duration
-        DefaultCategoryDataset dataset = generateDataset(graphType, duration, branchCode, startDate, endDate);
+        JLabel titleLabel = new JLabel(graphType + " Report", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titleLabel);
 
-        // Create the chart
-        JFreeChart barChart = ChartFactory.createBarChart(
-                graphType + " Report", // Chart title
-                "Time Period",         // X-axis label
-                graphType + " Amount", // Y-axis label
-                dataset                // Dataset
-        );
+        JLabel branchCodeLabel = new JLabel("Branch Code: " + branchCode, SwingConstants.CENTER);
+        branchCodeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(branchCodeLabel);
 
-        // Customize the chart appearance
-        customizeChart(barChart);
+        JLabel durationLabel = new JLabel("Duration: " + duration, SwingConstants.CENTER);
+        durationLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(durationLabel);
 
-        // Add the chart to a panel
-        ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setPreferredSize(new Dimension(750, 450));
+        JLabel dateRangeLabel = new JLabel("Date Range: " + startDate + " to " + endDate, SwingConstants.CENTER);
+        dateRangeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(dateRangeLabel);
 
-        add(graphInfo, BorderLayout.NORTH);
-        add(chartPanel, BorderLayout.CENTER);
+        add(headerPanel, BorderLayout.NORTH);
 
-        setLocationRelativeTo(null);
-    }
-
-    private DefaultCategoryDataset generateDataset(String graphType, String duration, String branchCode, String startDate, String endDate) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        // Always parse startDate and endDate as full dates
-        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-        switch (duration.toLowerCase()) {
-            case "today":
-                dataset.addValue(generateDummyValue(branchCode), graphType, "Today");
-                break;
-
-            case "weekly":
-                for (int i = 6; i >= 0; i--) {
-                    LocalDate day = end.minusDays(i);
-                    dataset.addValue(generateDummyValue(branchCode), graphType, day.getDayOfWeek().name());
-                }
-                break;
-
-            case "monthly":
-                for (int i = 1; i <= end.getDayOfMonth(); i++) {
-                    dataset.addValue(generateDummyValue(branchCode), graphType, "Day " + i);
-                }
-                break;
-
-            case "yearly":
-                for (int i = 1; i <= 12; i++) {
-                    String monthName = LocalDate.of(start.getYear(), i, 1).getMonth().name();
-                    dataset.addValue(generateDummyValue(branchCode), graphType, monthName.substring(0, 3)); // Shortened month name
-                }
-                break;
-
-            case "custom range":
-                long days = ChronoUnit.DAYS.between(start, end) + 1;
-                for (int i = 0; i < days; i++) {
-                    LocalDate day = start.plusDays(i);
-                    dataset.addValue(generateDummyValue(branchCode), graphType, day.toString());
-                }
-                break;
-
-            default:
-                throw new IllegalArgumentException("Invalid duration: " + duration);
+        if (graphType.equals("Sales")) {
+            if (json.getSalesData() == null) {
+                JOptionPane.showMessageDialog(this, "No sales data available for the selected date range.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            generateSalesBarChart(duration, startDate, endDate);
+        }
+        if (graphType.equals("Profit")) {
+            if (json.getSalesData() == null) {
+                JOptionPane.showMessageDialog(this, "No profit data available for the selected date range.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            generateProfitBarChart(duration, startDate, endDate);
         }
 
-        return dataset;
-    }
-    private String formatDate(LocalDate date, String duration) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Default format
-        return date.format(formatter);
     }
 
+    private void generateSalesBarChart(String duration, String startDate, String endDate) {
 
-    private int generateDummyValue(String branchCode) {
-        return 100 + Math.abs(branchCode.hashCode() % 500);
+        if (duration.equals("Daily")) {
+            generateDailySales();
+        }
+        if (duration.equals("Weekly")) {
+            generateWeeklySales();
+        }
+        if (duration.equals("Monthly")) {
+            generateMonthlySales();
+        }
+        if (duration.equals("Yearly")) {
+            generateYearlySales();
+        }
+
     }
 
-    private void customizeChart(JFreeChart chart) {
-        CategoryPlot plot = chart.getCategoryPlot();
+    private void generateProfitBarChart(String duration, String startDate, String endDate) {
+        if (duration.equals("Daily")) {
+            generateDailyProfit();
+        }
+        if (duration.equals("Weekly")) {
+            generateWeeklyProfit();
+        }
+        if (duration.equals("Monthly")) {
+            generateMonthlyProfit();
+        }
+        if (duration.equals("Yearly")) {
+            generateYearlyProfit();
+        }
+    }
 
-        // Customize the renderer (bar colors)
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, new Color(100, 150, 250)); // Blue bars
-        renderer.setDrawBarOutline(true);
-        renderer.setSeriesOutlinePaint(0, Color.BLACK);
+    public void generateDailySales() {
+        Map<Integer, Integer> salesData = new TreeMap<>();
 
-        // Customize the axis
-        CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
-        domainAxis.setLabelFont(new Font("Arial", Font.BOLD, 12));
-        domainAxis.setTickLabelFont(new Font("Arial", Font.PLAIN, 10));
+        for (int i = 0; i < 24; i++) {
+            salesData.put(i, salesPerHour(i));
+        }
 
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        rangeAxis.setLabelFont(new Font("Arial", Font.BOLD, 12));
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<Integer, Integer> entry : salesData.entrySet()) {
+            int hour1 = entry.getKey();
+            hour1 = hour1 + 1;
+            String hour = hour1 + ":00";
+            dataset.addValue(entry.getValue(), "Sales", hour);
+        }
 
-        // Customize background
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setDomainGridlinePaint(Color.GRAY);
-        plot.setRangeGridlinePaint(Color.GRAY);
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Sales Per Hour",
+                "Hour",
+                "Sales",
+                dataset);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+        add(chartPanel, BorderLayout.CENTER);
+
+    }
+
+    public void generateWeeklySales() {
+
+        Map<String, Integer> weeklySales = new HashMap<>();
+
+        weeklySales.put("Monday", salesPerDay("MONDAY"));
+        weeklySales.put("Tuesday", salesPerDay("TUESDAY"));
+        weeklySales.put("Wednesday", salesPerDay("WEDNESDAY"));
+        weeklySales.put("Thursday", salesPerDay("THURSDAY"));
+        weeklySales.put("Friday", salesPerDay("FRIDAY"));
+        weeklySales.put("Saturday", salesPerDay("SATURDAY"));
+        weeklySales.put("Sunday", salesPerDay("SUNDAY"));
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<String, Integer> entry : weeklySales.entrySet()) {
+            dataset.addValue(entry.getValue(), "Sales", entry.getKey());
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Weekly Sales",
+                "Days",
+                "Number of sales",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        CategoryAxis xAxis = chart.getCategoryPlot().getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        add(chartPanel, BorderLayout.CENTER);
+
+    }
+
+    public void generateMonthlySales() {
+
+        LocalDate rn = LocalDate.now();
+
+        int year = rn.getYear();
+        int month = rn.getMonthValue();
+
+        YearMonth yearMonth = YearMonth.of(year, month);
+
+        int totalDays = yearMonth.lengthOfMonth();
+
+        Map<Integer, Integer> dailySales = new HashMap<>();
+
+        for (int day = 1; day <= totalDays; day++) {
+            int sales = salesPerDay(day);
+            dailySales.put(day, sales);
+        }
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (Map.Entry<Integer, Integer> entry : dailySales.entrySet()) {
+            dataset.addValue(entry.getValue(), "Sales", "Day " + entry.getKey());
+        }
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Monthly Sales",
+                "Days of the Month",
+                "Number of sales",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        CategoryAxis xAxis = barChart.getCategoryPlot().getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+
+        add(chartPanel, BorderLayout.CENTER);
+    }
+
+    public void generateMonthlyProfit() {
+
+        LocalDate rn = LocalDate.now();
+
+        int year = rn.getYear();
+        int month = rn.getMonthValue();
+
+        YearMonth yearMonth = YearMonth.of(year, month);
+
+        int totalDays = yearMonth.lengthOfMonth();
+
+        Map<Integer, Double> dailyProfit = new HashMap<>();
+
+        for (int day = 1; day <= totalDays; day++) {
+            double sales = profitPerDay(day);
+            dailyProfit.put(day, sales);
+        }
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (Map.Entry<Integer, Double> entry : dailyProfit.entrySet()) {
+            dataset.addValue(entry.getValue(), "Profit", "Day " + entry.getKey());
+        }
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Monthly Profit",
+                "Days of the Month",
+                "Total Profit",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        CategoryAxis xAxis = barChart.getCategoryPlot().getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+
+        add(chartPanel, BorderLayout.CENTER);
+
+    }
+
+    public void generateDailyProfit() {
+
+        Map<Integer, Double> profitData = new TreeMap<>();
+
+        for (int i = 0; i < 24; i++) {
+            profitData.put(i, profitPerHour(graphType, i));
+        }
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<Integer, Double> entry : profitData.entrySet()) {
+            int hour1 = entry.getKey();
+            hour1 = hour1 + 1;
+            String hour = hour1 + ":00";
+            dataset.addValue(entry.getValue(), "Profit", hour);
+        }
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Profit Per Hour",
+                "Hour",
+                "Profit",
+                dataset);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+        add(chartPanel, BorderLayout.CENTER);
+    }
+
+    public void generateWeeklyProfit() {
+
+        Map<String, Double> weeklyProfit = new HashMap<>();
+
+        weeklyProfit.put("Monday", profitPerDay("MONDAY"));
+        weeklyProfit.put("Tuesday", profitPerDay("TUESDAY"));
+        weeklyProfit.put("Wednesday", profitPerDay("WEDNESDAY"));
+        weeklyProfit.put("Thursday", profitPerDay("THURSDAY"));
+        weeklyProfit.put("Friday", profitPerDay("FRIDAY"));
+        weeklyProfit.put("Saturday", profitPerDay("SATURDAY"));
+        weeklyProfit.put("Sunday", profitPerDay("SUNDAY"));
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<String, Double> entry : weeklyProfit.entrySet()) {
+            dataset.addValue(entry.getValue(), "Profit", entry.getKey());
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Weekly Profit",
+                "Days",
+                "Total Profit",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        CategoryAxis xAxis = chart.getCategoryPlot().getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        add(chartPanel, BorderLayout.CENTER);
+    }
+
+    public void generateYearlySales() {
+
+        Map<Integer, Integer> monthlySales = new HashMap<>();
+
+        for (int month = 1; month <= 12; month++) {
+
+            monthlySales.put(month, salesPerMonth(month));
+
+        }
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<Integer, Integer> entry : monthlySales.entrySet()) {
+            dataset.addValue(entry.getValue(), "Sales", "Month " + entry.getKey());
+        }
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Yearly Sales",
+                "Months",
+                "Total Sales",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        CategoryAxis xAxis = barChart.getCategoryPlot().getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        add(chartPanel, BorderLayout.CENTER);
+
+    }
+
+    public void generateYearlyProfit() {
+        Map<Integer, Double> monthlyProfit = new HashMap<>();
+        for (int month = 1; month <= 12; month++) {
+            monthlyProfit.put(month, profitPerMonth(month));
+        }
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<Integer, Double> entry : monthlyProfit.entrySet()) {
+            dataset.addValue(entry.getValue(), "Profit", "Month " + entry.getKey());
+        }
+
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "Yearly Profit",
+                "Months",
+                "Total Profit",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        CategoryAxis xAxis = barChart.getCategoryPlot().getDomainAxis();
+        xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        add(chartPanel, BorderLayout.CENTER);
+    }
+
+    public int salesPerMonth(int month) {
+        int total = 0;
+
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            int saleMonth = saleTime.getMonthValue();
+            if (saleMonth == month) {
+                {
+                    total += 1;
+                }
+            }
+        }
+        return total;
+    }
+
+    public double profitPerMonth(int month) {
+        double total = 0.0;
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            int saleMonth = saleTime.getMonthValue();
+            if (saleMonth == month) {
+                total += sale.getProfit();
+            }
+
+        }
+        return total;
+    }
+
+    public int salesPerHour(int hour) {
+
+        int total = 0;
+
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            int saleHour = saleTime.getHour();
+            if (saleHour == hour) {
+                total += 1;
+            }
+        }
+
+        return total;
+
+    }
+
+    public double profitPerHour(String type, int hour) {
+
+        double total = 0.0;
+
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            int saleHour = saleTime.getHour();
+            if (saleHour == hour) {
+                total += sale.getProfit();
+            }
+        }
+
+        return total;
+
+    }
+
+    public int salesPerDay(int day) {
+        int total = 0;
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            int saleDay = saleTime.getDayOfMonth();
+            if (saleDay == day) {
+                total += 1;
+            }
+        }
+        return total;
+    }
+
+    public double profitPerDay(int day) {
+        double total = 0.0;
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            int saleDay = saleTime.getDayOfMonth();
+            if (saleDay == day) {
+                total += sale.getProfit();
+            }
+        }
+        return total;
+    }
+
+    public int salesPerDay(String day) {
+        int total = 0;
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            DayOfWeek saleDay = saleTime.getDayOfWeek();
+            if (saleDay.name().equals(day)) {
+                total += 1;
+            }
+        }
+        return total;
+
+    }
+
+    public double profitPerDay(String day) {
+        double total = 0.0;
+        List<Sale> sales = json.getSalesData();
+        for (Sale sale : sales) {
+            LocalDateTime saleTime = sale.getCreatedAt();
+            DayOfWeek saleDay = saleTime.getDayOfWeek();
+            if (saleDay.name().equals(day)) {
+                total += sale.getProfit();
+                System.out.println(sale.getProfit());
+            }
+        }
+        System.out.println(total);
+        return total;
+
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GraphGeneratorPanel panel = new GraphGeneratorPanel(
-                    "Sales", "Weekly", "BR-1234", "2024-12-01", "2024-12-07");
-            panel.setVisible(true);
-        });
+        List<Sale> sales = new ArrayList<>();
+
+        Sale sale1 = new Sale(null, null, 0.0, 24);
+        Sale sale2 = new Sale(null, null, 0.0, 48);
+        Sale sale3 = new Sale(null, null, 0.0, 72);
+        Sale sale4 = new Sale(null, null, 0.0, 96);
+        Sale sale5 = new Sale(null, null, 0.0, 120);
+        Sale sale6 = new Sale(null, null, 0.0, 24);
+
+        sales.add(sale6);
+        sales.add(sale5);
+        sales.add(sale4);
+        sales.add(sale3);
+        sales.add(sale2);
+        sales.add(sale1);
+
+        GetReportJSON json = new GetReportJSON(sales, null, 0.0, "");
+
+        GraphGeneratorPanel graphGeneratorPanel = new GraphGeneratorPanel("Profit", "Yearly", "BR-0001", "2023-01-01",
+                "2023-01-01", json);
+        graphGeneratorPanel.setVisible(true);
     }
+
 }

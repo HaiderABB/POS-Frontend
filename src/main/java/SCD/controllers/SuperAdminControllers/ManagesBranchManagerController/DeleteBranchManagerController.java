@@ -3,26 +3,25 @@ package SCD.controllers.SuperAdminControllers.ManagesBranchManagerController;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import SCD.model.models.Employee;
+import SCD.model.service.Common.CommonServices;
+import SCD.model.service.Json.AddResponseJSON;
 import SCD.ui.SuperAdmin.ManageBranchManager.DeleteBranchManagerPage;
 
 public class DeleteBranchManagerController {
     private DeleteBranchManagerPage view;
-    Employee employee;
+    CommonServices commonServices = new CommonServices();
 
-    public DeleteBranchManagerController(Employee employee) {
-        this.employee = employee;
-        SwingUtilities.invokeLater(() -> {
-            DeleteBranchManagerPage page = new DeleteBranchManagerPage(employee);
+    public DeleteBranchManagerController() {
 
-            page.setVisible(true);
-        });
+        view = new DeleteBranchManagerPage();
+        view.setVisible(true);
+        this.view.getDeleteButton().addActionListener(e -> handleDeleteBranchManager());
+
     }
 
-    public DeleteBranchManagerController(DeleteBranchManagerPage view, Employee employee) {
-        this.employee = employee;
+    public DeleteBranchManagerController(DeleteBranchManagerPage view) {
         this.view = view;
-        this.view.getDeleteButton().addActionListener(e -> handleDeleteBranchManager());
+
     }
 
     private void handleDeleteBranchManager() {
@@ -32,8 +31,22 @@ public class DeleteBranchManagerController {
             return;
         }
 
-        deleteBranchManager(managerCode);
-        view.getManagerCodeField().setText("");
+        boolean res = commonServices.checkEmployeeExists(managerCode);
+        if (!res) {
+            JOptionPane.showMessageDialog(view, "Branch Manager does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        AddResponseJSON json = commonServices.RemoveEmployee(managerCode);
+
+        if (json.isSuccess()) {
+
+            deleteBranchManager(managerCode);
+
+            view.getManagerCodeField().setText("");
+        } else {
+            JOptionPane.showMessageDialog(view, "Failed to delete Branch Manager!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public boolean validateManagerCode(String managerCode) {
@@ -52,22 +65,22 @@ public class DeleteBranchManagerController {
         return true;
     }
 
-    private void deleteBranchManager(String managerCode) {
-        JOptionPane.showMessageDialog(view,
-                "Branch Manager with Code " + managerCode + " deleted successfully!",
+    void deleteBranchManager(String managerCode) {
+        JOptionPane.showMessageDialog(view, "Branch Manager with ID " + managerCode + " deleted successfully!",
                 "Success",
                 JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            DeleteBranchManagerPage page = new DeleteBranchManagerPage(null);
-            new DeleteBranchManagerController(page, null);
+            DeleteBranchManagerPage page = new DeleteBranchManagerPage();
+            new DeleteBranchManagerController(page);
             page.setVisible(true);
         });
     }
 
     public void showPage() {
-        new DeleteBranchManagerPage(employee);
+        new DeleteBranchManagerPage();
     }
 }

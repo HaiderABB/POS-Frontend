@@ -1,34 +1,27 @@
 package SCD.ui.SuperAdmin.ManageBranchManager;
 
-import java.awt.BorderLayout;
-
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
+import java.awt.*;
 import SCD.model.models.Employee;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
+import SCD.ui.Common.Props;
 
-public class ViewBranchManagersPage extends JFrame {
+public class ViewBranchManagersPage extends JFrame implements Props {
 
     private Sidebar sidebar;
     private NavBar navBar;
     private DefaultTableModel tableModel;
     private JTable branchManagerTable;
-    Employee employee;
 
-    public ViewBranchManagersPage(Employee employee) {
-        this.employee = employee;
+    public ViewBranchManagersPage() {
         setTitle("View Branch Managers");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar(employee);
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -58,5 +51,13 @@ public class ViewBranchManagersPage extends JFrame {
 
     public JTable getBranchManagerTable() {
         return branchManagerTable;
+    }
+
+    public void clearTable() {
+        tableModel.setRowCount(0);
+    }
+
+    public void addRow(Object[] rowData) {
+        tableModel.addRow(rowData);
     }
 }

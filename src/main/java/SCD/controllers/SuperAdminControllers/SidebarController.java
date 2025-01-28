@@ -1,5 +1,12 @@
 package SCD.controllers.SuperAdminControllers;
 
+import java.awt.Window;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import SCD.controllers.CommonControllers.MainMenuController;
 import SCD.controllers.SuperAdminControllers.ManageBranchesController.AddBranchController;
 import SCD.controllers.SuperAdminControllers.ManageBranchesController.DeleteBranchController;
@@ -9,79 +16,94 @@ import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.AddB
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.DeleteBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.UpdateBranchManagerController;
 import SCD.controllers.SuperAdminControllers.ManagesBranchManagerController.ViewBranchManagersController;
-import SCD.model.models.Employee;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.function.Consumer;
+import SCD.controllers.SuperAdminControllers.Reports.ViewReportsController;
+import SCD.ui.SuperAdmin.Sidebar;
 
 public class SidebarController {
 
-    private final JPanel sidebarPanel;
-    Employee employee;
+    private JPanel sidebarPanel;
 
-    public SidebarController(JPanel sidebarPanel, Employee employee) {
+    public SidebarController() {
+        Sidebar sideBar = new Sidebar();
+    }
+
+    public SidebarController(JPanel sidebarPanel) {
         this.sidebarPanel = sidebarPanel;
-        this.employee = employee;
     }
 
     public void openDashboard() {
-        navigateTo(SuperAdminDashboardController::new, employee);
+        navigateTo(SuperAdminDashboardController::new);
     }
 
     public void openAddBranchPage() {
-        navigateTo(AddBranchController::new, employee);
+        navigateTo(AddBranchController::new);
     }
 
     public void openUpdateBranchPage() {
-        navigateTo(UpdateBranchController::new, employee);
+        navigateTo(UpdateBranchController::new);
     }
 
     public void openDeleteBranchPage() {
-        navigateTo(DeleteBranchController::new, employee);
+        navigateTo(DeleteBranchController::new);
     }
 
     public void openViewBranchesPage() {
-        navigateTo(ViewBranchesController::new, employee);
+        navigateTo(ViewBranchesController::new);
     }
 
     public void openAddBranchManagerPage() {
-        navigateTo(AddBranchManagerController::new, employee);
+        navigateTo(AddBranchManagerController::new);
     }
 
     public void openUpdateBranchManagerPage() {
-        navigateTo(UpdateBranchManagerController::new, employee);
+        navigateTo(UpdateBranchManagerController::new);
     }
 
     public void openDeleteBranchManagerPage() {
-        navigateTo(DeleteBranchManagerController::new, employee);
+        navigateTo(DeleteBranchManagerController::new);
     }
 
     public void openViewBranchManagersPage() {
-        navigateTo(ViewBranchManagersController::new, employee);
+        navigateTo(ViewBranchManagersController::new);
+    }
+
+    public void openReportsPage() {
+        navigateTo(ViewReportsController::new);
     }
 
     public void openSystemSettingsPage() {
-        navigateTo(SystemSettingsController::new, employee);
+        navigateTo(SystemSettingsController::new);
     }
 
     public void performLogout() {
-        navigateTo(MainMenuController::new, null);
+
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?", "Logout",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            for (Window window : Window.getWindows()) {
+                if (window.isShowing()) {
+                    window.dispose(); // scd- proj initClose the window
+                }
+            }
+            navigateTo(MainMenuController::new);
+        } else {
+            return;
+        }
 
     }
 
-    private void navigateTo(Consumer<Employee> navigationTask, Employee employee) {
+    private void navigateTo(Runnable navigationTask) {
         SwingUtilities.invokeLater(() -> {
-            // Get the current window
+            // scd- proj initGet the current window
             Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
             if (currentWindow instanceof JFrame) {
-                ((JFrame) currentWindow).dispose(); // Dispose of the current window
+                ((JFrame) currentWindow).dispose(); // scd- proj initDispose of the current window
             }
-            // Pass the object to the navigation task
-            navigationTask.accept(employee);
+            // scd- proj initPass the object to the navigation task
+            navigationTask.run();
+            ;
         });
     }
 
-    public void openViewReportsPage() {
-    }
 }

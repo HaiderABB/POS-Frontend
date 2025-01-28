@@ -9,12 +9,11 @@ import SCD.ui.Common.MainMenu;
 public class MainMenuController {
     Employee employee;
 
-    public MainMenuController(Employee employee) {
+    public MainMenuController() {
 
-        SwingUtilities.invokeLater(() -> {
-            MainMenu mainMenu = new MainMenu();
-            mainMenu.setVisible(true);
-        });
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.setVisible(true);
+
     }
 
     public static void handleRoleButtonClick(JFrame mainMenu, String prefix, String role) {

@@ -1,83 +1,103 @@
 package SCD.controllers.BranchManagerControllers;
 
-import SCD.ui.BranchManager.BranchManagerDashboard;
-import SCD.ui.BranchManager.ManageCashier.AddCashierPage;
-import SCD.ui.BranchManager.ManageCashier.DeleteCashierPage;
-import SCD.ui.BranchManager.ManageCashier.UpdateCashierPage;
-import SCD.ui.BranchManager.ManageCashier.ViewCashiersPage;
-import SCD.ui.BranchManager.ManageDataEntryOperator.AddDataEntryOperatorPage;
-import SCD.ui.BranchManager.ManageDataEntryOperator.DeleteDataEntryOperatorPage;
-import SCD.ui.BranchManager.ManageDataEntryOperator.UpdateDataEntryPage;
-import SCD.ui.BranchManager.ManageDataEntryOperator.ViewDataEntryOperatorsPage;
-import SCD.ui.BranchManager.SettingsPage;
+import java.awt.Window;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import SCD.controllers.BranchManagerControllers.CashierController.AddCashierController;
+import SCD.controllers.BranchManagerControllers.CashierController.DeleteCashierController;
+import SCD.controllers.BranchManagerControllers.CashierController.UpdateCashierController;
+import SCD.controllers.BranchManagerControllers.CashierController.ViewCashiersController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.AddDataEntryOperatorController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.DeleteDataEntryOperatorController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.UpdateDataEntryController;
+import SCD.controllers.BranchManagerControllers.DataEntryOperatorController.ViewDataEntryOperatorsController;
+import SCD.controllers.CommonControllers.MainMenuController;
+import SCD.ui.BranchManager.BranchSidebar;
 
 public class BranchSidebarController {
 
-    private final JPanel sidebarPanel;
+    private JPanel sidebarPanel;
+
+    public BranchSidebarController() {
+        sidebarPanel = new BranchSidebar();
+    }
 
     public BranchSidebarController(JPanel sidebarPanel) {
         this.sidebarPanel = sidebarPanel;
     }
 
     public void openDashboard() {
-        navigateToPage(new BranchManagerDashboard());
+        navigateTo(BranchManagerDashboardController::new);
     }
 
     public void openAddCashier() {
-        navigateToPage(new AddCashierPage());
+        navigateTo(AddCashierController::new);
     }
 
     public void openUpdateCashier() {
-        navigateToPage(new UpdateCashierPage());
+        navigateTo(UpdateCashierController::new);
     }
 
     public void openDeleteCashier() {
-        navigateToPage(new DeleteCashierPage());
+        navigateTo(DeleteCashierController::new);
     }
 
     public void openViewCashiers() {
-        navigateToPage(new ViewCashiersPage());
+        navigateTo(ViewCashiersController::new);
     }
 
     public void openAddDataEntryOperator() {
-        navigateToPage(new AddDataEntryOperatorPage());
+        navigateTo(AddDataEntryOperatorController::new);
     }
 
     public void openUpdateDataEntryOperator() {
-        navigateToPage(new UpdateDataEntryPage());
+        navigateTo(UpdateDataEntryController::new);
     }
 
     public void openDeleteDataEntryOperator() {
-        navigateToPage(new DeleteDataEntryOperatorPage());
+        navigateTo(DeleteDataEntryOperatorController::new);
     }
 
     public void openViewDataEntryOperators() {
-        navigateToPage(new ViewDataEntryOperatorsPage());
+        navigateTo(ViewDataEntryOperatorsController::new);
     }
 
     public void openSettings() {
-        navigateToPage(new SettingsPage());
+        navigateTo(SettingsPageController::new);
     }
 
     public void performLogout() {
-        JOptionPane.showMessageDialog(sidebarPanel, "Logging out...");
-        System.exit(0);
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to log out?", "Logout",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            for (Window window : Window.getWindows()) {
+                if (window.isShowing()) {
+                    window.dispose(); // scd- proj initClose the window
+                }
+            }
+            navigateTo(MainMenuController::new);
+        } else {
+            return;
+        }
     }
 
-    private void navigateToPage(JFrame page) {
+    private void navigateTo(Runnable navigationTask) {
         SwingUtilities.invokeLater(() -> {
-            Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
 
+            Window currentWindow = SwingUtilities.getWindowAncestor(sidebarPanel);
             if (currentWindow instanceof JFrame) {
                 ((JFrame) currentWindow).dispose();
             }
-
-            page.setLocationRelativeTo(null);
-            page.setVisible(true);
+            navigationTask.run();
         });
     }
 
+    public void openViewSales() {
+        navigateTo(ViewSalesController::new);
+    }
 }

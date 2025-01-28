@@ -3,11 +3,12 @@ package SCD.ui.BranchManager.ManageCashier;
 import SCD.ui.BranchManager.BranchSidebar;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
+import SCD.ui.Common.Props;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class UpdateCashierPage extends JFrame {
+public class UpdateCashierPage extends JFrame implements Props {
 
     private BranchSidebar sidebar;
     private NavBar navBar;
@@ -42,7 +43,7 @@ public class UpdateCashierPage extends JFrame {
         formPanel.add(cashierCodeField);
 
         JLabel fieldLabel = new JLabel("Select Field to Update:");
-        String[] fields = {"Name", "Email", "Branch Code"};
+        String[] fields = { "Name", "Email", "Branch Code", "Phone Number" }; // scd- proj initAdded "Phone Number"
         fieldComboBox = new JComboBox<>(fields);
         formPanel.add(fieldLabel);
         formPanel.add(fieldComboBox);

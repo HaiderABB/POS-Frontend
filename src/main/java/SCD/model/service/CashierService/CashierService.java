@@ -3,10 +3,10 @@ package SCD.model.service.CashierService;
 import java.util.ArrayList;
 import java.util.List;
 
-import SCD.model.crud.local.ProductDAO;
-import SCD.model.crud.local.SaleDAO;
-import SCD.model.crud.local.SaleItemDAO;
-import SCD.model.crud.local.SyncTableDAO;
+import SCD.model.db.local.ProductDAO;
+import SCD.model.db.local.SaleDAO;
+import SCD.model.db.local.SaleItemDAO;
+import SCD.model.db.local.SyncTableDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Employee;
 import SCD.model.models.Product;
@@ -45,15 +45,14 @@ public class CashierService {
 
   }
 
-  public SaleItem addSaleItem(List<SaleItem> items, int quantity, String productCode) {
+  public SaleItem addSaleItem(List<SaleItem> items, int quantity, Product product) {
 
-    Product product = productDAO.getProductByCode(productCode);
     if (product == null) {
       return null;
     }
 
     for (SaleItem sl : items) {
-      if (sl.getProduct().getProductCode().equals(productCode)) {
+      if (sl.getProduct().getProductCode().equals(product.getProductCode())) {
 
         if (sl.getQuantity() + quantity > sl.getProduct().getStockQuantity()) {
           return null;
@@ -75,14 +74,11 @@ public class CashierService {
   }
 
   public SaleItemJSON removeSaleItem(List<SaleItem> items, String productCode, int quantity) {
-    Product product = productDAO.getProductByCode(productCode);
-    if (product == null) {
-      return null;
-    }
+
     for (SaleItem sl : items) {
       if (sl.getProduct().getProductCode().equals(productCode)) {
         if (sl.getQuantity() - quantity < 0) {
-          return new SaleItemJSON(null, false, "Quantity cannot be negative");
+          return new SaleItemJSON(sl, false, "Quantity cannot be negative");
         }
         if (sl.getQuantity() - quantity == 0) {
           items.remove(sl);
@@ -143,6 +139,10 @@ public class CashierService {
       return new AddResponseJSON("Error Creating Sale", false, null);
     }
 
+  }
+
+  public List<Product> getProducts() {
+    return productDAO.getAllActiveProducts();
   }
 
   public Product getProduct(String code) {

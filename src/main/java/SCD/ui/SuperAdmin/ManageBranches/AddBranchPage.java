@@ -3,6 +3,7 @@ package SCD.ui.SuperAdmin.ManageBranches;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import SCD.ui.Common.Props;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,27 +12,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
 
-public class AddBranchPage extends JFrame {
+public class AddBranchPage extends JFrame implements Props {
     private JTextField nameField;
     private JTextField cityField;
     private JTextField phoneField;
     private JTextField addressField;
     private JButton addButton;
-    Employee employee;
 
-    public AddBranchPage(Employee employee) {
-        this.employee = employee;
+    public AddBranchPage() {
         setTitle("Add Branch");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        Sidebar sidebar = new Sidebar(employee);
+        Sidebar sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -74,7 +72,8 @@ public class AddBranchPage extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // Getters for the fields and button to connect with the controller
+    // scd- proj initGetters for the fields and button to connect with the
+    // controller
     public String getNameField() {
         return nameField.getText().trim();
     }

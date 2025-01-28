@@ -1,10 +1,14 @@
 package SCD.model.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,6 +24,12 @@ public class Branch {
 
   @Column(name = "city", nullable = false)
   private String city;
+
+  @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  private List<Employee> employees;
+
+  @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  private List<Sale> sales;
 
   @Column(name = "address", nullable = false)
   private String address;
@@ -54,7 +64,9 @@ public class Branch {
     this.updatedAt = LocalDateTime.now();
   }
 
-  public String getBranchCode() {
+
+
+    public String getBranchCode() {
     return branchCode;
   }
 
@@ -140,4 +152,21 @@ public class Branch {
         ", updatedAt=" + updatedAt +
         '}';
   }
+
+  public List<Employee> getEmployees() {
+    return employees;
+  }
+
+  public void setEmployees(List<Employee> employees) {
+    this.employees = employees;
+  }
+
+  public List<Sale> getSales() {
+    return sales;
+  }
+
+  public void setSales(List<Sale> sales) {
+    this.sales = sales;
+  }
+
 }

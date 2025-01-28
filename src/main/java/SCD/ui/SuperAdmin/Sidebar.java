@@ -12,23 +12,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import SCD.controllers.SuperAdminControllers.SidebarController;
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
+import SCD.ui.Common.Props;
 
-public class Sidebar extends JPanel {
+public class Sidebar extends JPanel implements Props {
 
     private final SidebarController controller;
-    Employee employee;
 
-    public Sidebar(Employee employee) {
-        this.employee = employee;
-        controller = new SidebarController(this, employee);
+    public Sidebar() {
+
+        controller = new SidebarController(this);
 
         setPreferredSize(new Dimension(240, 800));
-        setBackground(new Color(255, 102, 102));
+        setBackground(Props.bg);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JLabel logo = new JLabel(new ImageIcon("path/to/logo.png")); // Replace with the actual path to your logo
+        JLabel logo = new JLabel(new ImageIcon("path/to/logo.png"));
         logo.setAlignmentX(Component.CENTER_ALIGNMENT);
         logo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(logo);
@@ -42,7 +41,7 @@ public class Sidebar extends JPanel {
         add(createButton("Update Branch Manager", controller::openUpdateBranchManagerPage));
         add(createButton("Delete Branch Manager", controller::openDeleteBranchManagerPage));
         add(createButton("View Branch Managers", controller::openViewBranchManagersPage));
-        add(createButton("View Reports", controller::openViewReportsPage));
+        add(createButton("View Reports", controller::openReportsPage));
         add(createButton("System Settings", controller::openSystemSettingsPage));
         add(createButton("Logout", controller::performLogout));
     }

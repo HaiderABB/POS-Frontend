@@ -1,9 +1,19 @@
 package SCD.ui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Font;
 
-public class LoginPage extends JFrame {
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import SCD.ui.Common.Props;
+
+public class LoginPage extends JFrame implements Props {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
@@ -16,10 +26,10 @@ public class LoginPage extends JFrame {
 
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(null);
-        loginPanel.setBackground(Color.WHITE);
+        loginPanel.setBackground(Props.fg);
         loginPanel.setBounds(0, 0, 800, 600);
 
-        JLabel logo = new JLabel(new ImageIcon("C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\logo5.png"));
+        JLabel logo = new JLabel(new ImageIcon("logo5.png"));
         logo.setBounds(350, 50, 100, 100);
         loginPanel.add(logo);
 
@@ -31,7 +41,7 @@ public class LoginPage extends JFrame {
         JLabel signInText = new JLabel("Sign in to continue", JLabel.CENTER);
         signInText.setBounds(250, 220, 300, 20);
         signInText.setFont(new Font("Arial", Font.PLAIN, 16));
-        signInText.setForeground(Color.GRAY);
+        signInText.setForeground(Props.txtColor);
         loginPanel.add(signInText);
 
         usernameField = new JTextField();
@@ -46,15 +56,15 @@ public class LoginPage extends JFrame {
 
         loginButton = new JButton("Login");
         loginButton.setBounds(250, 400, 300, 50);
-        loginButton.setBackground(new Color(255, 102, 102));
-        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Props.bg);
+        loginButton.setForeground(Props.fg);
         loginButton.setFont(new Font("Arial", Font.BOLD, 18));
         loginPanel.add(loginButton);
 
         JLabel forgotPassword = new JLabel("Forgot Password?", JLabel.RIGHT);
         forgotPassword.setBounds(400, 460, 150, 20);
         forgotPassword.setFont(new Font("Arial", Font.PLAIN, 14));
-        forgotPassword.setForeground(Color.GRAY);
+        forgotPassword.setForeground(Props.txtColor);
         loginPanel.add(forgotPassword);
 
         add(loginPanel);

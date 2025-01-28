@@ -3,14 +3,20 @@ package SCD.ui.Cashier;
 import SCD.ui.Common.ButtonFactory;
 
 import javax.swing.*;
+import SCD.ui.Common.Props;
 import java.awt.*;
 
-public class cashierSidebar extends JPanel {
+public class cashierSidebar extends JPanel implements Props {
+
+    private JButton dashboardButton;
+    private JButton salesPageButton;
+    private JButton viewSalesButton;
+    private JButton settingsButton;
+    private JButton logoutButton;
 
     public cashierSidebar() {
         setPreferredSize(new Dimension(200, 700));
-        setBackground(new Color(255, 102, 102));
-
+        setBackground(Props.bg);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel logo = new JLabel(new ImageIcon("path/to/logo.png"));
@@ -18,44 +24,40 @@ public class cashierSidebar extends JPanel {
         logo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(logo);
 
-        add(createButton("Dashboard", this::openDashboard));
-        add(createButton("Sales Page", this::openSalesPage));
-        add(createButton("Settings", this::openSettings));
-        add(createButton("Log Out", this::performLogout));
+        dashboardButton = createButton("Dashboard");
+        salesPageButton = createButton("Sales Page");
+
+        settingsButton = createButton("Settings");
+        logoutButton = createButton("Log Out");
+
+        add(dashboardButton);
+        add(salesPageButton);
+        add(settingsButton);
+        add(logoutButton);
     }
 
-    private JButton createButton(String label, Runnable action) {
+    private JButton createButton(String label) {
         JButton button = ButtonFactory.createStyledButton(label);
-        button.addActionListener(e -> action.run());
         return button;
     }
 
-    private void openDashboard() {
-        navigateToPage(new CashierDashboard());
+    public JButton getDashboardButton() {
+        return dashboardButton;
     }
 
-    private void openSalesPage() {
-        navigateToPage(new SalesPage());
+    public JButton getSalesPageButton() {
+        return salesPageButton;
     }
 
-
-
-    private void openSettings() {
-        navigateToPage(new SettingsPage());
+    public JButton getViewSalesButton() {
+        return viewSalesButton;
     }
 
-    private void performLogout() {
-        JOptionPane.showMessageDialog(this, "Logging out...");
-        System.exit(0);
+    public JButton getSettingsButton() {
+        return settingsButton;
     }
 
-    private void navigateToPage(JFrame page) {
-        SwingUtilities.invokeLater(() -> {
-            Window topLevelWindow = SwingUtilities.getWindowAncestor(this);
-            if (topLevelWindow instanceof JFrame) {
-                ((JFrame) topLevelWindow).dispose();
-            }
-            page.setVisible(true);
-        });
+    public JButton getLogoutButton() {
+        return logoutButton;
     }
 }

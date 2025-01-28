@@ -4,9 +4,10 @@ import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 
 import javax.swing.*;
+import SCD.ui.Common.Props;
 import java.awt.*;
 
-public class SettingsPage extends JFrame {
+public class SettingsPage extends JFrame implements Props {
     private BranchSidebar sidebar;
     private NavBar navBar;
     private JButton changePasswordButton;

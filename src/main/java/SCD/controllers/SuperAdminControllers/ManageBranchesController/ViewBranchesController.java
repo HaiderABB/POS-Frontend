@@ -1,35 +1,47 @@
 package SCD.controllers.SuperAdminControllers.ManageBranchesController;
 
-import javax.swing.SwingUtilities;
-
-import SCD.model.models.Employee;
+import SCD.model.models.Branch;
+import SCD.model.service.Json.GetResponseJSON;
+import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranches.ViewBranchesPage;
 
 public class ViewBranchesController {
 
     private ViewBranchesPage viewBranchesPage;
-    Employee employee;
+    private SuperAdminService superAdminService;
 
-    public ViewBranchesController(Employee employee) {
-        this.employee = employee;
-        SwingUtilities.invokeLater(() -> {
-            ViewBranchesPage page = new ViewBranchesPage(employee);
-            page.setVisible(true);
-        });
+    public ViewBranchesController() {
+        superAdminService = new SuperAdminService();
+        GetResponseJSON<Branch> json = superAdminService.getBranches();
 
+        viewBranchesPage = new ViewBranchesPage();
+        clearTable();
+        populateTable(json);
+        viewBranchesPage.setVisible(true);
     }
 
-    public ViewBranchesController(ViewBranchesPage viewBranchesPage, Employee employee) {
-        this.employee = employee;
-        this.viewBranchesPage = viewBranchesPage;
+    private void clearTable() {
+        viewBranchesPage.getTableModel().setRowCount(0); // scd- proj initClear any existing rows in the table
+    }
 
+    private void populateTable(GetResponseJSON<Branch> json) {
+        if (json != null && json.getData() != null) {
+            for (Branch branch : json.getData()) {
+                viewBranchesPage.addRow(new Object[] {
+                        branch.getBranchCode(),
+                        branch.getName(),
+                        branch.getCity(),
+                        branch.getPhone(),
+                        branch.getAddress(),
+                        branch.isActive() ? "Yes" : "No"
+                });
+            }
+        } else {
+            viewBranchesPage.addRow(new Object[] { "-", "-", "-", "-", "-", "-" });
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ViewBranchesPage page = new ViewBranchesPage(null);
-            new ViewBranchesController(page, null);
-            page.setVisible(true);
-        });
+        // scd- proj initnew ViewBranchesController();
     }
 }

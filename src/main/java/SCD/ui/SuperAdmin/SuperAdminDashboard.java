@@ -14,24 +14,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import SCD.model.models.Employee;
 import SCD.ui.Common.NavBar;
+import SCD.ui.Common.Props;
 
-public class SuperAdminDashboard extends JFrame {
+public class SuperAdminDashboard extends JFrame implements Props {
 
     private Sidebar sidebar;
     private NavBar navBar;
     private JPanel mainContent;
-    Employee employee;
 
-    public SuperAdminDashboard(Employee employee) {
-        this.employee = employee;
+    public SuperAdminDashboard() {
         setTitle("Super Admin Dashboard");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar(employee);
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -51,7 +49,7 @@ public class SuperAdminDashboard extends JFrame {
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        mainContent.setBackground(Color.WHITE);
+        mainContent.setBackground(Props.fg);
 
         JLabel welcomeLabel = new JLabel("Welcome to the Super Admin Dashboard!");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));

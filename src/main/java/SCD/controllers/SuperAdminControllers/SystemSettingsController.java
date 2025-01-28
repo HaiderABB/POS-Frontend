@@ -9,34 +9,39 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
 
-import SCD.model.models.Employee;
+import SCD.controllers.cache.Cache;
+import SCD.model.service.Common.CommonServices;
 import SCD.ui.SuperAdmin.SystemSettingsPage;
 
 public class SystemSettingsController {
+
     private SystemSettingsPage view;
-    Employee employee;
-    private final String existingPassword = "existingPassword123";
 
-    public SystemSettingsController(Employee employee) {
-        this.employee = employee;
-        SwingUtilities.invokeLater(() -> {
-            SystemSettingsPage page = new SystemSettingsPage(employee);
+    private String existingPassword;
+    String emp_code;
+    CommonServices commonServices = new CommonServices();
 
-            page.setVisible(true);
-        });
+    public SystemSettingsController() {
+        Cache cache = new Cache();
+        emp_code = cache.getCache();
+        view = new SystemSettingsPage();
+        initController();
+        view.setVisible(true);
+
     }
 
-    public SystemSettingsController(SystemSettingsPage view, Employee employee) {
-        this.employee = employee;
+    public SystemSettingsController(SystemSettingsPage view) {
+        Cache cache = new Cache();
+        emp_code = cache.getCache();
         this.view = view;
         initController();
     }
 
-    private void initController() {
+    void initController() {
         view.getChangePasswordButton().addActionListener(e -> handlePasswordChange());
     }
 
-    private void handlePasswordChange() {
+    void handlePasswordChange() {
         JPanel passwordPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -67,7 +72,16 @@ public class SystemSettingsController {
             String confirmPassword = new String(confirmPasswordField.getPassword());
 
             if (validatePasswordChange(oldPassword, newPassword, confirmPassword)) {
-                view.showSuccessMessage("Password changed successfully!");
+                System.out.println("in validation");
+
+                if (commonServices.update_password(emp_code, newPassword)) {
+                    JOptionPane.showMessageDialog(view, "Password changed successfully!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(view, "Password not changed!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         }
     }
@@ -78,7 +92,7 @@ public class SystemSettingsController {
             return false;
         }
 
-        if (!oldPassword.equals(existingPassword)) {
+        if (!oldPassword.equals(commonServices.getCurrentPassword(emp_code))) {
             view.showErrorMessage("Old password is incorrect.");
             return false;
         }
@@ -98,13 +112,13 @@ public class SystemSettingsController {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            SystemSettingsPage page = new SystemSettingsPage(null);
-            new SystemSettingsController(page, null);
+            SystemSettingsPage page = new SystemSettingsPage();
+            new SystemSettingsController(page);
             page.setVisible(true);
         });
     }
 
     public void showPage() {
-        new SystemSettingsPage(employee).setVisible(true);
+        new SystemSettingsPage().setVisible(true);
     }
 }

@@ -1,12 +1,31 @@
 package SCD.controllers.BranchManagerControllers;
 
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.SwingUtilities;
+
+import SCD.controllers.cache.Cache;
+import SCD.model.service.Common.CommonServices;
 import SCD.ui.BranchManager.SettingsPage;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class SettingsPageController {
-    private final SettingsPage view;
+    private SettingsPage view;
+    String emp_code;
+    CommonServices commonServices = new CommonServices();
+
+    public SettingsPageController() {
+        Cache cache = new Cache();
+        emp_code = cache.getCache();
+        view = new SettingsPage();
+        initController();
+        view.setVisible(true);
+
+    }
 
     public SettingsPageController(SettingsPage view) {
         this.view = view;
@@ -17,34 +36,83 @@ public class SettingsPageController {
         view.getChangePasswordButton().addActionListener(e -> handleChangePassword());
     }
 
-    private void handleChangePassword() {
-        JPanel passwordPanel = new JPanel(new GridLayout(2, 2));
-        JPasswordField oldPasswordField = new JPasswordField(15);
-        JPasswordField newPasswordField = new JPasswordField(15);
+    void handleChangePassword() {
+        JPanel passwordPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        passwordPanel.add(new JLabel("Old Password:"));
+        JLabel oldPasswordLabel = new JLabel("Old Password:");
+        JPasswordField oldPasswordField = new JPasswordField(15);
+        JLabel newPasswordLabel = new JLabel("New Password:");
+        JPasswordField newPasswordField = new JPasswordField(15);
+        JLabel confirmPasswordLabel = new JLabel("Confirm Password:");
+        JPasswordField confirmPasswordField = new JPasswordField(15);
+
+        passwordPanel.add(oldPasswordLabel);
         passwordPanel.add(oldPasswordField);
-        passwordPanel.add(new JLabel("New Password:"));
+        passwordPanel.add(newPasswordLabel);
         passwordPanel.add(newPasswordField);
+        passwordPanel.add(confirmPasswordLabel);
+        passwordPanel.add(confirmPasswordField);
 
         int option = JOptionPane.showConfirmDialog(
-                null,
+                view,
                 passwordPanel,
-                "Enter Old and New Password",
+                "Change Password",
                 JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
+                JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.OK_OPTION) {
-            char[] oldPassword = oldPasswordField.getPassword();
-            char[] newPassword = newPasswordField.getPassword();
+            String oldPassword = new String(oldPasswordField.getPassword());
+            String newPassword = new String(newPasswordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
 
-            if (oldPassword.length > 0 && newPassword.length > 0) {
-                JOptionPane.showMessageDialog(view, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(view, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (validatePasswordChange(oldPassword, newPassword, confirmPassword)) {
+                System.out.println("in validation");
+
+                if (commonServices.update_password(emp_code, newPassword)) {
+                    JOptionPane.showMessageDialog(view, "Password changed successfully!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(view, "Password not changed!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         }
+    }
+
+    public boolean validatePasswordChange(String oldPassword, String newPassword, String confirmPassword) {
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+
+            JOptionPane.showMessageDialog(view, "All fields are required.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            return false;
+        }
+
+        if (!oldPassword.equals(commonServices.getCurrentPassword(emp_code))) {
+
+            JOptionPane.showMessageDialog(view, "Old password is incorrect.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            return false;
+        }
+
+        if (newPassword.length() < 8) {
+
+            JOptionPane.showMessageDialog(view, "New password must be at least 8 characters long.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return false;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+
+            JOptionPane.showMessageDialog(view, "New password and confirm password do not match.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return false;
+        }
+
+        return true;
     }
 
     public static void main(String[] args) {

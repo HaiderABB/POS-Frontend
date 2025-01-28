@@ -1,13 +1,19 @@
 package SCD.ui.BranchManager.ManageCashier;
 
-import SCD.ui.Common.NavBar;
-import SCD.ui.BranchManager.BranchSidebar;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import SCD.ui.Common.Props;
 
-public class ViewCashiersPage extends JFrame {
+import SCD.ui.BranchManager.BranchSidebar;
+import SCD.ui.Common.NavBar;
+
+public class ViewCashiersPage extends JFrame implements Props {
 
     private BranchSidebar sidebar;
     private NavBar navBar;
@@ -32,7 +38,7 @@ public class ViewCashiersPage extends JFrame {
         contentPanel.add(navBar, BorderLayout.NORTH);
 
         JPanel tablePanel = new JPanel(new BorderLayout());
-        String[] columnNames = {"Cashier ID", "Name", "Email", "Branch Code"};
+        String[] columnNames = { "Cashier ID", "Name", "Email", "Branch Code" };
         tableModel = new DefaultTableModel(columnNames, 0);
         cashierTable = new JTable(tableModel);
 
@@ -43,12 +49,11 @@ public class ViewCashiersPage extends JFrame {
 
         setLocationRelativeTo(null);
 
-        loadSampleData();
     }
 
     public void loadSampleData() {
-        tableModel.addRow(new Object[]{"CM-1234", "John Doe", "john.doe@example.com", "BR-1234"});
-        tableModel.addRow(new Object[]{"CM-5678", "Jane Smith", "jane.smith@example.com", "BR-5678"});
+        tableModel.addRow(new Object[] { "CM-1234", "John Doe", "john.doe@example.com", "BR-1234" });
+        tableModel.addRow(new Object[] { "CM-5678", "Jane Smith", "jane.smith@example.com", "BR-5678" });
     }
 
     public DefaultTableModel getTableModel() {
@@ -59,5 +64,11 @@ public class ViewCashiersPage extends JFrame {
         return cashierTable;
     }
 
+    public void clearTable() {
+        tableModel.setRowCount(0);
+    }
 
+    public void addRow(Object[] rowData) {
+        tableModel.addRow(rowData);
+    }
 }

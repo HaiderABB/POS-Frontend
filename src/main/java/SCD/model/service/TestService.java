@@ -1,14 +1,10 @@
 package SCD.model.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import SCD.model.crud.local.CodesDAO;
+import SCD.model.db.local.CodesDAO;
 import SCD.model.models.Branch;
 import SCD.model.models.Codes;
 import SCD.model.models.Employee;
 import SCD.model.models.Product;
-import SCD.model.models.SaleItem;
 import SCD.model.models.Vendor;
 import SCD.model.service.BranchManagerService.BranchManagerService;
 import SCD.model.service.CashierService.CashierService;
@@ -35,124 +31,175 @@ public class TestService {
                 Codes codes3 = new Codes("0000", "VENDORS");
                 Codes codes4 = new Codes("0000", "PRODUCTS");
 
-                // codesDAO.addCode(codes1);
-                // codesDAO.addCode(codes2);
-                // codesDAO.addCode(codes3);
-                // codesDAO.addCode(codes4);
+                // scd- proj initcodesDAO.addCode(codes1);
+                // scd- proj initcodesDAO.addCode(codes2);
+                // scd- proj initcodesDAO.addCode(codes3);
+                // scd- proj initcodesDAO.addCode(codes4);
 
-                Branch branch = new Branch("Main Branch", "Lahore", "CHAKRI", "03219306126");
+                Branch branch = new Branch("Main Branch", "Lahore", "Gulberg", "03219306126");
 
-                // superAdminService.createBranch(branch);
-
-                Employee employee = new Employee("TEST1",
-                                "SUPER_ADMIN", branch, "03219306127", 20000,
+                // scd- proj initsuperAdminService.createBranch(branch);
+                branch.setBranchCode("BR-0001");
+                Employee employee = new Employee("Haider Abbas Moazzam",
+                                "SUPER_ADMIN", branch, "03219306127",
                                 "haider.a.moazzam@gmail.com");
 
-                // commonServices.AddEmployee(employee);
+                // scd- proj initAddResponseJSON json = commonServices.AddEmployee(employee);
+                // scd- proj initSystem.out.println(json.isSuccess());
 
-                // Creating another Branch object
-                Branch branch2 = new Branch("THIRD Branch", "Karachi", "Clifton Block 2", "03111234567");
+                Vendor ven = new Vendor("Mahnoor Beauty Parlour", "03219632515", "Askari 10");
 
-                // Creating another Employee object associated with branch2
-                Employee employee2 = new Employee("Ayesha Khan",
-                                "CASHIER",
-                                branch2,
-                                "03121234567",
-                                50000,
-                                "ayesha.khan@gmail.com");
+                dataEntryOperatorService.addVendor(ven);
 
-                // superAdminService.createBranch(branch2);
-                // commonServices.AddEmployee(employee2);
-                branch.setBranchCode("BR-0001");
-                // AddResponseJSON json = superAdminService.updateBranch(branch);
-                // System.out.println(json.isSuccess());
-                // System.out.println(json.getMessage());
+                Product prod = new Product(ven, "Hands", "Cooking", 20.0, 25.0, 26.0, 50.0, 40);
 
-                Vendor vendor = new Vendor("ABC Electronics", "03121234567", "123 Main Street");
-                Vendor vendor2 = new Vendor("XYZ Electronics", "03121234789", "456 Elm Street");
+                dataEntryOperatorService.addProduct(prod);
 
-                // dataEntryOperatorService.addVendor(vendor);
-                // dataEntryOperatorService.addVendor(vendor2);
+                // scd- proj init// scd- proj initCreating another Branch object
+                // scd- proj initBranch branch2 = new Branch("THIRD Branch", "Karachi", "Clifton
+                // Block 2",
+                // scd- proj init"03111234567");
 
-                employee.setEmployeeCode("SM-0001");
-                // commonServices.UpdateEmployee(employee);
+                // scd- proj init// scd- proj initCreating another Employee object associated
+                // with branch2
+                // scd- proj init// scd- proj initEmployee employee2 = new Employee("Ayesha
+                // Khan",
+                // scd- proj init// scd- proj init"CASHIER",
+                // scd- proj init// scd- proj initbranch2,
+                // scd- proj init// scd- proj init"03121234567",
+                // scd- proj init// scd- proj init50000,
+                // scd- proj init// scd- proj init"ayesha.khan@gmail.com");
 
-                branch2.setBranchCode("BR-0002");
-                // superAdminService.updateBranch(branch2);
+                // scd- proj init// scd- proj initsuperAdminService.createBranch(branch2);
+                // scd- proj init// scd- proj initcommonServices.AddEmployee(employee2);
+                // scd- proj initbranch.setBranchCode("BR-0001");
+                // scd- proj init// scd- proj initAddResponseJSON json =
+                // superAdminService.updateBranch(branch);
+                // scd- proj init// scd- proj initSystem.out.println(json.isSuccess());
+                // scd- proj init// scd- proj initSystem.out.println(json.getMessage());
 
-                vendor.setVendorCode("VM-0001");
-                vendor2.setVendorCode("VM-0002");
+                // scd- proj initVendor vendor = new Vendor("ABC Electronics", "03121234567",
+                // "123 Main
+                // scd- proj initStreet");
+                // scd- proj initVendor vendor2 = new Vendor("XYZ Electronics", "03121234789",
+                // "456 Elm
+                // scd- proj initStreet");
 
-                Product product1 = new Product(vendor, "Product One", "Category A", 100.0, 90.0, 10.0, 90.0,
-                                50);
-                Product product2 = new Product(vendor, "Product Two", "Category A", 120.0, 110.0, 12.0, 108.0,
-                                40);
-                Product product3 = new Product(vendor, "Product Three", "Category B", 200.0, 180.0, 20.0,
-                                180.0, 30);
-                Product product4 = new Product(vendor, "Product Four", "Category B", 80.0, 70.0, 8.0, 72.0,
-                                25);
-                Product product5 = new Product(vendor, "Product Five", "Category C", 150.0, 140.0, 15.0, 135.0,
-                                60);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addVendor(vendor);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addVendor(vendor2);
 
-                Product product6 = new Product(vendor2, "Product Six", "Category A", 100.0, 95.0, 9.5, 90.0,
-                                80);
-                Product product7 = new Product(vendor2, "Product Seven", "Category A", 110.0, 100.0, 11.0, 99.0,
-                                70);
-                Product product8 = new Product(vendor2, "Product Eight", "Category B", 90.0, 85.0, 8.5, 88.0,
-                                45);
-                Product product9 = new Product(vendor2, "Product Nine", "Category B", 140.0, 130.0, 13.0, 126.0,
-                                35);
-                Product product10 = new Product(vendor2, "Product Ten", "Category C", 160.0, 150.0, 16.0, 144.0,
-                                55);
+                // scd- proj initemployee.setEmployeeCode("SM-0001");
+                // scd- proj init// scd- proj initcommonServices.UpdateEmployee(employee);
 
-                // dataEntryOperatorService.addProduct(product10);
-                // dataEntryOperatorService.addProduct(product9);
-                // dataEntryOperatorService.addProduct(product8);
-                // dataEntryOperatorService.addProduct(product7);
-                // dataEntryOperatorService.addProduct(product6);
-                // dataEntryOperatorService.addProduct(product5);
-                // dataEntryOperatorService.addProduct(product4);
-                // dataEntryOperatorService.addProduct(product3);
-                // dataEntryOperatorService.addProduct(product2);
-                // dataEntryOperatorService.addProduct(product1);
-                product1.setProductCode("PM-0001");
-                product2.setProductCode("PM-0002");
-                product3.setProductCode("PM-0003");
-                product4.setProductCode("PM-0004");
-                product5.setProductCode("PM-0005");
-                product6.setProductCode("PM-0006");
-                product7.setProductCode("PM-0007");
-                product8.setProductCode("PM-0008");
-                product9.setProductCode("PM-0009");
-                product10.setProductCode("PM-0010");
+                // scd- proj initbranch2.setBranchCode("BR-0002");
+                // scd- proj init// scd- proj initsuperAdminService.updateBranch(branch2);
 
-                // Create SaleItem objects
-                SaleItem saleItem1 = new SaleItem(product1, 2, product1.getSalePrice(), product1.getOriginalPrice());
-                SaleItem saleItem2 = new SaleItem(product2, 3, product2.getSalePrice(), product2.getOriginalPrice());
-                SaleItem saleItem3 = new SaleItem(product3, 1, product3.getSalePrice(), product3.getOriginalPrice());
-                SaleItem saleItem4 = new SaleItem(product4, 5, product4.getSalePrice(), product4.getOriginalPrice());
-                SaleItem saleItem5 = new SaleItem(product5, 4, product5.getSalePrice(), product5.getOriginalPrice());
+                // scd- proj initvendor.setVendorCode("VM-0001");
+                // scd- proj initvendor2.setVendorCode("VM-0002");
 
-                // Add to a list
-                List<SaleItem> saleItems = new ArrayList<>();
-                saleItems.add(saleItem1);
-                saleItems.add(saleItem2);
-                saleItems.add(saleItem3);
-                saleItems.add(saleItem4);
-                saleItems.add(saleItem5);
+                // scd- proj initProduct product1 = new Product(vendor, "Product One", "Category
+                // A", 100.0,
+                // scd- proj init90.0, 10.0, 90.0,
+                // scd- proj init50);
+                // scd- proj initProduct product2 = new Product(vendor, "Product Two", "Category
+                // A", 120.0,
+                // scd- proj init110.0, 12.0, 108.0,
+                // scd- proj init40);
+                // scd- proj initProduct product3 = new Product(vendor, "Product Three",
+                // "Category B", 200.0,
+                // scd- proj init180.0, 20.0,
+                // scd- proj init180.0, 30);
+                // scd- proj initProduct product4 = new Product(vendor, "Product Four",
+                // "Category B", 80.0,
+                // scd- proj init70.0, 8.0, 72.0,
+                // scd- proj init25);
+                // scd- proj initProduct product5 = new Product(vendor, "Product Five",
+                // "Category C", 150.0,
+                // scd- proj init140.0, 15.0, 135.0,
+                // scd- proj init60);
 
-                Employee cashier = new Employee("Meesum",
-                                "CASHIER", branch2, "03334710943", 20000,
-                                "cashier@gmail.com");
+                // scd- proj initProduct product6 = new Product(vendor2, "Product Six",
+                // "Category A", 100.0,
+                // scd- proj init95.0, 9.5, 90.0,
+                // scd- proj init80);
+                // scd- proj initProduct product7 = new Product(vendor2, "Product Seven",
+                // "Category A", 110.0,
+                // scd- proj init100.0, 11.0, 99.0,
+                // scd- proj init70);
+                // scd- proj initProduct product8 = new Product(vendor2, "Product Eight",
+                // "Category B", 90.0,
+                // scd- proj init85.0, 8.5, 88.0,
+                // scd- proj init45);
+                // scd- proj initProduct product9 = new Product(vendor2, "Product Nine",
+                // "Category B", 140.0,
+                // scd- proj init130.0, 13.0, 126.0,
+                // scd- proj init35);
+                // scd- proj initProduct product10 = new Product(vendor2, "Product Ten",
+                // "Category C", 160.0,
+                // scd- proj init150.0, 16.0, 144.0,
+                // scd- proj init55);
 
-                // commonServices.AddEmployee(cashier);
+                // scd- proj init// scd- proj
+                // initdataEntryOperatorService.addProduct(product10);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product9);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product8);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product7);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product6);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product5);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product4);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product3);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product2);
+                // scd- proj init// scd- proj initdataEntryOperatorService.addProduct(product1);
+                // scd- proj initproduct1.setProductCode("PM-0001");
+                // scd- proj initproduct2.setProductCode("PM-0002");
+                // scd- proj initproduct3.setProductCode("PM-0003");
+                // scd- proj initproduct4.setProductCode("PM-0004");
+                // scd- proj initproduct5.setProductCode("PM-0005");
+                // scd- proj initproduct6.setProductCode("PM-0006");
+                // scd- proj initproduct7.setProductCode("PM-0007");
+                // scd- proj initproduct8.setProductCode("PM-0008");
+                // scd- proj initproduct9.setProductCode("PM-0009");
+                // scd- proj initproduct10.setProductCode("PM-0010");
 
-                // double totalAmount = cashierService.GenerateBill(saleItems);
-                // System.out.println(totalAmount);
-                // cashier.setEmployeeCode("CM-0003");
-                // cashierService.proceedPayment(saleItems, cashier, branch, totalAmount);
+                // scd- proj init// scd- proj initCreate SaleItem objects
+                // scd- proj initSaleItem saleItem1 = new SaleItem(product1, 2,
+                // product1.getSalePrice(),
+                // scd- proj initproduct1.getOriginalPrice());
+                // scd- proj initSaleItem saleItem2 = new SaleItem(product2, 3,
+                // product2.getSalePrice(),
+                // scd- proj initproduct2.getOriginalPrice());
+                // scd- proj initSaleItem saleItem3 = new SaleItem(product3, 1,
+                // product3.getSalePrice(),
+                // scd- proj initproduct3.getOriginalPrice());
+                // scd- proj initSaleItem saleItem4 = new SaleItem(product4, 5,
+                // product4.getSalePrice(),
+                // scd- proj initproduct4.getOriginalPrice());
+                // scd- proj initSaleItem saleItem5 = new SaleItem(product5, 4,
+                // product5.getSalePrice(),
+                // scd- proj initproduct5.getOriginalPrice());
 
-                dataSync.syncData();
+                // scd- proj init// scd- proj initAdd to a list
+                // scd- proj initList<SaleItem> saleItems = new ArrayList<>();
+                // scd- proj initsaleItems.add(saleItem1);
+                // scd- proj initsaleItems.add(saleItem2);
+                // scd- proj initsaleItems.add(saleItem3);
+                // scd- proj initsaleItems.add(saleItem4);
+                // scd- proj initsaleItems.add(saleItem5);
+
+                // scd- proj init// scd- proj initEmployee cashier = new Employee("Meesum",
+                // scd- proj init// scd- proj init"CASHIER", branch2, "03334710943", 20000,
+                // scd- proj init// scd- proj init"cashier@gmail.com");
+
+                // scd- proj init// scd- proj initcommonServices.AddEmployee(cashier);
+
+                // scd- proj init// scd- proj initdouble totalAmount =
+                // cashierService.GenerateBill(saleItems);
+                // scd- proj init// scd- proj initSystem.out.println(totalAmount);
+                // scd- proj init// scd- proj initcashier.setEmployeeCode("CM-0003");
+                // scd- proj init// scd- proj initcashierService.proceedPayment(saleItems,
+                // cashier, branch, totalAmount);
+
+                // scd- proj init// scd- proj initdataSync.syncData();
 
         }
 

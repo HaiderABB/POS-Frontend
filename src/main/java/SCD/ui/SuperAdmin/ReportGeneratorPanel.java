@@ -1,72 +1,170 @@
 package SCD.ui.SuperAdmin;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import SCD.ui.Common.Props;
 
-public class ReportGeneratorPanel extends JFrame {
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
-    public ReportGeneratorPanel(String branchCode, String duration, String startDate, String endDate) {
+import SCD.model.models.Product;
+import SCD.model.models.Sale;
+import SCD.model.service.Json.GetReportJSON;
+
+public class ReportGeneratorPanel extends JFrame implements Props {
+
+    public JLabel totalSalesLabel;
+    public JLabel totalProfitLabel;
+    public JLabel stockLabel;
+    public JPanel summaryPanel;
+    public JScrollPane scrollPane;
+
+    public DefaultTableModel tableModel;
+    public JTable productsTable;
+    String[] columnNames = { "Product Code ", "Product Name", "Vendor Code", "Vendor Name", "Remaining Stock" };
+
+    public ReportGeneratorPanel(String branchCode, String duration) {
         setTitle("Report Generator");
-        setSize(600, 400);
+        setSize(800, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JTextArea reportDetails = new JTextArea();
-        reportDetails.setEditable(false);
+        JPanel headerPanel = new JPanel(new GridLayout(3, 1));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Display branch code, duration, and date range
-        reportDetails.append("Branch Code: " + branchCode + "\n");
-        reportDetails.append("Duration: " + duration + "\n");
-        reportDetails.append("Start Date: " + startDate + "\n");
-        reportDetails.append("End Date: " + endDate + "\n");
+        JLabel titleLabel = new JLabel("Branch Report", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titleLabel);
 
-        // Generate and display simulated report data
-        String simulatedData = generateSimulatedReportData(branchCode, duration, startDate, endDate);
-        reportDetails.append("\n\nSimulated Report Data:\n");
-        reportDetails.append(simulatedData);
+        JLabel branchCodeLabel = new JLabel("Branch Code: " + branchCode, SwingConstants.CENTER);
+        branchCodeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(branchCodeLabel);
 
-        reportDetails.setFont(new Font("Arial", Font.PLAIN, 16));
-        reportDetails.setMargin(new Insets(10, 10, 10, 10));
-        reportDetails.setBackground(new Color(230, 230, 250));
+        JLabel durationLabel = new JLabel("Duration: " + duration, SwingConstants.CENTER);
+        durationLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(durationLabel);
 
-        add(new JScrollPane(reportDetails), BorderLayout.CENTER);
+        add(headerPanel, BorderLayout.NORTH);
+
+        summaryPanel = new JPanel(new GridLayout(3, 1));
+        summaryPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        tableModel = new DefaultTableModel(columnNames, 0);
+        productsTable = new JTable(tableModel);
+        scrollPane = new JScrollPane(productsTable);
+
+    }
+
+    public ReportGeneratorPanel(String branchCode, String duration, String startDate, String endDate) {
+        setTitle("Report Generator");
+        setSize(800, 500);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        JPanel headerPanel = new JPanel(new GridLayout(4, 1));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel titleLabel = new JLabel("Branch Report", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titleLabel);
+
+        JLabel branchCodeLabel = new JLabel("Branch Code: " + branchCode, SwingConstants.CENTER);
+        branchCodeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(branchCodeLabel);
+
+        JLabel durationLabel = new JLabel("Duration: " + duration, SwingConstants.CENTER);
+        durationLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(durationLabel);
+
+        JLabel dateRangeLabel = new JLabel("Date Range: " + startDate + " to " + endDate, SwingConstants.CENTER);
+        dateRangeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        headerPanel.add(dateRangeLabel);
+
+        summaryPanel = new JPanel(new GridLayout(3, 1));
+        summaryPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        add(headerPanel, BorderLayout.NORTH);
+        tableModel = new DefaultTableModel(columnNames, 0);
+        productsTable = new JTable(tableModel);
+
+        scrollPane = new JScrollPane(productsTable);
+
+    }
+
+    public void setReportData(GetReportJSON json) {
+
+        List<Sale> sales = json.getSalesData();
+        List<Product> products = json.getProducts();
+
+        if (sales == null) {
+            totalSalesLabel = new JLabel("Total Sales: PKR 0", SwingConstants.LEFT);
+            totalSalesLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            summaryPanel.add(totalSalesLabel);
+
+            totalProfitLabel = new JLabel("Total Profit: PKR 0", SwingConstants.LEFT);
+            totalProfitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            summaryPanel.add(totalProfitLabel);
+        } else {
+            int totalSales = 0;
+            double totalProfit = 0.0;
+            for (Sale sale : sales) {
+                totalSales += sale.getTotalAmount();
+                totalProfit += sale.getProfit();
+            }
+            totalSalesLabel = new JLabel("Total Sales: PKR " + totalSales, SwingConstants.LEFT);
+            totalSalesLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            summaryPanel.add(totalSalesLabel);
+
+            totalProfitLabel = new JLabel("Total Profit: PKR " + totalProfit, SwingConstants.LEFT);
+            totalProfitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            summaryPanel.add(totalProfitLabel);
+        }
+
+        if (products == null) {
+            clearTable();
+            addRow(new Object[] { "-", "-", "-", "-", "-" });
+
+        } else {
+            clearTable();
+            for (Product product : products) {
+                addRow(new Object[] {
+                        product.getProductCode(),
+                        product.getName(),
+                        product.getVendor().getVendorCode(),
+                        product.getVendor().getName(),
+                        product.getStockQuantity(),
+
+                });
+            }
+        }
+
+        add(summaryPanel, BorderLayout.WEST);
+        add(scrollPane, BorderLayout.CENTER);
+
+        JLabel footerLabel = new JLabel("Generated on: " + LocalDate.now(), SwingConstants.CENTER);
+        footerLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+        footerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        add(footerLabel, BorderLayout.SOUTH);
 
         setLocationRelativeTo(null);
     }
 
-    private String generateSimulatedReportData(String branchCode, String duration, String startDate, String endDate) {
-        Map<String, Integer> data = generateDummyData(branchCode);
-        StringBuilder report = new StringBuilder();
-
-        report.append("Total Sales: $").append(data.get("sales")).append("\n");
-        report.append("Total Profit: $").append(data.get("profit")).append("\n");
-        report.append("Remaining Stock: ").append(data.get("stock")).append(" Units\n");
-
-        report.append("\nDuration Details:\n");
-        report.append("Start Date: ").append(startDate).append("\n");
-        report.append("End Date: ").append(endDate).append("\n");
-
-        return report.toString();
+    public void clearTable() {
+        tableModel.setRowCount(0);
     }
 
-    private Map<String, Integer> generateDummyData(String branchCode) {
-        int baseSales = 10000 + branchCode.hashCode() % 5000;
-        int baseProfit = 2500 + branchCode.hashCode() % 1000;
-        int remainingStock = 150 + branchCode.hashCode() % 50;
-
-        Map<String, Integer> data = new HashMap<>();
-        data.put("sales", baseSales);
-        data.put("profit", baseProfit);
-        data.put("stock", remainingStock);
-
-        return data;
+    public void addRow(Object[] rowData) {
+        tableModel.addRow(rowData);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ReportGeneratorPanel(
-                "BR-1234", "Weekly", "2024-12-01", "2024-12-07").setVisible(true));
-    }
 }

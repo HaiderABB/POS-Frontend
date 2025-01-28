@@ -20,7 +20,7 @@ public class Product {
 
   @ManyToOne
   @JoinColumn(name = "vendor_code", nullable = false, foreignKey = @ForeignKey(name = "FK_product_vendor"))
-  private Vendor vendorCode;
+  private Vendor vendor; // scd- proj initUpdate from vendorCode to vendor
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -61,7 +61,7 @@ public class Product {
       double originalPrice, double salePrice, double priceByUnit,
       double priceByCarton, int stockQuantity) {
     this.productCode = productCode;
-    this.vendorCode = vendorCode;
+    this.vendor = vendorCode;
     this.name = name;
     this.category = category;
     this.originalPrice = originalPrice;
@@ -77,7 +77,7 @@ public class Product {
   public Product(Vendor vendorCode, String name, String category,
       double originalPrice, double salePrice, double priceByUnit,
       double priceByCarton, int stockQuantity) {
-    this.vendorCode = vendorCode;
+    this.vendor = vendorCode;
     this.name = name;
     this.category = category;
     this.originalPrice = originalPrice;
@@ -99,11 +99,11 @@ public class Product {
   }
 
   public Vendor getVendor() {
-    return vendorCode;
+    return vendor;
   }
 
   public void setVendor(Vendor vendor) {
-    this.vendorCode = vendor;
+    this.vendor = vendor;
   }
 
   public String getName() {
@@ -190,7 +190,7 @@ public class Product {
   public String toString() {
     return "Product{" +
         "productCode='" + productCode + '\'' +
-        ", vendorCode=" + vendorCode +
+        ", vendorCode=" + vendor.toString() +
         ", name='" + name + '\'' +
         ", category='" + category + '\'' +
         ", originalPrice=" + originalPrice +
@@ -202,5 +202,10 @@ public class Product {
         ", createdAt=" + createdAt +
         ", updatedAt=" + updatedAt +
         '}';
+  }
+
+  public int getQuantity() {
+    // scd- proj initTODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getQuantity'");
   }
 }

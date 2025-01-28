@@ -3,11 +3,12 @@ package SCD.ui.BranchManager.ManageCashier;
 import SCD.ui.BranchManager.BranchSidebar;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
+import SCD.ui.Common.Props;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DeleteCashierPage extends JFrame {
+public class DeleteCashierPage extends JFrame implements Props {
     private BranchSidebar sidebar;
     private NavBar navBar;
     private JTextField cashierCodeField;
@@ -60,4 +61,6 @@ public class DeleteCashierPage extends JFrame {
     public JButton getDeleteButton() {
         return deleteButton;
     }
+
+
 }

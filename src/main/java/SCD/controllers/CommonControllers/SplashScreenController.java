@@ -12,11 +12,15 @@ public class SplashScreenController {
 
   public void CloseSplashScreen() {
 
-    // Close the splash screen
-    // splashScreen.dispose();
+    // scd- proj initClose the splash screen
+    // scd- proj initsplashScreen.dispose();
 
-    // new MainMenuController();
+    // scd- proj initnew MainMenuController();
 
+  }
+
+  public static void main(String[] args) {
+    new SplashScreenController();
   }
 
 }

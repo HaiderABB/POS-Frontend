@@ -1,25 +1,47 @@
 package SCD.ui.Cashier;
 
-import SCD.model.models.SaleItem;
-import SCD.model.models.Product;
-import SCD.model.models.Vendor;
-import SCD.ui.Common.ButtonFactory;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.util.List;
-import java.util.regex.Pattern;
 
-public class SalesPage extends JFrame {
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
+import SCD.controllers.CashierControllers.cashierSidebarController;
+import SCD.model.models.Product;
+import SCD.model.models.SaleItem;
+import SCD.ui.Common.ButtonFactory;
+import SCD.ui.Common.Props;
+
+public class SalesPage extends JFrame implements Props {
+
+    private JTextField productCodeField;
+    private JTextField quantityField;
+    private JTextField searchField;
+    private JButton addButton;
+    private JButton removeButton;
+    private JButton searchButton;
+    private JButton proceedButton;
+    private JButton cancelButton;
     private JTable salesTable;
-    private DefaultTableModel tableModel;
+    private JTable productTable;
     private JLabel totalBillLabel;
-
-    private List<SaleItem> saleItems = new ArrayList<>();
-    private double totalBill = 0.0;
+    private DefaultTableModel salesTableModel;
+    private DefaultTableModel productTableModel;
+    public cashierSidebarController sidebarController;
 
     public SalesPage() {
         setTitle("Sales Page");
@@ -27,240 +49,197 @@ public class SalesPage extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Reuse DEOSidebar for consistency
-        JPanel sidebar = new cashierSidebar();
+        sidebarController = new cashierSidebarController(this);
+        JPanel sidebar = sidebarController.getView();
         add(sidebar, BorderLayout.WEST);
 
-        // Header with title
-        JPanel headerPanel = new JPanel();
-        headerPanel.setBackground(new Color(255, 255, 255)); // Consistent header background
-        JLabel titleLabel = new JLabel("Sales Page");
-        titleLabel.setForeground(Color.black);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        headerPanel.add(titleLabel);
-        add(headerPanel, BorderLayout.NORTH);
-
-        // Main content area
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BorderLayout());
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20));
         add(contentPanel, BorderLayout.CENTER);
 
         JPanel inputPanel = createInputPanel();
         contentPanel.add(inputPanel, BorderLayout.NORTH);
 
-        JScrollPane tableScrollPane = createSalesTable();
-        contentPanel.add(tableScrollPane, BorderLayout.CENTER);
+        JSplitPane tablesPanel = createTablesPanel();
+        contentPanel.add(tablesPanel, BorderLayout.CENTER);
 
-        JPanel totalBillPanel = createTotalBillPanel();
-        contentPanel.add(totalBillPanel, BorderLayout.SOUTH);
+        JPanel footerPanel = new JPanel(new BorderLayout());
+        footerPanel.add(createTotalBillPanel(), BorderLayout.NORTH);
+        footerPanel.add(createFooterPanel(), BorderLayout.SOUTH);
 
-        // Footer with action buttons
-        JPanel footerPanel = new JPanel();
-        footerPanel.setBackground(new Color(255, 255, 255)); // Consistent footer background
-        footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        contentPanel.add(footerPanel, BorderLayout.SOUTH);
 
-        JButton proceedButton = ButtonFactory.createStyledButton("Proceed to Payment");
-        proceedButton.addActionListener(e -> openPaymentsPage());
-
-        JButton cancelButton = ButtonFactory.createStyledButton("Cancel");
-        cancelButton.addActionListener(e -> dispose());
-
-        footerPanel.add(proceedButton);
-        footerPanel.add(cancelButton);
-
-        add(footerPanel, BorderLayout.SOUTH);
-
-        setLocationRelativeTo(null); // Center the window on the screen
+        setLocationRelativeTo(null);
     }
 
     private JPanel createInputPanel() {
-        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        inputPanel.setBorder(BorderFactory.createTitledBorder("Add/Remove Product"));
-        inputPanel.setBackground(Color.WHITE);
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Props.tableBg),
+                "Add/Remove Product"));
 
+        JPanel firstRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
         JLabel productCodeLabel = new JLabel("Product Code (PM-XXXX):");
-        JTextField productCodeField = new JTextField(10);
+        productCodeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        productCodeField = new JTextField(15);
 
         JLabel quantityLabel = new JLabel("Quantity:");
-        JTextField quantityField = new JTextField(5);
+        quantityLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        quantityField = new JTextField(8);
 
-        JButton addButton = ButtonFactory.createStyledButton("Add");
+        addButton = ButtonFactory.createStyledButton("Add");
+        removeButton = ButtonFactory.createStyledButton("Remove");
 
-        addButton.addActionListener(e -> {
-            String productCode = productCodeField.getText().trim();
-            String quantityText = quantityField.getText().trim();
+        firstRow.add(productCodeLabel);
+        firstRow.add(productCodeField);
+        firstRow.add(quantityLabel);
+        firstRow.add(quantityField);
+        firstRow.add(addButton);
+        firstRow.add(removeButton);
 
-            if (validateProductCode(productCode) && validateQuantity(quantityText)) {
-                int quantity = Integer.parseInt(quantityText);
-                addSaleItem(productCode, quantity);
-                productCodeField.setText("");
-                quantityField.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid input! Ensure correct product code and quantity.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        JButton removeButton = ButtonFactory.createStyledButton("Remove");
+        JPanel secondRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
+        JLabel searchLabel = new JLabel("Search Product:");
+        searchLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        searchField = new JTextField(20);
+        searchButton = ButtonFactory.createStyledButton("Search");
 
+        secondRow.add(searchLabel);
+        secondRow.add(searchField);
+        secondRow.add(searchButton);
 
-        removeButton.addActionListener(e -> {
-            String productCode = productCodeField.getText().trim();
-            String quantityText = quantityField.getText().trim();
-
-            if (validateProductCode(productCode) && validateQuantity(quantityText)) {
-                int quantity = Integer.parseInt(quantityText);
-                removeSaleItem(productCode, quantity);
-                productCodeField.setText("");
-                quantityField.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid input! Ensure correct product code and quantity.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        inputPanel.add(productCodeLabel);
-        inputPanel.add(productCodeField);
-        inputPanel.add(quantityLabel);
-        inputPanel.add(quantityField);
-        inputPanel.add(addButton);
-        inputPanel.add(removeButton);
+        inputPanel.add(firstRow);
+        inputPanel.add(secondRow);
 
         return inputPanel;
     }
 
-    private JScrollPane createSalesTable() {
-        tableModel = new DefaultTableModel(new Object[]{"Product Code", "Quantity", "Sale Price", "Total"}, 0);
-        salesTable = new JTable(tableModel);
-        return new JScrollPane(salesTable);
+    private JSplitPane createTablesPanel() {
+        salesTableModel = new DefaultTableModel(new Object[] { "Product Code", "Quantity", "Sale Price", "Total" }, 0);
+        salesTable = createStyledTable(salesTableModel);
+
+        JScrollPane salesScrollPane = new JScrollPane(salesTable);
+
+        productTableModel = new DefaultTableModel(new Object[] { "Product Code", "Name", "Category", "Price", "Stock" },
+                0);
+        productTable = createStyledTable(productTableModel);
+
+        JScrollPane productScrollPane = new JScrollPane(productTable);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, salesScrollPane, productScrollPane);
+        splitPane.setDividerLocation(250);
+        splitPane.setResizeWeight(0.5);
+
+        return splitPane;
+    }
+
+    private JTable createStyledTable(DefaultTableModel model) {
+        JTable table = new JTable(model);
+        table.setRowHeight(30);
+        table.getTableHeader().setBackground(Props.tableBg);
+        table.getTableHeader().setForeground(Color.BLACK);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        return table;
     }
 
     private JPanel createTotalBillPanel() {
         JPanel totalBillPanel = new JPanel(new BorderLayout());
-        totalBillPanel.setBorder(BorderFactory.createTitledBorder("Total Bill"));
-        totalBillPanel.setBackground(Color.WHITE);
+        totalBillPanel.setBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Props.tableBg), "Total Bill"));
 
-        totalBillLabel = new JLabel("Total: $" + String.format("%.2f", totalBill));
+        totalBillLabel = new JLabel("Total: $0.00");
         totalBillLabel.setFont(new Font("Arial", Font.BOLD, 16));
         totalBillLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        totalBillLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         totalBillPanel.add(totalBillLabel, BorderLayout.CENTER);
         return totalBillPanel;
     }
 
-    private boolean validateProductCode(String productCode) {
-        return Pattern.matches("PM-\\d{4}", productCode);
+    private JPanel createFooterPanel() {
+        JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        proceedButton = ButtonFactory.createStyledButton("Proceed to Payment");
+        cancelButton = ButtonFactory.createStyledButton("Cancel");
+
+        footerPanel.add(proceedButton);
+        footerPanel.add(cancelButton);
+
+        return footerPanel;
     }
 
-    private boolean validateQuantity(String quantityText) {
+    public JTextField getProductCodeField() {
+        return productCodeField;
+    }
+
+    public JTextField getQuantityField() {
+        return quantityField;
+    }
+
+    public JTextField getSearchField() {
+        return searchField;
+    }
+
+    public JButton getAddButton() {
+        return addButton;
+    }
+
+    public JButton getRemoveButton() {
+        return removeButton;
+    }
+
+    public JButton getSearchButton() {
+        return searchButton;
+    }
+
+    public JButton getProceedButton() {
+        return proceedButton;
+    }
+
+    public JButton getCancelButton() {
+        return cancelButton;
+    }
+
+    public void updateSalesTable(List<SaleItem> saleItems) {
+        salesTableModel.setRowCount(0);
+        for (SaleItem item : saleItems) {
+            salesTableModel.addRow(new Object[] { item.getProduct().getProductCode(), item.getQuantity(),
+                    item.getSalePrice(), item.getTotalPrice() });
+        }
+    }
+
+    public void populateProductTable(List<Product> products) {
+        productTableModel.setRowCount(0);
+        for (Product product : products) {
+            productTableModel.addRow(new Object[] { product.getProductCode(), product.getName(), product.getCategory(),
+                    product.getSalePrice(), product.getStockQuantity() });
+        }
+    }
+
+    public void updateTotalBill(double totalBill) {
+        totalBillLabel.setText("Total: $" + String.format("%.2f", totalBill));
+    }
+
+    public void clearInputFields() {
+        productCodeField.setText("");
+        quantityField.setText("");
+    }
+
+    public boolean validateProductCode(String productCode) {
+
+        return productCode.matches("PM-\\d{4}");
+    }
+
+    public boolean validateQuantity(String quantityText) {
         try {
             int quantity = Integer.parseInt(quantityText);
             return quantity > 0;
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    private void addSaleItem(String productCode, int quantity) {
-        // Assuming a method to get product by code
-        Product product = getProductByCode(productCode);
-        if (product != null) {
-            if (quantity <= product.getStockQuantity()) {
-                boolean itemExists = false;
-                for (SaleItem item : saleItems) {
-                    if (item.getProduct().getProductCode().equals(productCode)) {
-                        if (item.getQuantity() + quantity <= product.getStockQuantity()) {
-                            item.setQuantity(item.getQuantity() + quantity);
-                            item.setTotalPrice(item.getSalePrice() * item.getQuantity());
-                            itemExists = true;
-                            break;
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Insufficient quantity in stock!", "Error", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                    }
-                }
-                if (!itemExists) {
-                    SaleItem saleItem = new SaleItem(product, quantity, product.getSalePrice(), product.getOriginalPrice());
-                    saleItems.add(saleItem);
-                }
-                updateTable();
-                calculateTotalBill();
-                totalBillLabel.setText("Total: $" + String.format("%.2f", totalBill));
-            } else {
-                JOptionPane.showMessageDialog(this, "Insufficient quantity in stock!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Product not found!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void removeSaleItem(String productCode, int quantity) {
-        for (SaleItem item : saleItems) {
-            if (item.getProduct().getProductCode().equals(productCode)) {
-                if (item.getQuantity() > quantity) {
-                    item.setQuantity(item.getQuantity() - quantity);
-                    item.setTotalPrice(item.getSalePrice() * item.getQuantity());
-                } else {
-                    saleItems.remove(item);
-                }
-                updateTable();
-                calculateTotalBill();
-                totalBillLabel.setText("Total: $" + String.format("%.2f", totalBill));
-                return;
-            }
-        }
-        JOptionPane.showMessageDialog(this, "Product not found in the list!", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void updateTable() {
-        tableModel.setRowCount(0);
-        for (SaleItem item : saleItems) {
-            tableModel.addRow(new Object[]{item.getProduct().getProductCode(), item.getQuantity(), item.getSalePrice(), item.getTotalPrice()});
-        }
-    }
-
-    private void calculateTotalBill() {
-        totalBill = saleItems.stream().mapToDouble(SaleItem::getTotalPrice).sum();
-    }
-
-    private Product getProductByCode(String productCode) {
-        // Mock implementation, replace with actual product retrieval logic
-        Vendor vendor = new Vendor();
-        vendor.setVendorCode("V001");
-        vendor.setName("Sample Vendor");
-        vendor.setPhoneNumber("123456789");
-        vendor.setAddress("123 Market Street");
-
-        switch (productCode) {
-            case "PM-0001":
-                return new Product("PM-0001", vendor, "Product A", "Category 1", 100.0, 120.0, 10.0, 90.0, 50);
-            case "PM-0002":
-                return new Product("PM-0002", vendor, "Product B", "Category 2", 200.0, 220.0, 20.0, 180.0, 30);
-            case "PM-0003":
-                return new Product("PM-0003", vendor, "Product C", "Category 3", 50.0, 60.0, 5.0, 45.0, 100);
-            case "PM-0004":
-                return new Product("PM-0004", vendor, "Product D", "Category 4", 150.0, 170.0, 15.0, 140.0, 40);
-            case "PM-0005":
-                return new Product("PM-0005", vendor, "Product E", "Category 5", 75.0, 85.0, 7.5, 70.0, 60);
-            case "PM-0006":
-                return new Product("PM-0006", vendor, "Product F", "Category 6", 120.0, 130.0, 12.0, 110.0, 45);
-            case "PM-0007":
-                return new Product("PM-0007", vendor, "Product G", "Category 7", 90.0, 100.0, 9.0, 80.0, 80);
-            default:
-                return null;
-        }
-    }
-
-    private void openPaymentsPage() {
-        SwingUtilities.invokeLater(() -> {
-            PaymentsPage paymentsPage = new PaymentsPage(saleItems, totalBill);
-            paymentsPage.setVisible(true);
-            dispose();
-        });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            SalesPage salesPage = new SalesPage();
-            salesPage.setVisible(true);
-        });
     }
 }

@@ -3,10 +3,11 @@ package SCD.ui.BranchManager;
 import SCD.controllers.BranchManagerControllers.BranchSidebarController;
 import SCD.ui.Common.ButtonFactory;
 
+import SCD.ui.Common.Props;
 import javax.swing.*;
 import java.awt.*;
 
-public class BranchSidebar extends JPanel {
+public class BranchSidebar extends JPanel implements Props {
 
     private final BranchSidebarController controller;
 
@@ -14,7 +15,7 @@ public class BranchSidebar extends JPanel {
         controller = new BranchSidebarController(this);
 
         setPreferredSize(new Dimension(240, 700));
-        setBackground(new Color(255, 102, 102));
+        setBackground(Props.bg);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel logo = new JLabel(new ImageIcon("path/to/logo.png"));
@@ -33,7 +34,7 @@ public class BranchSidebar extends JPanel {
         add(createButton("Update Data Entry Operator", controller::openUpdateDataEntryOperator));
         add(createButton("Delete Data Entry Operator", controller::openDeleteDataEntryOperator));
         add(createButton("View Data Entry Operators", controller::openViewDataEntryOperators));
-
+        add(createButton("View Sales", controller::openViewSales));
         add(createButton("Settings", controller::openSettings));
         add(createButton("Logout", controller::performLogout));
     }

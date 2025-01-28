@@ -3,6 +3,7 @@ package SCD.ui.SuperAdmin.ManageBranches;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import SCD.ui.Common.Props;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,42 +13,39 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
 
-public class UpdateBranchPage extends JFrame {
+public class UpdateBranchPage extends JFrame implements Props {
 
     private JTextField branchCodeField;
     private JComboBox<String> fieldComboBox;
     private JTextField newValueField;
     private JButton validateButton;
     private JButton updateButton;
-    Employee employee;
 
-    public UpdateBranchPage(Employee employee) {
-        this.employee = employee;
+    public UpdateBranchPage() {
         setTitle("Update Branch");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Sidebar
-        Sidebar sidebar = new Sidebar(employee);
+        // scd- proj initSidebar
+        Sidebar sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
-        // Content Panel
+        // scd- proj initContent Panel
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(contentPanel, BorderLayout.CENTER);
 
-        // NavBar
+        // scd- proj initNavBar
         NavBar navBar = new NavBar();
         navBar.setTitle("Update Branch");
         contentPanel.add(navBar, BorderLayout.NORTH);
 
-        // Form Panel
+        // scd- proj initForm Panel
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -67,14 +65,14 @@ public class UpdateBranchPage extends JFrame {
         formPanel.add(newValueLabel);
         formPanel.add(newValueField);
 
-        // Button Panel
+        // scd- proj initButton Panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         validateButton = ButtonFactory.createStyledButton("Validate Field");
         updateButton = ButtonFactory.createStyledButton("Update Branch");
         buttonPanel.add(validateButton);
         buttonPanel.add(updateButton);
 
-        // Add Panels
+        // scd- proj initAdd Panels
         contentPanel.add(formPanel, BorderLayout.CENTER);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 

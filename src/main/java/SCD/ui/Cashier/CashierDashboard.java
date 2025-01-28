@@ -1,35 +1,46 @@
 package SCD.ui.Cashier;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 
-public class CashierDashboard extends JFrame {
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
-    private cashierSidebar sidebar;
+import SCD.controllers.CashierControllers.cashierSidebarController;
+import SCD.ui.Common.Props;
+
+public class CashierDashboard extends JFrame implements Props {
+
+    private JPanel contentPanel;
 
     public CashierDashboard() {
         setTitle("Cashier Dashboard");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        sidebar = new cashierSidebar();
+
+        cashierSidebarController sidebarController = new cashierSidebarController(this);
+        JPanel sidebar = sidebarController.getView();
         add(sidebar, BorderLayout.WEST);
 
-        JPanel contentPanel = new JPanel();
+        contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout());
         add(contentPanel, BorderLayout.CENTER);
 
-        JLabel instructionsLabel = new JLabel("<html><h1>Welcome to the Cashier Dashboard</h1><p>Use the sidebar to navigate to different pages.</p></html>");
+        JLabel instructionsLabel = new JLabel(
+                "<html><h1>Welcome to the Cashier Dashboard</h1><p>Use the sidebar to navigate to different pages.</p></html>");
         instructionsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPanel.add(instructionsLabel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            CashierDashboard dashboard = new CashierDashboard();
-            dashboard.setVisible(true);
-        });
+    public void showDashboard() {
+        setVisible(true);
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
     }
 }

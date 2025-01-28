@@ -1,18 +1,28 @@
 package SCD.ui.BranchManager.ManageCashier;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import SCD.ui.Common.Props;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import SCD.ui.BranchManager.BranchSidebar;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 
-import javax.swing.*;
-import java.awt.*;
-
-public class AddCashierPage extends JFrame {
+public class AddCashierPage extends JFrame implements Props {
     private BranchSidebar sidebar;
     private NavBar navBar;
     private JTextField nameField;
     private JTextField emailField;
-    private JTextField branchCodeField;
+
+    private JTextField phoneField; // scd- proj initAdded for phone number
     private JButton addButton;
 
     public AddCashierPage() {
@@ -31,22 +41,24 @@ public class AddCashierPage extends JFrame {
         navBar.setTitle("Add Cashier");
         contentPanel.add(navBar, BorderLayout.NORTH);
 
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10)); // scd- proj initAdjusted grid layout for new field
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel nameLabel = new JLabel("Cashier Name:");
         nameField = new JTextField();
         JLabel emailLabel = new JLabel("Email:");
         emailField = new JTextField();
-        JLabel branchCodeLabel = new JLabel("Branch Code (BR-XXXX):");
-        branchCodeField = new JTextField();
+
+        JLabel phoneLabel = new JLabel("Phone Number (03XXXXXXXXX):"); // scd- proj initAdded label for phone number
+        phoneField = new JTextField(); // scd- proj initAdded text field for phone number
 
         formPanel.add(nameLabel);
         formPanel.add(nameField);
         formPanel.add(emailLabel);
         formPanel.add(emailField);
-        formPanel.add(branchCodeLabel);
-        formPanel.add(branchCodeField);
+
+        formPanel.add(phoneLabel);
+        formPanel.add(phoneField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         addButton = ButtonFactory.createStyledButton("Add Cashier");
@@ -67,8 +79,8 @@ public class AddCashierPage extends JFrame {
         return emailField;
     }
 
-    public JTextField getBranchCodeField() {
-        return branchCodeField;
+    public JTextField getPhoneField() { // scd- proj initAdded getter for phone number
+        return phoneField;
     }
 
     public JButton getAddButton() {

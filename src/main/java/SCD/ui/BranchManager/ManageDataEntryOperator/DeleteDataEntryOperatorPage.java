@@ -4,10 +4,11 @@ import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.BranchManager.BranchSidebar;
 
+import SCD.ui.Common.Props;
 import javax.swing.*;
 import java.awt.*;
 
-public class DeleteDataEntryOperatorPage extends JFrame {
+public class DeleteDataEntryOperatorPage extends JFrame implements Props {
 
     private BranchSidebar sidebar;
     private NavBar navBar;

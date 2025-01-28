@@ -1,38 +1,29 @@
 package SCD.ui.SuperAdmin.ManageBranchManager;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
+import SCD.ui.Common.Props;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
 import SCD.ui.SuperAdmin.Sidebar;
 
-public class AddBranchManagerPage extends JFrame {
+public class AddBranchManagerPage extends JFrame implements Props {
     private Sidebar sidebar;
     private NavBar navBar;
     private JTextField nameField;
     private JTextField emailField;
     private JTextField branchCodeField;
+    private JTextField phoneField; // scd- proj initAdded for phone number
     private JButton addButton;
-    Employee employee;
 
-    public AddBranchManagerPage(Employee employee) {
-        this.employee = employee;
+    public AddBranchManagerPage() {
         setTitle("Add Branch Manager");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar(employee);
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -42,12 +33,13 @@ public class AddBranchManagerPage extends JFrame {
         contentPanel.add(navBar, BorderLayout.NORTH);
         navBar.setTitle("Add Branch Manager");
 
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10)); // scd- proj initAdjusted rows for new field
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         nameField = new JTextField();
         emailField = new JTextField();
         branchCodeField = new JTextField();
+        phoneField = new JTextField(); // scd- proj initPhone number field
         addButton = ButtonFactory.createStyledButton("Add Branch Manager");
 
         formPanel.add(new JLabel("Branch Manager Name:"));
@@ -56,6 +48,8 @@ public class AddBranchManagerPage extends JFrame {
         formPanel.add(emailField);
         formPanel.add(new JLabel("Branch Code (BR-XXXX):"));
         formPanel.add(branchCodeField);
+        formPanel.add(new JLabel("Phone Number (03XXXXXXXXX):")); // scd- proj initLabel for phone number
+        formPanel.add(phoneField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(addButton);
@@ -77,6 +71,10 @@ public class AddBranchManagerPage extends JFrame {
 
     public JTextField getBranchCodeField() {
         return branchCodeField;
+    }
+
+    public JTextField getPhoneField() { // scd- proj initGetter for phone field
+        return phoneField;
     }
 
     public JButton getAddButton() {

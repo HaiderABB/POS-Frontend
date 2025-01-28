@@ -1,12 +1,24 @@
 package SCD;
 
+import javax.swing.SwingUtilities;
+
 import SCD.controllers.CommonControllers.SplashScreenController;
+import SCD.utils.HibernateUtil;
 
 public class App {
     public static void main(String[] args) {
-        // DataSync dataSync = new DataSync();
-        // SyncService syncService = new SyncService(dataSync);
-        // syncService.startSyncing();
-        new SplashScreenController();
+        // scd- proj initDataSync dataSync = new DataSync();
+        // scd- proj initSyncService syncService = new SyncService(dataSync);
+        // scd- proj initsyncService.startSyncing();
+
+        HibernateUtil.getSessionFactory();
+        HibernateUtil.getRemoteSessionFactory();
+
+        SwingUtilities.invokeLater(() -> {
+
+            new SplashScreenController();
+
+        });
+
     }
 }

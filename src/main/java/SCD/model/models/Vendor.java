@@ -1,10 +1,13 @@
 package SCD.model.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +26,9 @@ public class Vendor {
 
   @Column(name = "address")
   private String address;
+
+  @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Product> products;
 
   @Column(name = "is_active", nullable = false)
   private boolean isActive = true;

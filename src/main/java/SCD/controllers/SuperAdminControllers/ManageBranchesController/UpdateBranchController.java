@@ -1,32 +1,26 @@
 package SCD.controllers.SuperAdminControllers.ManageBranchesController;
 
+import java.awt.event.ActionEvent;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import SCD.model.models.Employee;
+import SCD.model.models.Branch;
+import SCD.model.service.Json.AddResponseJSON;
 import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranches.UpdateBranchPage;
 
 public class UpdateBranchController {
 
     private UpdateBranchPage updateBranchPage;
-    Employee employee;
     SuperAdminService superAdminService = new SuperAdminService();
 
-    public UpdateBranchController(Employee employee) {
-        this.employee = employee;
-        SwingUtilities.invokeLater(() -> {
-            UpdateBranchPage page = new UpdateBranchPage(employee);
+    public UpdateBranchController() {
 
-            page.setVisible(true);
-        });
-    }
+        updateBranchPage = new UpdateBranchPage();
 
-    public UpdateBranchController(UpdateBranchPage updateBranchPage, Employee employee) {
-        this.updateBranchPage = updateBranchPage;
-        this.employee = employee;
+        updateBranchPage.setVisible(true);
 
         updateBranchPage.getValidateButton().addActionListener(e -> {
             String selectedField = updateBranchPage.getSelectedField();
@@ -45,10 +39,12 @@ public class UpdateBranchController {
             }
         });
 
-        updateBranchPage.getUpdateButton().addActionListener(e -> {
+        updateBranchPage.getUpdateButton().addActionListener((ActionEvent e) -> {
             String branchCode = updateBranchPage.getBranchCode();
             String selectedField = updateBranchPage.getSelectedField();
             String newValue = updateBranchPage.getNewValue();
+
+            String temp;
 
             if (!validateBranchCode(branchCode)) {
                 JOptionPane.showMessageDialog(updateBranchPage,
@@ -61,9 +57,75 @@ public class UpdateBranchController {
                 return;
             }
 
-            updateBranch(branchCode, selectedField, newValue);
+            if (branchCode.equals("BR-0001")) {
+
+                JOptionPane.showMessageDialog(updateBranchPage, "Cannot update the default branch!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+
+            Branch branch = superAdminService.getBranchByCode(branchCode);
+
+            if (branch == null) {
+                JOptionPane.showMessageDialog(updateBranchPage, "Branch not found!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            temp = "";
+
+            if (selectedField.equals("Name")) {
+                temp = branch.getName();
+                branch.setName(newValue);
+            } else if (selectedField.equals("City")) {
+                temp = branch.getCity();
+                branch.setCity(newValue);
+            } else if (selectedField.equals("Phone")) {
+
+                boolean res = superAdminService.checkPhoneExists(newValue);
+                if (res) {
+                    JOptionPane.showMessageDialog(updateBranchPage, "Phone number already exists!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                temp = branch.getPhone();
+                branch.setPhone(newValue);
+            } else if (selectedField.equals("Address")) {
+                temp = branch.getAddress();
+                branch.setAddress(newValue);
+            }
+
+            AddResponseJSON json = superAdminService.updateBranch(branch);
+
+            if (json.isSuccess()) {
+                updateBranch(branchCode, selectedField, newValue);
+            } else {
+
+                if (selectedField.equals("Name")) {
+                    branch.setName(temp);
+                } else if (selectedField.equals("City")) {
+                    branch.setCity(temp);
+                } else if (selectedField.equals("Phone")) {
+                    branch.setPhone(temp);
+                } else if (selectedField.equals("Address")) {
+                    branch.setAddress(temp);
+                }
+
+                JOptionPane.showMessageDialog(updateBranchPage, "Failed to update branch!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
+
             updateBranchPage.clearFields();
         });
+
+    }
+
+    public UpdateBranchController(UpdateBranchPage updateBranchPage) {
+        this.updateBranchPage = updateBranchPage;
+
     }
 
     public boolean validateBranchCode(String branchCode) {
@@ -107,9 +169,11 @@ public class UpdateBranchController {
     }
 
     private boolean validatePhone(String phone) {
-        if (!Pattern.matches("03\\d{2}-\\d{7}", phone)) {
+
+        if (!Pattern.matches("03\\d{9}", phone)) {
             JOptionPane.showMessageDialog(updateBranchPage,
-                    "Invalid Phone! Phone must follow the format '0321-1234567'.", "Error", JOptionPane.ERROR_MESSAGE);
+                    "Invalid Phone! Phone must follow the format '03XXXXXXXXX'.", "Error", JOptionPane.ERROR_MESSAGE);
+
             return false;
         }
         return true;
@@ -125,7 +189,7 @@ public class UpdateBranchController {
         return true;
     }
 
-    private void updateBranch(String branchCode, String field, String newValue) {
+    void updateBranch(String branchCode, String field, String newValue) {
         JOptionPane.showMessageDialog(updateBranchPage,
                 "Branch with Code " + branchCode + " updated successfully!\n" +
                         "Updated Field: " + field + "\n" +
@@ -136,8 +200,8 @@ public class UpdateBranchController {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            UpdateBranchPage page = new UpdateBranchPage(null);
-            new UpdateBranchController(page, null);
+            UpdateBranchPage page = new UpdateBranchPage();
+            new UpdateBranchController(page);
             page.setVisible(true);
         });
     }

@@ -3,27 +3,28 @@ package SCD.controllers.SuperAdminControllers.ManagesBranchManagerController;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import SCD.model.models.Employee;
+import SCD.model.service.Common.CommonServices;
+import SCD.model.service.Json.AddResponseJSON;
+import SCD.model.service.SuperAdminService.SuperAdminService;
 import SCD.ui.SuperAdmin.ManageBranchManager.UpdateBranchManagerPage;
 
 public class UpdateBranchManagerController {
+
     private UpdateBranchManagerPage view;
-    Employee employee;
+    SuperAdminService superAdminService = new SuperAdminService();
+    CommonServices commonServices = new CommonServices();
 
-    public UpdateBranchManagerController(Employee employee) {
-        this.employee = employee;
-        SwingUtilities.invokeLater(() -> {
-            UpdateBranchManagerPage page = new UpdateBranchManagerPage(employee);
+    public UpdateBranchManagerController() {
 
-            page.setVisible(true);
-        });
+        view = new UpdateBranchManagerPage();
+        view.setVisible(true);
+        initController();
 
     }
 
-    public UpdateBranchManagerController(UpdateBranchManagerPage view, Employee employee) {
-        this.employee = employee;
+    public UpdateBranchManagerController(UpdateBranchManagerPage view) {
         this.view = view;
         initController();
     }
@@ -33,7 +34,7 @@ public class UpdateBranchManagerController {
         view.getUpdateButton().addActionListener(e -> handleUpdate());
     }
 
-    private void handleValidation() {
+    void handleValidation() {
         String selectedField = (String) view.getFieldComboBox().getSelectedItem();
         String newValue = view.getNewValueField().getText().trim();
 
@@ -52,7 +53,7 @@ public class UpdateBranchManagerController {
         }
     }
 
-    private void handleUpdate() {
+    void handleUpdate() {
         String managerCode = view.getManagerCodeField().getText().trim();
         String selectedField = (String) view.getFieldComboBox().getSelectedItem();
         String newValue = view.getNewValueField().getText().trim();
@@ -73,9 +74,52 @@ public class UpdateBranchManagerController {
             return;
         }
 
-        updateManager(managerCode, selectedField, newValue);
-        view.getManagerCodeField().setText("");
-        view.getNewValueField().setText("");
+        Employee manager = commonServices.getEmployeeByEmployeeCode(managerCode);
+
+        if (manager == null) {
+            JOptionPane.showMessageDialog(view, "Manager not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (manager.isActive() == false) {
+            JOptionPane.showMessageDialog(view, "Manager is not active!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String temp;
+
+        if (selectedField.equals("Name")) {
+            temp = manager.getName();
+            manager.setName(newValue);
+        } else if (selectedField.equals("Email")) {
+            temp = manager.getEmail();
+
+            boolean res = commonServices.checkEmailExists(newValue);
+            if (res) {
+                JOptionPane.showMessageDialog(view, "Email already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            manager.setEmail(newValue);
+        } else {
+            temp = manager.getPhoneNumber();
+            boolean res = commonServices.checkPhoneNumberExists(newValue);
+            if (res) {
+                JOptionPane.showMessageDialog(view, "Phone Number already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            manager.setPhoneNumber(newValue);
+        }
+
+        AddResponseJSON json = commonServices.UpdateEmployee(manager);
+
+        if (json.isSuccess()) {
+            updateManager(managerCode, selectedField, newValue);
+            view.getManagerCodeField().setText("");
+            view.getNewValueField().setText("");
+        } else {
+            JOptionPane.showMessageDialog(view, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     public boolean validateManagerCode(String managerCode) {
@@ -95,13 +139,15 @@ public class UpdateBranchManagerController {
                 return validateEmail(value);
             case "Branch Code":
                 return validateBranchCode(value);
+            case "Phone Number": // scd- proj initValidation for phone number
+                return validatePhoneNumber(value);
             default:
                 JOptionPane.showMessageDialog(view, "Unknown Field Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
         }
     }
 
-    private boolean validateName(String name) {
+    boolean validateName(String name) {
         boolean isValid = name != null && !name.isEmpty() && Pattern.matches("[A-Za-z\\s]+", name);
         if (!isValid) {
             JOptionPane.showMessageDialog(view,
@@ -111,7 +157,7 @@ public class UpdateBranchManagerController {
         return isValid;
     }
 
-    private boolean validateEmail(String email) {
+    boolean validateEmail(String email) {
         boolean isValid = email != null && Pattern.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", email);
         if (!isValid) {
             JOptionPane.showMessageDialog(view, "Invalid Email! Please enter a valid email address.", "Error",
@@ -120,7 +166,7 @@ public class UpdateBranchManagerController {
         return isValid;
     }
 
-    private boolean validateBranchCode(String branchCode) {
+    boolean validateBranchCode(String branchCode) {
         boolean isValid = branchCode != null && branchCode.matches("BR-\\d{4}");
         if (!isValid) {
             JOptionPane.showMessageDialog(view, "Invalid Branch Code! Branch Code must follow the format 'BR-XXXX'.",
@@ -129,7 +175,17 @@ public class UpdateBranchManagerController {
         return isValid;
     }
 
-    private void updateManager(String managerCode, String field, String newValue) {
+    boolean validatePhoneNumber(String phoneNumber) {
+        boolean isValid = phoneNumber != null && phoneNumber.matches("03\\d{9}");
+        if (!isValid) {
+            JOptionPane.showMessageDialog(view,
+                    "Invalid Phone Number! Phone Number must follow the format '03XXXXXXXXX'.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return isValid;
+    }
+
+    void updateManager(String managerCode, String field, String newValue) {
         JOptionPane.showMessageDialog(view,
                 "Branch Manager with Code " + managerCode + " updated successfully!\n" +
                         "Updated Field: " + field + "\n" +
@@ -139,14 +195,6 @@ public class UpdateBranchManagerController {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            UpdateBranchManagerPage page = new UpdateBranchManagerPage(null);
-            new UpdateBranchManagerController(page, null);
-            page.setVisible(true);
-        });
-    }
-
-    public void showPage() {
-        new UpdateBranchManagerPage(employee);
+        new UpdateBranchManagerController(); // scd- proj initUse the default constructor
     }
 }

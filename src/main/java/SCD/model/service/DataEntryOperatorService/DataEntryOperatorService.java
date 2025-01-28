@@ -2,10 +2,10 @@ package SCD.model.service.DataEntryOperatorService;
 
 import java.util.List;
 
-import SCD.model.crud.local.CodesDAO;
-import SCD.model.crud.local.ProductDAO;
-import SCD.model.crud.local.SyncTableDAO;
-import SCD.model.crud.local.VendorDAO;
+import SCD.model.db.local.CodesDAO;
+import SCD.model.db.local.ProductDAO;
+import SCD.model.db.local.SyncTableDAO;
+import SCD.model.db.local.VendorDAO;
 import SCD.model.models.Product;
 import SCD.model.models.SyncTable;
 import SCD.model.models.Vendor;
@@ -29,11 +29,6 @@ public class DataEntryOperatorService {
 
   public AddResponseJSON addVendor(Vendor vendor) {
     boolean res;
-    res = vendorDAO.vendorExistsWithPhoneNumberAndActiveStatus(vendor.getPhoneNumber());
-
-    if (res) {
-      return new AddResponseJSON("Phone Number Exists", false, null);
-    }
 
     String empcode = codesDAO.getCodeByTableName("VENDORS");
 
@@ -64,12 +59,6 @@ public class DataEntryOperatorService {
 
   public AddResponseJSON addProduct(Product product) {
     boolean res;
-    Vendor ven;
-    ven = vendorDAO.getVendorByCode(product.getVendor().getVendorCode());
-
-    if (ven == null) {
-      return new AddResponseJSON("Could not find Vendor", false, null);
-    }
 
     String empcode = codesDAO.getCodeByTableName("PRODUCTS");
 
@@ -106,7 +95,7 @@ public class DataEntryOperatorService {
   public GetResponseJSON<Vendor> getVendors() {
     List<Vendor> vendors = vendorDAO.getAllActiveVendors();
 
-    if (vendors.isEmpty()) {
+    if (vendors == null) {
       return new GetResponseJSON<>("No Vendors", vendors);
     }
     return new GetResponseJSON<>("Found Vendors", vendors);
@@ -115,21 +104,13 @@ public class DataEntryOperatorService {
   public GetResponseJSON<Product> getProducts() {
     List<Product> products = productDAO.getAllActiveProducts();
 
-    if (products.isEmpty()) {
-      return new GetResponseJSON<>("No Products", products);
+    if (products == null) {
+      return new GetResponseJSON<>("No Products", null);
     }
     return new GetResponseJSON<>("Found Products", products);
   }
 
   public AddResponseJSON removeProduct(String code) {
-
-    Product prod;
-
-    prod = productDAO.getActiveProductByCode(code);
-
-    if (prod == null) {
-      return new AddResponseJSON("Could not find product", false, null);
-    }
 
     boolean res = productDAO.deactivateProduct(code);
 
@@ -144,13 +125,15 @@ public class DataEntryOperatorService {
 
   }
 
+  public Product getProductByCode(String code) {
+    return productDAO.getActiveProductByCode(code);
+  }
+
+  public Vendor getVendorByCode(String code) {
+    return vendorDAO.getVendorByCode(code);
+  }
+
   public AddResponseJSON removeVendor(String code) {
-
-    Vendor ven = vendorDAO.getVendorByCode(code);
-
-    if (ven == null) {
-      return new AddResponseJSON("Could not find vendor", false, null);
-    }
 
     boolean res = vendorDAO.deactivateVendor(code);
     if (!res) {
@@ -159,20 +142,29 @@ public class DataEntryOperatorService {
     SyncTable st = new SyncTable("VENDORS", "UPDATE", code);
     syncTableDAO.addSyncTable(st);
 
-    res = productDAO.deactivateProductsByVendor(code);
-
     List<Product> products = productDAO.getProductsByVendorCode(code);
 
     if (!res) {
       return new AddResponseJSON("Could not deactivate products by vendors", false, null);
     }
 
-    for (Product p : products) {
-      syncTableDAO.addSyncTable(new SyncTable("PRODUCTS", "UPDATE", p.getProductCode()));
+    if (products != null) {
+      for (Product p : products) {
+        res = productDAO.deactivateProduct(p.getProductCode());
+        if (!res) {
+          return new AddResponseJSON("Could not deactivate products by vendors", false, null);
+        }
+        syncTableDAO.addSyncTable(new SyncTable("PRODUCTS", "UPDATE", p.getProductCode()));
+
+      }
     }
 
     return new AddResponseJSON("Vendor removed", true, null);
 
+  }
+
+  public boolean checkPhoneNumber(String phoneNumber) {
+    return vendorDAO.vendorExistsWithPhoneNumberAndActiveStatus(phoneNumber);
   }
 
   public AddResponseJSON updateVendor(Vendor vendor) {
@@ -194,10 +186,6 @@ public class DataEntryOperatorService {
 
   public AddResponseJSON updateProduct(Product product) {
 
-    Product prod = productDAO.getActiveProductByCode(product.getProductCode());
-    if (prod == null) {
-      return new AddResponseJSON("Product does not exist", false, product.getProductCode());
-    }
     boolean res = productDAO.updateProduct(product);
     if (res) {
       SyncTable st = new SyncTable("PRODUCTS", "UPDATE", product.getProductCode());
@@ -208,6 +196,15 @@ public class DataEntryOperatorService {
 
     return new AddResponseJSON("Product not updated", false, product.getProductCode());
 
+  }
+
+  public GetResponseJSON<Product> getProductsByVendorCode(String vendorCode) {
+    List<Product> products = productDAO.getProductsByVendorCode(vendorCode);
+    System.out.println(products == null);
+    if (products == null || products.isEmpty()) {
+      return new GetResponseJSON<>("No Products", null);
+    }
+    return new GetResponseJSON<>("Found Products", products);
   }
 
 }

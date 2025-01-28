@@ -11,24 +11,22 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import SCD.model.models.Employee;
 import SCD.ui.Common.ButtonFactory;
 import SCD.ui.Common.NavBar;
+import SCD.ui.Common.Props;
 
-public class SystemSettingsPage extends JFrame {
+public class SystemSettingsPage extends JFrame implements Props {
     private Sidebar sidebar;
     private NavBar navBar;
     private JButton changePasswordButton;
-    Employee employee;
 
-    public SystemSettingsPage(Employee employee) {
-        this.employee = employee;
+    public SystemSettingsPage() {
         setTitle("System Settings");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        sidebar = new Sidebar(employee);
+        sidebar = new Sidebar();
         add(sidebar, BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel(new BorderLayout());

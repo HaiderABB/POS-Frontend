@@ -1,11 +1,12 @@
 package SCD.ui.BranchManager;
 
 import SCD.ui.Common.NavBar;
+import SCD.ui.Common.Props;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class BranchManagerDashboard extends JFrame {
+public class BranchManagerDashboard extends JFrame implements Props {
 
     private BranchSidebar sidebar;
     private JPanel mainContent;
@@ -37,7 +38,7 @@ public class BranchManagerDashboard extends JFrame {
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
         mainContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        mainContent.setBackground(Color.WHITE);
+        mainContent.setBackground(Props.fg);
 
         JLabel welcomeLabel = new JLabel("Welcome to the Branch Manager Dashboard");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -49,8 +50,7 @@ public class BranchManagerDashboard extends JFrame {
                         "2. Oversee data entry operators for accurate record maintenance.\n" +
                         "3. Ensure proper branch operations and data integrity.\n" +
                         "4. Collaborate with the central team to meet operational goals.\n" +
-                        "5. Handle any branch-level issues and ensure smooth workflows."
-        );
+                        "5. Handle any branch-level issues and ensure smooth workflows.");
         responsibilityArea.setFont(new Font("Arial", Font.PLAIN, 16));
         responsibilityArea.setEditable(false);
         responsibilityArea.setWrapStyleWord(true);

@@ -1,11 +1,16 @@
 package SCD.ui.Common;
 
+import java.awt.Font;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import SCD.controllers.CommonControllers.MainMenuController;
 
-import javax.swing.*;
-import java.awt.*;
-
-public class MainMenu extends JFrame {
+public class MainMenu extends JFrame implements Props {
     public MainMenu() {
         setTitle("Main Menu");
         setSize(800, 600);
@@ -14,17 +19,18 @@ public class MainMenu extends JFrame {
 
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(null);
-        menuPanel.setBackground(Color.WHITE);
+        menuPanel.setBackground(Props.fg);
         menuPanel.setBounds(0, 0, 800, 600);
 
-        JLabel logo = new JLabel(new ImageIcon("C:\\Users\\AMMAR\\Desktop\\Parhai\\SCD\\POS-Frontend\\logo5.png"));
+        JLabel logo = new JLabel(new ImageIcon("logo5.png"));
+
         logo.setBounds(350, 30, 100, 100);
         menuPanel.add(logo);
 
         JLabel menuTitle = new JLabel("Main Menu", JLabel.CENTER);
         menuTitle.setBounds(250, 150, 300, 30);
         menuTitle.setFont(new Font("Arial", Font.BOLD, 22));
-        menuTitle.setForeground(new Color(255, 102, 102));
+        menuTitle.setForeground(Props.bg);
         menuPanel.add(menuTitle);
 
         addRoleButton(menuPanel, "Super Admin Panel", "SM-", "Super Admin", 250, 220);
@@ -40,8 +46,8 @@ public class MainMenu extends JFrame {
         JButton button = new JButton(text);
         button.setBounds(x, y, 300, 50);
         button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setBackground(new Color(255, 102, 102));
-        button.setForeground(Color.WHITE);
+        button.setBackground(Props.bg);
+        button.setForeground(Props.fg);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
 
